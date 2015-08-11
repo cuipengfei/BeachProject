@@ -12,11 +12,13 @@ public class test {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Customer customer = new Customer("mike",sdf.parse("1993-08-09"));
-        Customer customer2 = new Customer("meng",sdf.parse("1993-08-09"));
+        Customer customer2 = new Customer("Mike",sdf.parse("1993-08-09"));
+        Customer customer3 = new Customer("mike",sdf.parse("1992-08-09"));
 
         Bank bank = new Bank();
-        bank.IsAdd(customer);
-        bank.IsAdd(customer2);
+        bank.AddCustomer(customer);
+        bank.AddCustomer(customer2);
+        bank.AddCustomer(customer3);
 
 
 

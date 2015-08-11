@@ -22,10 +22,12 @@ public class BankTest {
 
     @Test
     public void bankShouldNotAcceptSameNameCustomer() throws Exception {
+        Bank bank = new Bank();
+
         Customer firstAbc = Customer.createCustomer("abc", new Date());
-        assertTrue(new Bank().addCustomer(firstAbc));
+        assertTrue(bank.addCustomer(firstAbc));
 
         Customer secondAbc = Customer.createCustomer("abc", new Date());
-        assertFalse(new Bank().addCustomer(secondAbc));
+        assertFalse(bank.addCustomer(secondAbc));
     }
 }

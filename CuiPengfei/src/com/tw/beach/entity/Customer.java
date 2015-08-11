@@ -20,18 +20,21 @@ public class Customer {
         return nickName;
     }
 
+    public static Customer invalidCustomer() {
+        return invalidCustomer;
+    }
+
     public static Customer createCustomer(String nickName, Date date) {
-        Pattern validNamePattern = compile("^[a-z0-9]+$");
-        Boolean isValidName = validNamePattern.matcher(nickName).matches();
-        if (isValidName) {
+        if (isNickNameValid(nickName)) {
             return new Customer(nickName, date);
         } else {
             return invalidCustomer;
         }
     }
 
-    public static Customer invalidCustomer() {
-        return invalidCustomer;
+    private static Boolean isNickNameValid(String nickName) {
+        Pattern validNamePattern = compile("^[a-z0-9]+$");
+        return validNamePattern.matcher(nickName).matches();
     }
 
 }

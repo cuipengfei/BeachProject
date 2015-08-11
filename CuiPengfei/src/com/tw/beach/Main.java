@@ -1,4 +1,4 @@
-package com.company;
+package com.tw.beach;
 
 public class Main {
 

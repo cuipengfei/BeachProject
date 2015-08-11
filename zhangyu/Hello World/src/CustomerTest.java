@@ -14,8 +14,8 @@ public class CustomerTest {
 
         Bank bank = new Bank();
 
-        if(bank.isAdd(customer1)) bank.addToBank(customer1);
-        if(bank.isAdd(customer2)) bank.addToBank(customer2);
-        if(bank.isAdd(customer3)) bank.addToBank(customer3);
+        bank.addToBank(customer1);
+        bank.addToBank(customer2);
+        bank.addToBank(customer3);
     }
 }

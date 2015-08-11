@@ -9,7 +9,7 @@ public class Bank {
 
     public boolean isValidNickname(Customer customer ){
         String nickname = customer.getNickname();
-        return nickname.matches("^[a-z0-9]+$");
+        return (nickname.matches("^[a-z0-9]+$"));
     }
 
     public boolean isRepeative(Customer customer) {
@@ -21,18 +21,17 @@ public class Bank {
         return false;
     }
 
-    public boolean isAdd(Customer customer){
+    public void addToBank(Customer customer) {
         if(isValidNickname(customer) && !isRepeative(customer)) {
             System.out.println(customer.getNickname()+" , add successful!");
-            return true;
+            this.customers.add(customer);
         }else{
-            System.out.println(customer.getNickname()+" , add failed!");
-            return false;
+            System.out.print(customer.getNickname()+" , add failed");
+            if(!isValidNickname(customer))
+                System.out.println(" , nickname should contain only lowercase letters or digits");
+            else
+                System.out.println(" , nickname already exits");
         }
-    }
-
-    public void addToBank(Customer customer) {
-        this.customers.add(customer);
     }
 
 }

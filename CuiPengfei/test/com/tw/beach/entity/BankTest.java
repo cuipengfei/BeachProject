@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static com.tw.beach.entity.CustomerRequest.withDraw;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -49,7 +50,7 @@ public class BankTest {
 
         bank.addCustomer(xiaoming);
         bank.deposit(xiaoming, 100);
-        bank.withDraw(xiaoming, 10);
+        bank.handleRequest(withDraw(xiaoming, RequestType.WithDraw, 10));
 
         assertThat(xiaoming.account().balance(), is(90));
     }
@@ -61,6 +62,6 @@ public class BankTest {
 
         bank.addCustomer(xiaoming);
         bank.deposit(xiaoming, 100);
-        bank.withDraw(xiaoming, 200);
+        bank.handleRequest(withDraw(xiaoming, RequestType.WithDraw, 200));
     }
 }

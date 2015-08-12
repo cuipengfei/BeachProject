@@ -30,7 +30,11 @@ public class Bank {
         customer.account().add(amount);
     }
 
-    public void withDraw(Customer customer, Integer amount) {
-        customer.account().minus(amount);
+    public void withDraw(Customer customer, Integer amount) throws InsufficientFundException {
+        if (amount <= customer.account().balance()) {
+            customer.account().minus(amount);
+        } else {
+            throw new InsufficientFundException();
+        }
     }
 }

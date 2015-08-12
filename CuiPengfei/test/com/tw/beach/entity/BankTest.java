@@ -53,4 +53,14 @@ public class BankTest {
 
         assertThat(xiaoming.account().balance(), is(90));
     }
+
+    @Test(expected = Exception.class)
+    public void shouldNotBeAbleToWithdrawMoneyMoreThanBalance() throws Exception {
+        Bank bank = new Bank();
+        Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+
+        bank.addCustomer(xiaoming);
+        bank.deposit(xiaoming, 100);
+        bank.withDraw(xiaoming, 200);
+    }
 }

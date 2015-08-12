@@ -10,6 +10,7 @@ public class Customer {
 
     private final String nickName;
     private final Date birthDay;
+    private final Account account = new Account();
 
     private Customer(String nickName, Date birthDay) {
         this.nickName = nickName;
@@ -18,6 +19,10 @@ public class Customer {
 
     public String nickName() {
         return nickName;
+    }
+
+    public Account account() {
+        return account;
     }
 
     public static Customer invalidCustomer() {
@@ -36,5 +41,4 @@ public class Customer {
         Pattern validNamePattern = compile("^[a-z0-9]+$");
         return validNamePattern.matcher(nickName).matches();
     }
-
 }

@@ -35,9 +35,22 @@ public class BankTest {
     public void shouldBeAbleToDepositMoney() throws Exception {
         Bank bank = new Bank();
         Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+
         bank.addCustomer(xiaoming);
         bank.deposit(xiaoming, 100);
 
         assertThat(xiaoming.account().balance(), is(100));
+    }
+
+    @Test
+    public void shouldBeAbleToWithdrawMoney() throws Exception {
+        Bank bank = new Bank();
+        Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+
+        bank.addCustomer(xiaoming);
+        bank.deposit(xiaoming, 100);
+        bank.withDraw(xiaoming, 10);
+
+        assertThat(xiaoming.account().balance(), is(90));
     }
 }

@@ -29,4 +29,8 @@ public class Bank {
     public void deposit(Customer customer, Integer amount) {
         customer.account().add(amount);
     }
+
+    public void withDraw(Customer customer, Integer amount) {
+        customer.account().minus(amount);
+    }
 }

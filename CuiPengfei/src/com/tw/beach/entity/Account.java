@@ -7,7 +7,11 @@ public class Account {
         return balance;
     }
 
-    public Integer add(Integer amount) {
-        return balance+=amount;
+    public void add(Integer amount) {
+        balance += amount;
+    }
+
+    public void minus(Integer amount) {
+        balance -= amount;
     }
 }

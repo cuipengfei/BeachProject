@@ -29,9 +29,8 @@ public class Customer {
         String reg = "^[a-z0-9]+$";
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(_nickName);
-        Boolean isValidNickName = matcher.matches();
 
-        return isValidNickName;
+        return matcher.matches();
     }
 
     public String getNickName(){

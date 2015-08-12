@@ -32,7 +32,6 @@ public class Bank {
         double currentMoneyInAccount = customerList.get(index).getAccount();
         if (index != -1) {
             if(currentMoneyInAccount > 0.0) {
-                customerList.get(find(_customer)).setAccount(0.0);
                 _customer.setAccount(0.0);
             }
             else throw new Exception("No Enough Money in Account!");
@@ -42,10 +41,9 @@ public class Bank {
 
     public void withdraw(Customer _customer,double _moneyWillBeDrawn) throws Exception {
         int index = find(_customer);
-        double currentMoneyInAccount = customerList.get(index).getAccount();
+        double currentMoneyInAccount = _customer.getAccount();
         if (index != -1) {
             if(_moneyWillBeDrawn < currentMoneyInAccount) {
-                customerList.get(find(_customer)).setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
                 _customer.setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
             }
             else throw new Exception("No Enough Money in Account!");
@@ -56,9 +54,8 @@ public class Bank {
 
     public void deposit(Customer _customer,double _moneyWillBeDeposited) throws Exception {
         int index = find(_customer);
-        double currentMoneyInAccount = customerList.get(index).getAccount();
+        double currentMoneyInAccount = _customer.getAccount();
         if (index != -1) {
-                customerList.get(find(_customer)).setAccount(currentMoneyInAccount + _moneyWillBeDeposited);
             _customer.setAccount(currentMoneyInAccount +_moneyWillBeDeposited);
         }
         else throw new Exception("The customer is not exist in the bank!");

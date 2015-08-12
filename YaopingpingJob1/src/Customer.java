@@ -8,18 +8,14 @@ import java.util.regex.Pattern;
  * Created by ppyao on 8/11/15.
  */
 public class Customer {
+        private  Account account;
         private String nickname;
         private Date dateofBirth1;
-        public Customer(String nickname,String dateofBirth)throws ParseException {
-            if (validateNickname(nickname)) {
-                this.nickname = nickname;
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                this.dateofBirth1 = formatter.parse(dateofBirth);
 
-            }
-            else {
-                System.out.println("the nickname is error");
-            }
+        public Customer(String nickname,Date dateofBirth)throws ParseException {
+                this.nickname = nickname;
+                this.dateofBirth1=dateofBirth;
+
         }
         public String getNickname()
         {
@@ -30,11 +26,5 @@ public class Customer {
         {
             return  dateofBirth1;
         }
-        public  boolean validateNickname(String nickname)
-        {
-            final String strRegex="^[a-z0-9]+$";
-            Pattern pattern=Pattern.compile(strRegex);
-            Matcher matcher=pattern.matcher(nickname);
-            return matcher.find();
-        }
+
 }

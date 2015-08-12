@@ -1,5 +1,7 @@
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,36 +11,83 @@ import java.util.regex.Pattern;
 public class Bank {
     List<Customer> customerList = new LinkedList<>();
 
-    void add(Customer _customer) {
+    public boolean add(Customer _customer) {
+        boolean shouldAddCustomer = shouldAdd(_customer);
 
-        if (isValid(_customer)) {
+        if (shouldAddCustomer) {
+            _customer.setAccount(0.0);
             customerList.add(_customer);
-            System.out.println("Add Succeed");
         }
-        else {
-            System.out.println("Add Failed");
-        }
+        if(shouldAddCustomer)
+            System.out.println("shouldAdd");
+        else
+            System.out.println("shouldNotAdd");
+
+            return shouldAddCustomer;
+
     }
 
-    public boolean isValid(Customer _customer) {
-        String reg = "^[a-z0-9]+$";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(_customer.getNickName());
-        Boolean isValidName = matcher.matches();
-        Boolean isExistName = false;
+    public void withdrawAll(Customer _customer) throws Exception {
+        int index = find(_customer);
+        double currentMoneyInAccount = customerList.get(index).getAccount();
+        if (index != -1) {
+            if(currentMoneyInAccount > 0.0) {
+                customerList.get(find(_customer)).setAccount(0.0);
+                _customer.setAccount(0.0);
+            }
+            else throw new Exception("No Enough Money in Account!");
+        }
+        else throw new Exception("The customer is not exist in the bank!");
+    }
 
+    public void withdraw(Customer _customer,double _moneyWillBeDrawn) throws Exception {
+        int index = find(_customer);
+        double currentMoneyInAccount = customerList.get(index).getAccount();
+        if (index != -1) {
+            if(_moneyWillBeDrawn < currentMoneyInAccount) {
+                customerList.get(find(_customer)).setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
+                _customer.setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
+            }
+            else throw new Exception("No Enough Money in Account!");
+        }
+        else throw new Exception("The customer is not exist in the bank!");
+
+    }
+
+    public void deposit(Customer _customer,double _moneyWillBeDeposited) throws Exception {
+        int index = find(_customer);
+        double currentMoneyInAccount = customerList.get(index).getAccount();
+        if (index != -1) {
+                customerList.get(find(_customer)).setAccount(currentMoneyInAccount + _moneyWillBeDeposited);
+            _customer.setAccount(currentMoneyInAccount +_moneyWillBeDeposited);
+        }
+        else throw new Exception("The customer is not exist in the bank!");
+
+    }
+
+    protected int find(Customer _customer) {
+        int index = 0;
+        for(Customer customer:customerList){
+            if (customer.getNickName().equals(_customer.getNickName()))
+                return index;
+            index++;
+        }
+        return -1;
+    }
+
+    private boolean shouldAdd(Customer _customer) {
+        boolean isNotValidNickName = (_customer != Customer.getInvalidCustomer());
+        boolean isExistName = isExistName(_customer);
+        return  isNotValidNickName && !isExistName;
+    }
+
+    public boolean isExistName(Customer _customer) {
+        boolean isExistName = false;
         for(Customer customer: customerList) {
             if (customer.getNickName().equals(_customer.getNickName()) )
                 isExistName = true;
         }
-
-        if (!isValidName)
-            return false;
-        else if(isExistName)
-            return false;
-        else
-            return true;
-
+        return isExistName;
     }
 
 }

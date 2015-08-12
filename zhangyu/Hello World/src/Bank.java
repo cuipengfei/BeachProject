@@ -24,7 +24,6 @@ public class Bank {
     public String addToBank(Customer customer) {
         if (isValidNickname(customer) && !isRepeative(customer)) {
             this.customers.add(customer);
-            customer.needAccount = true;
             return "add successful";
         } else {
             return "add failed";

@@ -18,16 +18,14 @@ public class CustomerTest {
         bank1.addToBank(customer2);
         bank1.addToBank(customer3);
 
-        if(customer1.needAccount){
-            Account account = new Account(customer1);
-            customer1.needAccount = false;
-            account.deposit(account,300);
+        customer1.myAccount = new Account(customer1);
+        customer1.myAccount.deposit(300);
 
-            try {
-                account.withdraw(account,301);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            customer1.myAccount.withdraw(301);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 }

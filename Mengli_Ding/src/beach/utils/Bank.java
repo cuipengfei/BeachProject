@@ -24,15 +24,15 @@ public class Bank {
             return false;
     }
 
-    public void AddCustomer(Customer customer) {
+    public boolean IsValidCustomer(Customer customer) {
 
         boolean Namelegal = IsNamelegal(customer.getNickname());
         boolean Isrepeat = IsNameRepeat(customer);
         if (Namelegal && !Isrepeat) {
             customerList.add(customer);
-            System.out.println("Customer can be added to bank!");
+            return true;
         } else {
-            System.out.println("Customer can not be added to bank!");
+            return false;
         }
     }
 

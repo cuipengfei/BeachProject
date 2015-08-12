@@ -24,8 +24,7 @@ public class TestCustomer {
         Bank bank = new Bank();
         bank.addToBank(customer1);
 
-        customer1.myAccount = new Account(customer1);
-        assertThat(300,is(customer1.myAccount.deposit(300)));
+        assertThat(300, is(customer1.getMyAccount().deposit(300)));
     }
 
     @Test
@@ -34,25 +33,29 @@ public class TestCustomer {
         Bank bank = new Bank();
         bank.addToBank(customer1);
 
-        customer1.myAccount = new Account(customer1);
-        customer1.myAccount.deposit(300);
-        assertThat(200,is(customer1.myAccount.withdraw(100)));
+        customer1.getMyAccount().deposit(300);
+        assertThat(200,is(customer1.getMyAccount().withdraw(100)));
 
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void should_throw_exception_when_overdraw() throws Exception {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         Bank bank = new Bank();
         bank.addToBank(customer1);
 
-        customer1.myAccount = new Account(customer1);
-        customer1.myAccount.deposit(300);
-
-        try {
-            customer1.myAccount.withdraw(301);
+        customer1.getMyAccount().deposit(300);
+        customer1.getMyAccount().withdraw(301);
+        /*try {
+            customer1.getMyAccount().withdraw(301);
         } catch (Exception e) {
             assertThat(e.getMessage(),is("overdraw"));
-        }
+        }*/
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void should_throw_NullPointerException_when_the_no_added_customer_deposit() throws Exception {
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        customer1.getMyAccount().deposit(300);
     }
 }

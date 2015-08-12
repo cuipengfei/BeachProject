@@ -18,6 +18,6 @@ public class CustomerTest {
 
         assertThat(customer.getAccount(), is(0.0));
     }
-    
+
 
 }

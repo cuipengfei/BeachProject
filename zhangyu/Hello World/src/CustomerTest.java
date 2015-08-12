@@ -12,10 +12,22 @@ public class CustomerTest {
         Customer customer2 = new Customer("zhangyu",sdf.parse("2015-08-12"));
         Customer customer3 = new Customer("ZhangYu",sdf.parse("2015-08-13"));
 
-        Bank bank = new Bank();
+        Bank bank1 = new Bank();
 
-        bank.addToBank(customer1);
-        bank.addToBank(customer2);
-        bank.addToBank(customer3);
+        bank1.addToBank(customer1);
+        bank1.addToBank(customer2);
+        bank1.addToBank(customer3);
+
+        if(customer1.needAccount){
+            Account account = new Account(customer1);
+            customer1.needAccount = false;
+            account.deposit(account,300);
+
+            try {
+                account.withdraw(account,301);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

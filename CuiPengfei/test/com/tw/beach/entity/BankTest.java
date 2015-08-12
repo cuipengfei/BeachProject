@@ -1,11 +1,12 @@
 package com.tw.beach.entity;
 
+import com.tw.beach.entity.requests.InsufficientFundException;
 import org.junit.Test;
 
 import java.util.Date;
 
-import static com.tw.beach.entity.CustomerRequest.deposit;
-import static com.tw.beach.entity.CustomerRequest.withDraw;
+import static com.tw.beach.entity.requests.CustomerRequest.deposit;
+import static com.tw.beach.entity.requests.CustomerRequest.withDraw;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 

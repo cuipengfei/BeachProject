@@ -58,8 +58,8 @@ public class BankTest {
     @Test
     public void shouldBeAbleToDepositMoney() throws Exception {
         //given
-        Bank bank = new Bank();
         Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+        Bank bank = new Bank();
         bank.addCustomer(xiaoming);
 
         //when
@@ -72,8 +72,8 @@ public class BankTest {
     @Test
     public void shouldBeAbleToWithdrawMoney() throws Exception {
         //given
-        Bank bank = new Bank();
         Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+        Bank bank = new Bank();
         bank.addCustomer(xiaoming);
         bank.handleRequest(deposit(xiaoming, 100));
 
@@ -87,8 +87,8 @@ public class BankTest {
     @Test(expected = InsufficientFundException.class)
     public void shouldNotBeAbleToWithdrawMoneyMoreThanBalance() throws Exception {
         //given
-        Bank bank = new Bank();
         Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+        Bank bank = new Bank();
         bank.addCustomer(xiaoming);
         bank.handleRequest(deposit(xiaoming, 100));
 

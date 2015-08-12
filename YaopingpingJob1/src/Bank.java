@@ -1,29 +1,24 @@
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by ppyao on 8/11/15.
  */
-public class Bank {
-
-        LinkedList<Customer> customerLinkedList=new LinkedList<Customer>();
-        private Customer customer;
-        public void addCustomertoBank(Customer customer)
+public class Bank
+{
+    LinkedList<Customer> customerLinkedList=new LinkedList<Customer>();
+    public boolean isAddCustomertoBank(Customer customer)
         {
-            if(customer.getNickname()!=null) {
-                if (this.isCustomerRepeat(customer)) {
-                    customerLinkedList.add(customer);
-                    System.out.println("add success");
-                } else {
-                    System.out.println("the nickname is exist");
-                }
-            }
-            else
+           if(validateNickname(customer)&&isCustomerNotRepeat(customer))
             {
-                System.out.print("the nickname is error");
+                customerLinkedList.add(customer);
+                return true;
             }
-        }
+            return false;
 
-        public  boolean isCustomerRepeat(Customer customer)
+        }
+        private   boolean isCustomerNotRepeat(Customer customer)
         {
             for(Customer customer1:customerLinkedList)
             {
@@ -37,5 +32,14 @@ public class Bank {
             }
             return true;
         }
+       private   boolean validateNickname(Customer customer )
+       {
+           final String strRegex="^[a-z0-9]+$";
+           Pattern pattern=Pattern.compile(strRegex);
+           Matcher matcher=pattern.matcher(customer.getNickname());
+           return matcher.find();
+       }
+
+
     }
 

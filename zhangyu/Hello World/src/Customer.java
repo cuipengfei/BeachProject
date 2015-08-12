@@ -6,6 +6,7 @@ import java.util.Date;
 public class Customer {
     private String nickname;
     private Date dateOFBirth;
+    public boolean needAccount = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;

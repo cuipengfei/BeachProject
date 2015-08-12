@@ -1,20 +1,79 @@
 import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Created by zhenliu on 8/11/15.
  */
 public class MainTest {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws Exception {
 
-        Customer customer1 = new Customer("1liuzhen","1990-09-04");
-        Customer customer2 = new Customer("!liuzhen","1990-09-04");
-        Customer customer3 = new Customer("1liuzhen","1990-09-04");
+        Customer customer1 = Customer.createCustomer("1liuzhen", new Date());
+        Customer customer2 = Customer.createCustomer("!liuzhen", new Date());
+        Customer customer3 = Customer.createCustomer("1liuzhen", new Date());
 
-        Bank bank = new Bank();
+        Bank bank1 = new Bank();
+        Bank bank2 = new Bank();
 
-        bank.add(customer1);
-        bank.add(customer2);
-        bank.add(customer3);
+        bank1.add(customer1);
+        bank1.add(customer2);
+        bank1.add(customer3);
+
+        try{
+            bank1.deposit(customer1, 1000.0);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
+        try{
+            bank1.withdraw(customer1, 100.0);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
+        try{
+            bank1.withdrawAll(customer1);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
+        try{
+            bank1.withdraw(customer1, 100.0);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
+        try{
+            bank1.deposit(customer1, 1000.0);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
+
+        bank2.add(customer1);
+        try{
+            bank2.deposit(customer1, 1000.0);
+        }catch (Exception e)
+        {
+            System.out.println("Throw Exception:"+e);
+        }
+        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
+        System.out.println(customer1.getAccount());
+
 
     }
 }

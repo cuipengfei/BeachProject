@@ -20,7 +20,9 @@ public class Bank {
     }
 
     public void handleRequest(CustomerRequest request) throws InsufficientFundException {
-        findHandler(request.getType()).handle(request);
+        if (customers.contains(request.getCustomer())) {
+            findHandler(request.getType()).handle(request);
+        }
     }
 
     private boolean shouldAdd(Customer customer) {

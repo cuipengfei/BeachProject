@@ -98,4 +98,17 @@ public class BankTest {
         //then
         //an exception should be thrown(see annotation)
     }
+
+    @Test
+    public void shouldNotHandleAnyRequestIfCustomerWasNotAdded() throws Exception {
+        //given customer not added
+        Customer abc = Customer.createCustomer("abc", new Date());
+        Bank bank = new Bank();
+
+        //when
+        bank.handleRequest(deposit(abc, 100));
+
+        //then
+        assertThat(abc.account().balance(), is(0));
+    }
 }

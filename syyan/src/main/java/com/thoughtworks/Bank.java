@@ -1,20 +1,19 @@
 package main.java.com.thoughtworks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
 public class Bank {
 
-    private List<Customer> customerList = new ArrayList<>();
+    public List<Customer> customerList = new ArrayList<>();
 
-    public String addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) {
         if (!contains(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
-            return "add success";
+            return true;
         }
-        return "add failure";
+        return false;
     }
 
     private boolean isValid(String nickName) {
@@ -30,4 +29,5 @@ public class Bank {
         }
         return false;
     }
+
 }

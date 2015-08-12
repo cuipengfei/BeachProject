@@ -1,12 +1,11 @@
 package main.java.com.thoughtworks;
 
-import java.util.Date;
-
+import java.util.*;
 
 
 public class Customer {
-    private String nickName;
-    private Date dateOfBirth;
+    private final String nickName;
+    private final Date dateOfBirth;
 
     public Date getDateOfBirth() {
         return dateOfBirth;
@@ -20,5 +19,6 @@ public class Customer {
         this.nickName = nickName;
         this.dateOfBirth = dateOfBirth;
     }
+
 
 }

@@ -17,7 +17,7 @@ public class BankTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Bank bank = new Bank();
         Customer customer = new Customer("yan123", sdf.parse("2015-08-09"));
-        assertThat("add success", is(bank.addCustomer(customer)));
+        assertTrue(bank.addCustomer(customer));
 
     }
 
@@ -27,7 +27,7 @@ public class BankTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Bank bank = new Bank();
         Customer notValidCustomer = new Customer("YAN", sdf.parse("2015-08-10"));
-        assertThat("add failure", is(bank.addCustomer(notValidCustomer)));
+        assertFalse(bank.addCustomer(notValidCustomer));
     }
 
     @Test
@@ -36,9 +36,9 @@ public class BankTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Bank bank = new Bank();
         Customer customer = new Customer("yan123", sdf.parse("2015-08-09"));
-        assertThat("add success", is(bank.addCustomer(customer)));
+        assertTrue(bank.addCustomer(customer));
         Customer existCustomer = new Customer("yan123", sdf.parse("2015-08-10"));
-        assertThat("add failure", is(bank.addCustomer(existCustomer)));
+        assertFalse(bank.addCustomer(existCustomer));
     }
 
 }

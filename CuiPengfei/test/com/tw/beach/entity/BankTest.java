@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class BankTest {
     @Test
@@ -29,5 +29,15 @@ public class BankTest {
 
         Customer secondAbc = Customer.createCustomer("abc", new Date());
         assertFalse(bank.addCustomer(secondAbc));
+    }
+
+    @Test
+    public void shouldBeAbleToDepositMoney() throws Exception {
+        Bank bank = new Bank();
+        Customer xiaoming = Customer.createCustomer("xiaoming", new Date());
+        bank.addCustomer(xiaoming);
+        bank.deposit(xiaoming, 100);
+
+        assertThat(xiaoming.account().balance(), is(100));
     }
 }

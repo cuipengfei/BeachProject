@@ -25,4 +25,8 @@ public class Bank {
                 .anyMatch(customer ->
                         customer.nickName().equals(newCustomer.nickName()));
     }
+
+    public void deposit(Customer customer, Integer amount) {
+        customer.account().add(amount);
+    }
 }

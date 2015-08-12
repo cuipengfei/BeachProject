@@ -6,4 +6,8 @@ public class Account {
     public Integer balance() {
         return balance;
     }
+
+    public Integer add(Integer amount) {
+        return balance+=amount;
+    }
 }

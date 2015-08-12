@@ -1,5 +1,7 @@
 package com.tw.beach.entity;
 
+import static com.tw.beach.entity.RequestType.WithDraw;
+
 public class CustomerRequest {
     private Customer customer;
     private final RequestType type;
@@ -23,7 +25,11 @@ public class CustomerRequest {
         return amount;
     }
 
-    public static CustomerRequest withDraw(Customer customer, RequestType type, Integer amount) {
-        return new CustomerRequest(customer,type, amount);
+    public static CustomerRequest withDraw(Customer customer, Integer amount) {
+        return new CustomerRequest(customer, WithDraw, amount);
+    }
+
+    public static CustomerRequest deposit(Customer customer, Integer amount) {
+        return new CustomerRequest(customer, RequestType.Deposit, amount);
     }
 }

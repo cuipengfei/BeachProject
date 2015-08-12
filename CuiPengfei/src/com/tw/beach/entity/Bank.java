@@ -26,7 +26,7 @@ public class Bank {
                         customer.nickName().equals(newCustomer.nickName()));
     }
 
-    public void deposit(Customer customer, Integer amount) {
+    private void deposit(Customer customer, Integer amount) {
         customer.account().add(amount);
     }
 
@@ -41,6 +41,8 @@ public class Bank {
     public void handleRequest(CustomerRequest request) throws InsufficientFundException {
         if (request.getType() == RequestType.WithDraw) {
             withDraw(request.getCustomer(), request.getAmount());
+        } else if (request.getType() == RequestType.Deposit) {
+            deposit(request.getCustomer(), request.getAmount());
         }
     }
 }

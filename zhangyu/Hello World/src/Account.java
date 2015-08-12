@@ -3,11 +3,6 @@
  */
 public class Account {
     private int balance;
-    private Customer customer;
-
-    public Account(Customer customer) {
-        this.customer = customer;
-    }
 
     public int getBalance() {
         return balance;

@@ -3,6 +3,8 @@ package com.tw.beach.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tw.beach.entity.Handlers.findHandler;
+
 public class Bank {
     private List<Customer> customers = new ArrayList<>();
 
@@ -12,6 +14,10 @@ public class Bank {
             customers.add(customer);
         }
         return shouldAddCustomer;
+    }
+
+    public void handleRequest(CustomerRequest request) throws InsufficientFundException {
+        findHandler(request.getType()).handle(request);
     }
 
     private boolean shouldAdd(Customer customer) {
@@ -24,25 +30,5 @@ public class Bank {
         return !customers.stream()
                 .anyMatch(customer ->
                         customer.nickName().equals(newCustomer.nickName()));
-    }
-
-    private void deposit(Customer customer, Integer amount) {
-        customer.account().add(amount);
-    }
-
-    private void withDraw(Customer customer, Integer amount) throws InsufficientFundException {
-        if (amount <= customer.account().balance()) {
-            customer.account().minus(amount);
-        } else {
-            throw new InsufficientFundException();
-        }
-    }
-
-    public void handleRequest(CustomerRequest request) throws InsufficientFundException {
-        if (request.getType() == RequestType.WithDraw) {
-            withDraw(request.getCustomer(), request.getAmount());
-        } else if (request.getType() == RequestType.Deposit) {
-            deposit(request.getCustomer(), request.getAmount());
-        }
     }
 }

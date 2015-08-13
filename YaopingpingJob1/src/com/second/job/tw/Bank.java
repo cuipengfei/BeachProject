@@ -8,23 +8,16 @@ import java.util.regex.Pattern;
  * Created by ppyao on 8/12/15.
  */
 public class Bank {
-    LinkedList<Account> customerLinkedList=new LinkedList<Account>();
-    Account potentialAccount;
-    public Account addCustomertoBank(Customer customer,double balance)
+    LinkedList<Customer> customerLinkedList=new LinkedList<Customer>();
+
+    public boolean isAddCustomerValid(Customer customer)
     {
         if(validateNickname(customer)&&isCustomerNotRepeat(customer))
         {
-            potentialAccount=new Account(customer.getNickname(),customer.getDateofBirth(),balance);
-            customerLinkedList.add(potentialAccount);
-            System.out.println("开户成功");
-            System.out.println("开户本金"+potentialAccount.getBalance());
-            return potentialAccount;
+            customerLinkedList.add(customer);
+            return true;
         }
-        else
-        {
-            System.out.println("输入的账户名不准确或者是该用户已经存在");
-            return null;
-        }
+        return false;
 
 
     }
@@ -50,5 +43,26 @@ public class Bank {
         return matcher.find();
     }
 
+
+    public double despoitMoney(Customer customer, double money) {
+        if(money<0)
+            return customer.getAccount().getBalance();
+        else
+        {
+            Double currentBalance=customer.getAccount().addBalance(money);
+            customer.getAccount().setBalance(currentBalance);
+            return currentBalance;
+        }
+    }
+    public double withdrawMoney(Customer customer,double money) throws OverdraftException
+    {
+        double withdrawBalance=customer.getAccount().minusBalance(money);
+        if(withdrawBalance>=0)
+        {
+            customer.getAccount().setBalance(withdrawBalance);
+            return withdrawBalance;
+        }else throw new OverdraftException();
+
+    }
 
 }

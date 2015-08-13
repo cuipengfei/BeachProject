@@ -10,6 +10,7 @@ import java.util.Date;
 public class Customer {
     private String nickname;
     private Date dateofBirth1;
+    private final Account account = new Account();
 
     public Customer(String nickname, Date dateofBirth) {
         this.nickname = nickname;
@@ -24,42 +25,8 @@ public class Customer {
     public Date getDateofBirth() {
         return dateofBirth1;
     }
-
-    // deposit money
-    public double depositMoney(Account account, double money) {
-        double tempBalance;
-        if (money < 0) {
-            System.out.println("please input the right money");
-            return account.getBalance();
-        } else {
-            tempBalance=account.getBalance()+money;
-            System.out.println("tempBalance  "+tempBalance);
-            account.setBalance(tempBalance);
-            return tempBalance;
-        }
+    public Account getAccount() {
+        return account;
     }
-    public void withdrawAllMoney(Account account)
-    {
-        try {
-            account.withdrawMoney(account,account.getBalance());
-            System.out.println("Are you try to withdraw your balance!");
-            System.out.println(account.getBalance());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    //withdraw money
-    public double withdrawMoney(Account account, double money) throws Exception {
-        double currrentBalance=account.getBalance() - money;
-        if (currrentBalance > 0||currrentBalance==0) {
-            account.setBalance(currrentBalance);
-            System.out.println("the balacne is  " + currrentBalance);
-            return currrentBalance;
-        } else throw new Exception("Your account balance is overdraw");
-
-    }
-
 
 }

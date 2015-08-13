@@ -12,7 +12,6 @@ public class MainTest {
         Customer customer3 = Customer.createCustomer("1liuzhen", new Date());
 
         Bank bank1 = new Bank();
-        Bank bank2 = new Bank();
 
         bank1.add(customer1);
         bank1.add(customer2);
@@ -24,7 +23,6 @@ public class MainTest {
         {
             System.out.println("Throw Exception:"+e);
         }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
         System.out.println(customer1.getAccount());
 
         try{
@@ -33,7 +31,6 @@ public class MainTest {
         {
             System.out.println("Throw Exception:"+e);
         }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
         System.out.println(customer1.getAccount());
 
         try{
@@ -42,7 +39,6 @@ public class MainTest {
         {
             System.out.println("Throw Exception:"+e);
         }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
         System.out.println(customer1.getAccount());
 
         try{
@@ -51,29 +47,7 @@ public class MainTest {
         {
             System.out.println("Throw Exception:"+e);
         }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
         System.out.println(customer1.getAccount());
-
-        try{
-            bank1.deposit(customer1, 1000.0);
-        }catch (Exception e)
-        {
-            System.out.println("Throw Exception:"+e);
-        }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
-        System.out.println(customer1.getAccount());
-
-
-        bank2.add(customer1);
-        try{
-            bank2.deposit(customer1, 1000.0);
-        }catch (Exception e)
-        {
-            System.out.println("Throw Exception:"+e);
-        }
-        System.out.println(bank1.customerList.get(bank1.find(customer1)).getAccount());
-        System.out.println(customer1.getAccount());
-
 
     }
 }

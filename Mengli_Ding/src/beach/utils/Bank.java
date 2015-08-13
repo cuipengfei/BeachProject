@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Bank {
 
-    List<Customer> customerList = new ArrayList<>();
+    List<Customer> customerList = new ArrayList<Customer>();
 
     public boolean IsNamelegal(String name){
         if (name == null) return false;
@@ -29,12 +29,18 @@ public class Bank {
         boolean Namelegal = IsNamelegal(customer.getNickname());
         boolean Isrepeat = IsNameRepeat(customer);
         if (Namelegal && !Isrepeat) {
-            customerList.add(customer);
             return true;
         } else {
             return false;
         }
     }
 
+    public boolean addCustomer(Customer customer){
+        boolean shouldAddCustomer = IsValidCustomer(customer);
+        if (shouldAddCustomer){
+            customerList.add(customer);
+        }
+        return shouldAddCustomer;
+    }
     }
 

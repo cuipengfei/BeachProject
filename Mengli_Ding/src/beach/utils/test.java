@@ -28,7 +28,5 @@ public class test {
         else
             System.out.println("Customer can not be added to bank!");
 
-
-
     }
 }

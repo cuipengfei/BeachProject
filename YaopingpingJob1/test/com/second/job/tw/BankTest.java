@@ -1,9 +1,13 @@
 package com.second.job.tw;
 
+import com.second.job.tw.request.CustomerRequest;
+import com.second.job.tw.request.RequestType;
 import org.junit.Test;
 
 import java.util.Date;
 
+import static com.second.job.tw.request.CustomerRequest.despoitRequst;
+import static com.second.job.tw.request.CustomerRequest.withdrawRequest;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -48,40 +52,50 @@ public class BankTest {
         assertFalse(isSecondSuccess);
     }
     @Test
-    public void bankShouldDespoitMoney()
-    {
+    public void bankShouldDespoitMoney() throws OverdraftException {
         //given
         Bank bank=new Bank();
         Customer customer=new Customer("yaoping",new Date());
         bank.isAddCustomerValid(customer);
         //when
-        double despoitMoney=bank.despoitMoney(customer, 100.0);
+        bank.handleRequest(despoitRequst(customer,100.0));
         //then
         assertThat(customer.getAccount().getBalance(), is(100.0));
     }
+     @Test
+     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance () throws Exception {
+         //given
+         Bank bank=new Bank();
+         Customer customer=new Customer("yaoping",new Date());
+         bank.isAddCustomerValid(customer);
+         //when
+         bank.handleRequest(despoitRequst(customer,100.0));
+          bank.handleRequest(withdrawRequest(customer,50.0));
+         //then
+         assertThat(customer.getAccount().getBalance(),is(50.0));
+     }
+     @Test(expected = OverdraftException.class)
+     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance () throws OverdraftException {
+         //given
+         Bank bank=new Bank();
+         Customer customer=new Customer("yaoping",new Date());
+         bank.isAddCustomerValid(customer);
+         //when
+         bank.handleRequest(despoitRequst(customer,100.0));
+         bank.handleRequest(withdrawRequest(customer,150.0));
+
+
+     }
     @Test
-    public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance () throws Exception {
-        //given
+    public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd()throws OverdraftException
+    {
+        //  given
         Bank bank=new Bank();
         Customer customer=new Customer("yaoping",new Date());
-        bank.isAddCustomerValid(customer);
         //when
-        bank.despoitMoney(customer,100.0);
-        double withdrawMoney=bank.withdrawMoney(customer, 50.0);
-
+        bank.handleRequest(despoitRequst(customer, 100.0));
         //then
-        assertThat(customer.getAccount().getBalance(),is(50.0));
-    }
-    @Test(expected = OverdraftException.class)
-    public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance () throws OverdraftException {
-        //given
-        Bank bank=new Bank();
-        Customer customer=new Customer("yaoping",new Date());
-        bank.isAddCustomerValid(customer);
-        //when
-        bank.despoitMoney(customer,100.0);
-        double withdrawMoney=bank.withdrawMoney(customer,150.0);
-
+        assertThat(customer.getAccount().getBalance(),is(0.0));
 
     }
 

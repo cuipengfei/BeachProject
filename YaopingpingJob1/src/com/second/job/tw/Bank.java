@@ -1,8 +1,15 @@
 package com.second.job.tw;
 
+import com.second.job.tw.request.CustomerRequest;
+import com.second.job.tw.request.RequestType;
+import handle.CustomerHandler;
+import handle.Handlers;
+
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.sun.org.apache.bcel.internal.generic.InstructionList.findHandle;
 
 /**
  * Created by ppyao on 8/12/15.
@@ -43,26 +50,9 @@ public class Bank {
         return matcher.find();
     }
 
-
-    public double despoitMoney(Customer customer, double money) {
-        if(money<0)
-            return customer.getAccount().getBalance();
-        else
-        {
-            Double currentBalance=customer.getAccount().addBalance(money);
-            customer.getAccount().setBalance(currentBalance);
-            return currentBalance;
+    public void handleRequest(CustomerRequest request) throws OverdraftException {
+        if (customerLinkedList.contains(request.getCustomer())) {
+            Handlers.findHandle(request.getType()).handlers(request);
         }
     }
-    public double withdrawMoney(Customer customer,double money) throws OverdraftException
-    {
-        double withdrawBalance=customer.getAccount().minusBalance(money);
-        if(withdrawBalance>=0)
-        {
-            customer.getAccount().setBalance(withdrawBalance);
-            return withdrawBalance;
-        }else throw new OverdraftException();
-
-    }
-
 }

@@ -1,12 +1,15 @@
 package main.java.com.thoughtworks;
 
+import main.java.com.thoughtworks.exception.OverdrawException;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
 
 public class Bank {
 
-    public List<Customer> customerList = new ArrayList<>();
+    private List<Customer> customerList = new ArrayList<>();
+    private final Map<Customer, Integer> accounts = new HashMap<>();
 
     public boolean addCustomer(Customer customer) {
         if (!contains(customer) && isValid(customer.getNickName())) {
@@ -28,6 +31,25 @@ public class Bank {
             }
         }
         return false;
+    }
+
+    public int withdraw(Customer customer, int money) throws OverdrawException {
+        if (customerList.contains(customer)) {
+            if (accounts.get(customer) < money) throw new OverdrawException();
+            if (accounts.containsKey(customer)) {
+                accounts.put(customer, accounts.get(customer) - money);
+            } else accounts.put(customer, money);
+        } else accounts.put(customer, 0);
+        return accounts.get(customer);
+    }
+
+    public int deposit(Customer customer, int money) {
+        if (customerList.contains(customer)) {
+            if (accounts.containsKey(customer)) {
+                accounts.put(customer, accounts.get(customer) + money);
+            } else accounts.put(customer, money);
+        } else accounts.put(customer, 0);
+        return accounts.get(customer);
     }
 
 }

@@ -17,11 +17,6 @@ public class Main {
         System.out.println(customer2.getNickName() + "   " + bank.addCustomer(customer2));
         System.out.println(existCustomer.getNickName() + "   " + bank.addCustomer(existCustomer));
 
-        Account account = new Account();
 
-        System.out.println(customer.getNickName() + "'s bank balance :" + account.deposit(customer, 200));
-        System.out.print(customer.getNickName() + "'s bank balance :" + account.withdraw(customer, 100));
-        System.out.print(customer.getNickName() + "'s bank balance :" + account.withdraw(customer, 200));
-        System.out.println(customer2.getNickName() + "'s bank balance :" + account.deposit(customer2, 100));
     }
 }

@@ -1,5 +1,7 @@
 package handle;
 
+import request.Type;
+
 import java.util.HashMap;
 
 /**

@@ -1,4 +1,4 @@
-import handle.Type;
+import request.Type;
 import org.junit.Test;
 import request.Bank;
 import request.Customer;

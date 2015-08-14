@@ -1,9 +1,8 @@
-import handle.Type;
+import request.Type;
 import request.Bank;
 import request.Customer;
 import request.CustomerRequest;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**

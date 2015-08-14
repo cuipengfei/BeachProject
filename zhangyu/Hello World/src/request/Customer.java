@@ -1,5 +1,7 @@
 package request;
 
+import handle.Account;
+
 import java.util.Date;
 
 /**
@@ -24,6 +26,5 @@ public class Customer {
     public void setMyAccount(Account myAccount) {
         this.myAccount = myAccount;
     }
-
 }
 

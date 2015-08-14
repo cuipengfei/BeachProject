@@ -1,7 +1,5 @@
 package request;
 
-import handle.Type;
-
 /**
  * Created by yuzhang on 8/14/15.
  */
@@ -21,7 +19,6 @@ public class CustomerRequest {
     }
 
     public Customer getCustomer() {
-
         return customer;
     }
 

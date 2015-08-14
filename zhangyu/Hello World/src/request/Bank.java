@@ -1,8 +1,7 @@
 package request;
 
 import handle.Handlers;
-import request.Account;
-import request.Customer;
+import handle.Account;
 
 import java.util.ArrayList;
 import java.util.List;

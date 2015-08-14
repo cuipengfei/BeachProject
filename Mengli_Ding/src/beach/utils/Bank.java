@@ -1,7 +1,9 @@
 package beach.utils;
 
+import beach.utils.requests.CustomerRequest;
 import java.util.ArrayList;
 import java.util.List;
+import static beach.utils.handlers.Handlers.findHandler;
 
 /**
  * Created by mlding on 8/11/15.
@@ -10,13 +12,7 @@ public class Bank {
 
     List<Customer> customerList = new ArrayList<Customer>();
 
-    public boolean IsNamelegal(String name){
-        if (name == null) return false;
-        return name.matches("^[a-z0-9]+$");
-    }
-
-
-    public boolean IsNameRepeat(Customer customer) {
+    private boolean IsNameRepeat(Customer customer) {
         for (Customer temp : customerList) {
             if (temp.getNickname().equals(customer.getNickname()))
                 return true;
@@ -24,23 +20,37 @@ public class Bank {
             return false;
     }
 
-    public boolean IsValidCustomer(Customer customer) {
-
-        boolean Namelegal = IsNamelegal(customer.getNickname());
+    private boolean IsContains(Customer customer) {
+        boolean Namelegal = (customer != Customer.invalidCustomer());
         boolean Isrepeat = IsNameRepeat(customer);
-        if (Namelegal && !Isrepeat) {
-            return true;
-        } else {
-            return false;
-        }
+        return Namelegal && !Isrepeat;
     }
 
     public boolean addCustomer(Customer customer){
-        boolean shouldAddCustomer = IsValidCustomer(customer);
-        if (shouldAddCustomer){
+        boolean shouldAddCustomer = IsContains(customer);
+        if (shouldAddCustomer)
             customerList.add(customer);
-        }
         return shouldAddCustomer;
     }
+
+//    public void depositMoney(Customer customer,int bill){
+//        if (customerList.contains(customer)){
+//            customer.getAccount().addMoney(bill);
+//        }
+//        else customer.getAccount().addMoney(0);
+//    }
+//
+//    public void withdrawMoney(Customer customer,int bill) {
+//        if (customerList.contains(customer)){
+//            customer.getAccount().minusMoney(bill);
+//        }
+//        else customer.getAccount().minusMoney(0);
+//    }
+
+    public void handleRequest(CustomerRequest request){
+        if (customerList.contains(request.getCustomer())){
+            findHandler(request.getType());
+        }
     }
+}
 

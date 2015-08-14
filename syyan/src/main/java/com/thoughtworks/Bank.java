@@ -48,9 +48,9 @@ public class Bank {
         return customer.getBalance();
     }
 
-    public double handle(Customer customer, RequestType requestType, double balance) throws OverdrawException {
-        if (requestType == RequestType.Deposit)
-            return deposit(customer, balance);
-        else return withdraw(customer, balance);
+    public double handle(CustomerRequest request) throws OverdrawException {
+        if (request.getRequestType() == RequestType.Deposit)
+            return deposit(request.getCustomer(), request.getBalance());
+        else return withdraw(request.getCustomer(), request.getBalance());
     }
 }

@@ -33,19 +33,24 @@ public class Bank {
         return false;
     }
 
-    public int withdraw(Customer customer, int money) throws OverdrawException {
+    private double withdraw(Customer customer, double money) throws OverdrawException {
         if (customerList.contains(customer)) {
             if (customer.getBalance() < money) throw new OverdrawException();
-                customer.setBalance(customer.getBalance()-money);
+            customer.setBalance(customer.getBalance() - money);
         }
         return customer.getBalance();
     }
 
-    public int deposit(Customer customer, int money) {
+    private double deposit(Customer customer, double money) {
         if (customerList.contains(customer)) {
             customer.setBalance(customer.getBalance() + money);
         }
         return customer.getBalance();
     }
 
+    public double handle(Customer customer, RequestType requestType, double balance) throws OverdrawException {
+        if (requestType == RequestType.Deposit)
+            return deposit(customer, balance);
+        else return withdraw(customer, balance);
+    }
 }

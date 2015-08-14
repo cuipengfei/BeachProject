@@ -2,6 +2,8 @@ package main.java.com.thoughtworks;
 
 import java.util.Date;
 
+import static main.java.com.thoughtworks.RequestType.Deposit;
+import static main.java.com.thoughtworks.RequestType.Withdraw;
 import static org.junit.Assert.*;
 
 import main.java.com.thoughtworks.exception.OverdrawException;
@@ -39,11 +41,11 @@ public class BankTest {
     }
 
     @Test
-    public void should_deposit_money_when_customer_is_valid() throws Exception {
+    public void should_deposit_money_when_customer_is_valid() throws Exception, OverdrawException {
         Customer syyan = new Customer("syyan123", new Date());
         Bank bank = new Bank();
         bank.addCustomer(syyan);
-        assertThat(bank.deposit(syyan, 100), is(100));
+        assertThat(bank.handle(syyan, Deposit,100d), is(100d));
     }
 
     @Test
@@ -51,8 +53,8 @@ public class BankTest {
         Customer syyan = new Customer("syyan123", new Date());
         Bank bank = new Bank();
         bank.addCustomer(syyan);
-        bank.deposit(syyan, 100);
-        assertThat(bank.withdraw(syyan, 100), is(0));
+        bank.handle(syyan, Deposit, 100d);
+        assertThat(bank.handle(syyan, Withdraw, 100d), is(0d));
     }
 
     @Test(expected = OverdrawException.class)
@@ -60,22 +62,22 @@ public class BankTest {
         Customer syyan = new Customer("syyan123", new Date());
         Bank bank = new Bank();
         bank.addCustomer(syyan);
-        bank.deposit(syyan, 100);
-        bank.withdraw(syyan, 200);
+        bank.handle(syyan, Deposit,100d);
+        bank.handle(syyan, Withdraw, 200d);
     }
     @Test
     public void should_not_withdraw_money_when_customer_is_not_exist() throws Exception, OverdrawException {
         Customer unexist = new Customer("unexist", new Date());
         Bank bank = new Bank();
 
-        assertThat(bank.withdraw(unexist, 100), is(0));
+        assertThat(bank.handle(unexist, Withdraw, 100d), is(0d));
     }
     @Test
     public void should_not_deposit_money_when_customer_is_not_exist() throws Exception, OverdrawException {
         Customer unexist = new Customer("unexist", new Date());
         Bank bank = new Bank();
 
-        assertThat(bank.deposit(unexist, 100), is(0));
+        assertThat(bank.handle(unexist, Deposit,100d), is(0d));
     }
 
 }

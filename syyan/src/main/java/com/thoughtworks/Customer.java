@@ -6,13 +6,13 @@ import java.util.*;
 public class Customer {
     private final String nickName;
     private final Date dateOfBirth;
-    private  int balance;
+    private  double balance;
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

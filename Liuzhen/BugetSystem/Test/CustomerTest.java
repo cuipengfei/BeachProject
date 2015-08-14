@@ -25,11 +25,13 @@ public class CustomerTest {
     public void should_deposit_successfully_when_some_money_be_deposited_in_account() throws Exception {
         Bank bank = new Bank();
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
+        //RequstType request= deposit;
 
         bank.add(customer);
-        bank.deposit(customer, 1000.0);
+        //bank.deposit(customer, 1000.0);
+        bank.handleRequest(customer, deposit, 1000.0);
 
-        assertThat(customer.getAccount(),is(1000.0));
+        assertThat(customer.getAccount(), is(1000.0));
 
     }
 
@@ -39,8 +41,10 @@ public class CustomerTest {
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
 
         bank.add(customer);
-        bank.deposit(customer, 1000.0);
-        bank.withdrawAll(customer);
+        //bank.deposit(customer, 1000.0);
+        //bank.withdrawAll(customer);
+        bank.handleRequest(customer,deposit,1000.0);
+        bank.handleRequest(customer,withdrawAll);
 
         assertThat(customer.getAccount(), is(0.0));
     }
@@ -51,8 +55,10 @@ public class CustomerTest {
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
 
         bank.add(customer);
-        bank.deposit(customer, 1000.0);
-        bank.withdraw(customer, 900.0);
+        //bank.deposit(customer, 1000.0);
+        //bank.withdraw(customer, 900.0);
+        bank.handleRequest(customer, deposit, 1000.0);
+        bank.handleRequest(customer, withdraw, 1000.0);
 
         assertThat(customer.getAccount(), is(100.0));
     }
@@ -71,7 +77,10 @@ public class CustomerTest {
         thrown.expect(Exception.class);
         thrown.expectMessage("No Enough Money in Account!");
 
-        bank.deposit(customer, 1000.0);
-        bank.withdraw(customer, 1100.0);
+        //bank.deposit(customer, 1000.0);
+        //bank.withdraw(customer, 1100.0);
+        bank.handleRequest(customer,deposit,1000.0);
+        bank.handleRequest(customer,withdraw,1100.0);
+
     }
 }

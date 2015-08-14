@@ -1,12 +1,8 @@
 package Handler;
 
 import Request.RequestType;
-
 import java.util.HashMap;
 
-/**
- * Created by zhenliu on 8/14/15.
- */
 public class Handlers {
     private static final HashMap<RequestType,RequestHandler> requestHandlerHashMap = new HashMap<RequestType,RequestHandler> (){
         {

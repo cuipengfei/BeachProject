@@ -2,9 +2,6 @@ package Request;
 
 import Src.Customer;
 
-/**
- * Created by zhenliu on 8/14/15.
- */
 public class CustomerRequest {
     private Customer customer;
     private RequestType requestType;

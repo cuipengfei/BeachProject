@@ -3,9 +3,6 @@ package Handler;
 import Request.CustomerRequest;
 import Src.Customer;
 
-/**
- * Created by zhenliu on 8/14/15.
- */
 public class DepositHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) {

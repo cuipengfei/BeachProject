@@ -1,14 +1,14 @@
 import org.junit.Test;
-
+import request.Bank;
+import request.Customer;
 import java.text.SimpleDateFormat;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 /**
  * Created by yuzhang on 8/12/15.
  */
-public class TestCustomer {
+public class CustomerTest {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Test

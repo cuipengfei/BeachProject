@@ -1,3 +1,9 @@
+package request;
+
+import handle.Handlers;
+import request.Account;
+import request.Customer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +35,11 @@ public class Bank {
         } else {
             return "add failed";
         }
+    }
+
+    public int handleRequest(CustomerRequest request) throws Exception {
+        Handlers.findHandler(request.getType()).handle(request);
+        return request.getCustomer().getMyAccount().getBalance();
     }
 
 }

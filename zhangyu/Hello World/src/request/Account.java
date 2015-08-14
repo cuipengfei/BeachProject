@@ -1,3 +1,5 @@
+package request;
+
 /**
  * Created by yuzhang on 8/12/15.
  */
@@ -6,10 +8,6 @@ public class Account {
 
     public int getBalance() {
         return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
     }
 
     public int deposit(int num){

@@ -21,7 +21,6 @@ public class CustomerRequest {
     }
 
     public CustomerRequest(Customer customer, RequestType requestType, double balance) {
-
         this.customer = customer;
         this.requestType = requestType;
         this.balance = balance;

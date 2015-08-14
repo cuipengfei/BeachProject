@@ -11,6 +11,8 @@ public class Customer {
     private String nickname;
     private Date dateOFBirth;
     private Account myAccount;
+    private String emailAddress = nickname+"@bank.com";
+    private String emailContent;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
@@ -23,8 +25,14 @@ public class Customer {
 
     public Account getMyAccount() {return myAccount;}
 
-    public void setMyAccount(Account myAccount) {
-        this.myAccount = myAccount;
-    }
+    public void setMyAccount(Account myAccount) {this.myAccount = myAccount;}
+
+    public String getEmailAddress() {return emailAddress;}
+
+    public void setEmailAddress(String emailAddress) {this.emailAddress = emailAddress;}
+
+    public String getEmailContent() {return emailContent;}
+
+    public void setEmailContent(String emailContent) {this.emailContent = emailContent;}
 }
 

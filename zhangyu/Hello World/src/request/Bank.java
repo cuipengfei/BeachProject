@@ -26,10 +26,16 @@ public class Bank {
         return false;
     }
 
+ /*   private boolean isValidEmailAddress(Customer customer) {
+        String emailAdress = customer.getEmailAddress();
+        return emailAdress.matches("^[/w-]+(/.[/w-]+)*@[/w-]+(/.[/w-]+)+$");
+    }*/
+
     public String addToBank(Customer customer) {
         if (isValidNickname(customer) && !isRepeative(customer)) {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
+            sendEmail(customer);
             return "add successful";
         } else {
             return "add failed";
@@ -41,4 +47,7 @@ public class Bank {
         return request.getCustomer().getMyAccount().getBalance();
     }
 
+    public void sendEmail(Customer customer){
+            customer.setEmailContent("Dear "+customer.getNickname()+" , Welcome to bank");
+    }
 }

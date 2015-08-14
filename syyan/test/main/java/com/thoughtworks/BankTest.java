@@ -2,9 +2,8 @@ package main.java.com.thoughtworks;
 
 import java.util.Date;
 
-
-import static main.java.com.thoughtworks.Bank.CustomerRequest.deposit;
-import static main.java.com.thoughtworks.Bank.CustomerRequest.withdraw;
+import static main.java.com.thoughtworks.requests.CustomerRequest.deposit;
+import static main.java.com.thoughtworks.requests.CustomerRequest.withdraw;
 import static org.junit.Assert.*;
 
 import main.java.com.thoughtworks.exception.OverdrawException;
@@ -78,6 +77,16 @@ public class BankTest {
 
         bank.handleRequest(deposit(unexist, 100));
         assertThat(unexist.getBalance(), is(0d));
+    }
+
+    @Test
+    public void should_send_email_when_customer_is_added() {
+        Customer syyan123 = new Customer("syyan123", new Date());
+        Bank bank = new Bank();
+        bank.addCustomer(syyan123);
+        assertThat(syyan123.getEmailBox().getMessage(), is("Dear syyan123, Welcome to the Bank"));
+        assertThat(syyan123.getEmailAddress(), is("syyan123@thebank.com"));
+
     }
 
 }

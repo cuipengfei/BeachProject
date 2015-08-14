@@ -24,18 +24,18 @@ public class BankTest {
         boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
         //then
         assertTrue(isSuccess);
-    }
 
+    }
     @Test
-    public void bankShouldUnacceptCustomerWhenNicknameValid() {
+    public void bankShouldUnacceptCustomerWhenNicknameInValidate() {
         //given
         Bank bank = new Bank();
         Customer customer = new Customer("Yaoping", new Date());
         //when
         boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
-        //then
-        assertFalse(isSuccess);
 
+        // then
+        assertFalse(isSuccess);
     }
 
     @Test

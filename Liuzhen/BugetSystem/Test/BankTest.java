@@ -65,4 +65,13 @@ public class BankTest {
 
         bank.handleRequest(CustomerRequest.deposit(customer, 1000.0));
     }
+
+    @Test
+    public void should_send_welcome_message_when_add_customer_successfully() throws Exception {
+        Bank bank = new Bank();
+        Customer customer = Customer.createCustomer("arollalz",new Date());
+        bank.add(customer);
+
+        assertEquals(customer.getMessage(),"Dear" + customer.getNickName() + ", Welcome to the Bank!");
+    }
 }

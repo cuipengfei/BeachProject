@@ -1,7 +1,7 @@
 package main.java.com.thoughtworks;
 
 import main.java.com.thoughtworks.exception.OverdrawException;
-import main.java.com.thoughtworks.requests.RequestType;
+import main.java.com.thoughtworks.requests.CustomerRequest;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,10 +13,10 @@ public class Bank {
 
     private List<Customer> customerList = new ArrayList<>();
 
-
     public boolean addCustomer(Customer customer) {
         if (!isExist(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
+            sendEmail(customer);
             return true;
         }
         return false;
@@ -41,34 +41,9 @@ public class Bank {
         return false;
     }
 
-    public static class CustomerRequest {
-        private Customer customer;
-        private RequestType requestType;
-        private double balance;
-
-        public Customer getCustomer() {
-            return customer;
-        }
-
-        public RequestType getRequestType() {
-            return requestType;
-        }
-
-        public double getBalance() {
-            return balance;
-        }
-
-        public CustomerRequest(Customer customer, RequestType requestType, double balance) {
-            this.customer = customer;
-            this.requestType = requestType;
-            this.balance = balance;
-        }
-
-        public static CustomerRequest withdraw(Customer customer, double balance) {
-            return  new CustomerRequest(customer,RequestType.Withdraw,balance);
-        }
-        public static CustomerRequest deposit(Customer customer, double balance) {
-            return  new CustomerRequest(customer,RequestType.Deposit,balance);
-        }
+    private void sendEmail(Customer customer) {
+        customer.setEmailBox(new EmailBox());
+        customer.getEmailBox().setMessage("Dear " + customer.getNickName() + ", Welcome to the Bank");
+        customer.setEmailAddress(customer.getNickName()+"@thebank.com");
     }
 }

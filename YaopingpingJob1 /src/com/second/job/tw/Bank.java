@@ -1,10 +1,10 @@
 package com.second.job.tw;
 
+import com.second.job.tw.handle.CustomerHandler;
+import com.second.job.tw.handle.DespoitHandler;
+import com.second.job.tw.handle.WithdrawHandler;
 import com.second.job.tw.request.CustomerRequest;
 import com.second.job.tw.request.RequestType;
-import handle.CustomerHandler;
-import handle.DespoitHandler;
-import handle.WithdrawHandler;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,19 +27,28 @@ public class Bank {
     public boolean AddCustomertoBankwhenValid(Customer customer) {
         if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
+            sendWelcomeMessage(customer);
             return true;
         }
         return false;
     }
 
+    private Mail sendWelcomeMessage(Customer customer) {
+        String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
+        if (validateEmail(customer)) {
+            Mail mail = new Mail(customer, message);
+            customer.setMail(mail);
+            return mail;
+        }
+        return null;
+    }
+
+
     private boolean isCustomerNotRepeat(Customer customer) {
         for (Customer customer1 : customerLinkedList) {
-
-            if (customer1.getNickname().equals(customer.getNickname())) {
+            if (customer.getNickname().equals(customer1.getNickname())) {
                 return false;
-
             }
-
         }
         return true;
     }
@@ -49,6 +58,11 @@ public class Bank {
         Pattern pattern = Pattern.compile(strRegex);
         Matcher matcher = pattern.matcher(customer.getNickname());
         return matcher.find();
+    }
+
+    private boolean validateEmail(Customer customer) {
+        return customer.getEmailAddress().matches("^[_a-z0-9-]+([.][_a-z0-9-]+)*@[a-z-]+([.][a-z-]+)*$");
+
     }
 
     public void handleRequest(CustomerRequest request) throws OverdraftException {

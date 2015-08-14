@@ -1,6 +1,7 @@
 package Src;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,7 @@ public class Customer {
     private final String nickName;
     private final Date dateOfBirth;
     private double account = 0.0;
+    private String message ="";
 
     private Customer(String _nickName, Date _dateOfBirth)  {
         nickName = _nickName;
@@ -45,6 +47,14 @@ public class Customer {
 
     public double getAccount() {
         return account;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

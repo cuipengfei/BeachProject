@@ -1,13 +1,7 @@
 package beach.utils;
 
-import beach.utils.Account;
-import beach.utils.Bank;
-import beach.utils.Customer;
+import beach.utils.requests.InsufficientFundException;
 import org.junit.Test;
-
-import javax.naming.InsufficientResourcesException;
-import java.text.SimpleDateFormat;
-
 import static beach.utils.requests.CustomerRequest.deposit;
 import static beach.utils.requests.CustomerRequest.withdraw;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,10 +61,8 @@ public class BankTest {
         Customer customer = createValidCustomer("mike", "1993-08-09");
         Bank bank = new Bank();
         bank.addCustomer(customer);
-//        bank.depositMoney(customer,5);
-        bank.handleRequest(deposit(customer,5));
-
-        assertThat(customer.getAccount().getMoney(), is(5));
+        bank.handleRequest(deposit(customer,2));
+        assertThat(customer.getAccount().getMoney(), is(7));
     }
 
     @Test
@@ -78,18 +70,16 @@ public class BankTest {
         Bank bank = new Bank();
         Customer customer = createValidCustomer("mike", "1993-08-09");
         bank.addCustomer(customer);
-//        bank.withdrawMoney(customer,1);
         bank.handleRequest(withdraw(customer,1));
 
         assertThat(customer.getAccount().getMoney(), is(4));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = InsufficientFundException.class)
     public void canNotWithdrawMoneyGreaterThanBalance() throws Exception {
         Bank bank = new Bank();
         Customer customer = createValidCustomer("mike", "1993-08-09");
         bank.addCustomer(customer);
-//        bank.withdrawMoney(customer,6);
         bank.handleRequest(withdraw(customer,6));
 
         assertThat(customer.getAccount().getMoney(), is(5));

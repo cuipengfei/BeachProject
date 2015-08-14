@@ -1,6 +1,8 @@
 package beach.utils;
 
 import beach.utils.requests.CustomerRequest;
+import beach.utils.requests.InsufficientFundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import static beach.utils.handlers.Handlers.findHandler;
@@ -33,23 +35,9 @@ public class Bank {
         return shouldAddCustomer;
     }
 
-//    public void depositMoney(Customer customer,int bill){
-//        if (customerList.contains(customer)){
-//            customer.getAccount().addMoney(bill);
-//        }
-//        else customer.getAccount().addMoney(0);
-//    }
-//
-//    public void withdrawMoney(Customer customer,int bill) {
-//        if (customerList.contains(customer)){
-//            customer.getAccount().minusMoney(bill);
-//        }
-//        else customer.getAccount().minusMoney(0);
-//    }
-
-    public void handleRequest(CustomerRequest request){
+    public void handleRequest(CustomerRequest request) throws InsufficientFundException{
         if (customerList.contains(request.getCustomer())){
-            findHandler(request.getType());
+            findHandler(request.getType()).handle(request);
         }
     }
 }

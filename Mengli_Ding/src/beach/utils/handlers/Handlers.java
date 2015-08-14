@@ -11,7 +11,7 @@ public final class Handlers {
     private static final HashMap<RequestType,RequestHandler> handlers = new HashMap<RequestType,RequestHandler>() {
         {
             put(RequestType.Deposit,new DepositHandler());
-            put(RequestType.WithDraw,new withdrawHandler());
+            put(RequestType.WithDraw,new WithdrawHandler());
         }
     };
 

@@ -1,4 +1,6 @@
-package main.java.com.thoughtworks;
+package main.java.com.thoughtworks.handlers;
+
+import main.java.com.thoughtworks.requests.RequestType;
 
 import java.util.HashMap;
 import java.util.Map;

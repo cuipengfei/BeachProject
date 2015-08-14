@@ -1,4 +1,4 @@
-package main.java.com.thoughtworks;
+package main.java.com.thoughtworks.requests;
 
 
 public enum RequestType {

@@ -1,5 +1,7 @@
-package main.java.com.thoughtworks;
+package main.java.com.thoughtworks.requests;
 
+
+import main.java.com.thoughtworks.Customer;
 
 public class CustomerRequest {
     private Customer customer;

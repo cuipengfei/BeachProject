@@ -1,7 +1,7 @@
+import MyException.CustomerNotExistException;
+import MyException.OverdrawException;
 import Request.CustomerRequest;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import Src.Bank;
 import Src.Customer;
 
@@ -28,10 +28,9 @@ public class BankTest {
     public void should_deposit_successfully_when_some_money_be_deposited_in_account() throws Exception {
         Bank bank = new Bank();
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
-
         bank.add(customer);
 
-        bank.handleRequest(CustomerRequest.deposit(customer,1000.0));
+        bank.handleRequest(CustomerRequest.deposit(customer, 1000.0));
 
         assertThat(customer.getAccount(), is(1000.0));
 
@@ -41,31 +40,29 @@ public class BankTest {
     public void should_withdraw_successfully_when_withdrawAll_method_be_used() throws Exception {
         Bank bank = new Bank();
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
-
         bank.add(customer);
 
-        bank.handleRequest(CustomerRequest.deposit(customer,1000.0));
+        bank.handleRequest(CustomerRequest.deposit(customer, 1000.0));
         bank.handleRequest(CustomerRequest.withDraw(customer, 900.0));
 
         assertThat(customer.getAccount(), is(100.0));
     }
 
-
-    @Rule
-    public ExpectedException thrown= ExpectedException.none();
-
-    @Test
+    @Test(expected = OverdrawException.class)
     public void should_throws_exception_when_an_account_be_withdraw_money_more_than_its_current_money() throws Exception {
         Bank bank = new Bank();
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
-
         bank.add(customer);
 
-        thrown.expect(Exception.class);
-        thrown.expectMessage("Overdraw!");
+        bank.handleRequest(CustomerRequest.deposit(customer, 1000.0));
+        bank.handleRequest(CustomerRequest.withDraw(customer, 1100.0));
+    }
 
-        bank.handleRequest(CustomerRequest.deposit(customer,1000.0));
-        bank.handleRequest(CustomerRequest.withDraw(customer,1100.0));
+    @Test(expected = CustomerNotExistException.class)
+    public void should_throws_exception_when_a_customer_does_not_exist() throws Exception {
+        Bank bank = new Bank();
+        Customer customer = Customer.createCustomer("liuzhen11",new Date());
 
+        bank.handleRequest(CustomerRequest.deposit(customer, 1000.0));
     }
 }

@@ -1,12 +1,15 @@
-import java.text.ParseException;
+import request.Type;
+import request.Bank;
+import request.Customer;
+import request.CustomerRequest;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by yuzhang on 8/11/15.
  */
-public class CustomerTest {
-    public static void main(String[] args) throws ParseException {
+public class TestCustomer {
+    public static void main(String[] args) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         Customer customer2 = new Customer("zhangyu", sdf.parse("2015-08-12"));
@@ -19,20 +22,24 @@ public class CustomerTest {
         bank1.addToBank(customer2);
         bank1.addToBank(customer3);
 
-        customer1.getMyAccount().deposit(300);
+        CustomerRequest request1 = new CustomerRequest(customer1,Type.deposit,300);
+        bank1.handleRequest(request1);
 
+        CustomerRequest request2 = new CustomerRequest(customer1,Type.withdraw,301);
+        bank1.handleRequest(request2);
+
+/*      customer1.getMyAccount().deposit(300);
         try {
             customer4.getMyAccount().deposit(300);
         }catch (NullPointerException e){
-            System.out.println("you are not added to bank");
+            System.out.println("[Failed deposit]you are not added to bank");
         }
 
         try {
             customer1.getMyAccount().withdraw(301);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
-
 }
 

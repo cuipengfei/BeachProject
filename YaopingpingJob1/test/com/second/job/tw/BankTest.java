@@ -16,86 +16,98 @@ import static org.junit.Assert.*;
  */
 public class BankTest {
     @Test
-    public void bankAcceptValidCustomer()
-    {
+    public void bankAcceptValidCustomer() {
         //given
-        Bank bank=new Bank();
-        Customer customer=new Customer("yaoping",new Date());
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
         //when
-        boolean isSuccess=bank.isAddCustomerValid(customer);
+        boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
         //then
         assertTrue(isSuccess);
     }
+
     @Test
-    public void bankShouldUnacceptCustomerWhenNicknameValid()
-    {
+    public void bankShouldUnacceptCustomerWhenNicknameValid() {
         //given
-        Bank bank=new Bank();
-        Customer customer=new Customer("Yaoping",new Date());
+        Bank bank = new Bank();
+        Customer customer = new Customer("Yaoping", new Date());
         //when
-        boolean isSuccess=bank.isAddCustomerValid(customer);
+        boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
         //then
         assertFalse(isSuccess);
 
     }
+
     @Test
-    public void bankShouldUnacceptCustomerWhenCustomerExist()
-    {
+    public void bankShouldUnacceptCustomerWhenCustomerExist() {
         //given
-        Bank bank=new Bank();
-        Customer firstCustomer=new Customer("yaoping",new Date());
-        Customer secondCustomer=new Customer("yaoping",new Date());
+        Bank bank = new Bank();
+        Customer firstCustomer = new Customer("yaoping", new Date());
+        Customer secondCustomer = new Customer("yaoping", new Date());
         //when
-        boolean isFirstSuccess=bank.isAddCustomerValid(firstCustomer);
-        boolean isSecondSuccess=bank.isAddCustomerValid(secondCustomer);
+        boolean isFirstSuccess = bank.AddCustomertoBankwhenValid(firstCustomer);
+        boolean isSecondSuccess = bank.AddCustomertoBankwhenValid(secondCustomer);
         assertTrue(isFirstSuccess);
         assertFalse(isSecondSuccess);
     }
+
     @Test
     public void bankShouldDespoitMoney() throws OverdraftException {
         //given
-        Bank bank=new Bank();
-        Customer customer=new Customer("yaoping",new Date());
-        bank.isAddCustomerValid(customer);
-        //when
-        bank.handleRequest(despoitRequst(customer,100.0));
-        //then
-        assertThat(customer.getAccount().getBalance(), is(100.0));
-    }
-     @Test
-     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance () throws Exception {
-         //given
-         Bank bank=new Bank();
-         Customer customer=new Customer("yaoping",new Date());
-         bank.isAddCustomerValid(customer);
-         //when
-         bank.handleRequest(despoitRequst(customer,100.0));
-          bank.handleRequest(withdrawRequest(customer,50.0));
-         //then
-         assertThat(customer.getAccount().getBalance(),is(50.0));
-     }
-     @Test(expected = OverdraftException.class)
-     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance () throws OverdraftException {
-         //given
-         Bank bank=new Bank();
-         Customer customer=new Customer("yaoping",new Date());
-         bank.isAddCustomerValid(customer);
-         //when
-         bank.handleRequest(despoitRequst(customer,100.0));
-         bank.handleRequest(withdrawRequest(customer,150.0));
-
-
-     }
-    @Test
-    public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd()throws OverdraftException
-    {
-        //  given
-        Bank bank=new Bank();
-        Customer customer=new Customer("yaoping",new Date());
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
+        bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
         //then
-        assertThat(customer.getAccount().getBalance(),is(0.0));
+        assertThat(customer.getAccount().getBalance(), is(100.0));
+    }
+
+    @Test
+    public void bankShouldNotAcceptDespoitMoneyWhenMoneyLessThanZero() throws OverdraftException {
+        //given
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
+        bank.AddCustomertoBankwhenValid(customer);
+        //when
+        bank.handleRequest(despoitRequst(customer, -10.0));
+        //then
+        assertThat(customer.getAccount().getBalance(), is(0.0));
+    }
+
+    @Test
+    public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
+        //given
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
+        bank.AddCustomertoBankwhenValid(customer);
+        //when
+        bank.handleRequest(despoitRequst(customer, 100.0));
+        bank.handleRequest(withdrawRequest(customer, 50.0));
+        //then
+        assertThat(customer.getAccount().getBalance(), is(50.0));
+    }
+
+    @Test(expected = OverdraftException.class)
+    public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdraftException {
+        //given
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
+        bank.AddCustomertoBankwhenValid(customer);
+        //when
+        bank.handleRequest(despoitRequst(customer, 100.0));
+        bank.handleRequest(withdrawRequest(customer, 150.0));
+    }
+
+    @Test
+    public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd() throws OverdraftException {
+        //  given
+        Bank bank = new Bank();
+        Customer customer = new Customer("yaoping", new Date());
+        //when
+        bank.handleRequest(despoitRequst(customer, 100.0));
+        //then
+        assertThat(customer.getAccount().getBalance(), is(0.0));
 
     }
 

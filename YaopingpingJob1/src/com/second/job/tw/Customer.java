@@ -1,7 +1,5 @@
 package com.second.job.tw;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -25,6 +23,7 @@ public class Customer {
     public Date getDateofBirth() {
         return dateofBirth1;
     }
+
     public Account getAccount() {
         return account;
     }

@@ -9,14 +9,13 @@ import com.second.job.tw.request.CustomerRequest;
  */
 public class WithdrawHandler implements CustomerHandler {
     @Override
-    public void handlers(CustomerRequest customerRequest) throws OverdraftException {
-        double amount = customerRequest.getMoney();
+    public double handlers(CustomerRequest customerRequest) throws OverdraftException {
+        double money = customerRequest.getMoney();
         Account account = customerRequest.getCustomer().getAccount();
-
-        if (amount <= account.getBalance()) {
-            account.minusBalance(amount);
-        } else {
-            throw new OverdraftException();
+        if (money <= account.getBalance()) {
+            return account.minusBalance(money);
         }
+        throw new OverdraftException();
+
     }
 }

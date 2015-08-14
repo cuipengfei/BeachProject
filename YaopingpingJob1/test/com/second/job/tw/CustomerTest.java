@@ -12,12 +12,11 @@ import static org.junit.Assert.*;
  */
 public class CustomerTest {
     @Test
-    public void defaultCustomerisAccount()
-    {
+    public void defaultCustomerisAccount() {
         //given
-        Customer customer=new Customer("yaoping",new Date());
+        Customer customer = new Customer("yaoping", new Date());
         //when
-        assertThat(customer.getAccount().getBalance(),is(0.0));
+        assertThat(customer.getAccount().getBalance(), is(0.0));
     }
 
 }

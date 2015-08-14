@@ -57,11 +57,11 @@ public class BankTest {
     }
 
     @Test
-    public void should_emailContent_equals_WelcomeMessage() throws Exception {
+    public void should_message_in_MailBox_equals_WelcomeMessage() throws Exception {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         Bank bank1 = new Bank();
         bank1.addToBank(customer1);
 
-        assertThat("Dear zhangyu , Welcome to bank", is(customer1.getEmailContent()));
+        assertThat("Dear zhangyu , Welcome to bank", is(customer1.getMyMailBox().getMessage()));
     }
 }

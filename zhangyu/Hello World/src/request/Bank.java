@@ -35,6 +35,7 @@ public class Bank {
         if (isValidNickname(customer) && !isRepeative(customer)) {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
+            customer.setMyMailBox(new MailBox());
             sendEmail(customer);
             return "add successful";
         } else {
@@ -49,7 +50,7 @@ public class Bank {
 
     public void sendEmail(Customer customer){
         if(isValidEmailAddress(customer)){
-            customer.setEmailContent("Dear "+customer.getNickname()+" , Welcome to bank");
+            customer.getMyMailBox().setMessage("Dear " + customer.getNickname() + " , Welcome to bank");
         }
     }
 

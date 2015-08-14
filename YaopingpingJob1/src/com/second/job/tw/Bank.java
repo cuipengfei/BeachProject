@@ -3,19 +3,25 @@ package com.second.job.tw;
 import com.second.job.tw.request.CustomerRequest;
 import com.second.job.tw.request.RequestType;
 import handle.CustomerHandler;
-import handle.Handlers;
+import handle.DespoitHandler;
+import handle.WithdrawHandler;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.sun.org.apache.bcel.internal.generic.InstructionList.findHandle;
 
 /**
  * Created by ppyao on 8/12/15.
  */
 public class Bank {
     LinkedList<Customer> customerLinkedList=new LinkedList<Customer>();
+    static Map<RequestType,CustomerHandler> customerHandlerMap=new HashMap<RequestType,CustomerHandler>();
+    static {
+        customerHandlerMap.put(RequestType.depositMoney, new DespoitHandler());
+        customerHandlerMap.put(RequestType.withdrawMoney,new WithdrawHandler());
+    }
 
     public boolean isAddCustomerValid(Customer customer)
     {
@@ -25,9 +31,8 @@ public class Bank {
             return true;
         }
         return false;
-
-
     }
+
     private   boolean isCustomerNotRepeat(Customer customer)
     {
         for(Customer customer1:customerLinkedList)
@@ -42,6 +47,7 @@ public class Bank {
         }
         return true;
     }
+
     private   boolean validateNickname(Customer customer )
     {
         final String strRegex="^[a-z0-9]+$";
@@ -51,8 +57,9 @@ public class Bank {
     }
 
     public void handleRequest(CustomerRequest request) throws OverdraftException {
+
         if (customerLinkedList.contains(request.getCustomer())) {
-            Handlers.findHandle(request.getType()).handlers(request);
+            customerHandlerMap.get(request.getType()).handlers(request);
         }
     }
 }

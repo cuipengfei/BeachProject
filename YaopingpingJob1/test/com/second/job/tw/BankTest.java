@@ -26,6 +26,7 @@ public class BankTest {
         //then
         assertTrue(isSuccess);
     }
+
     @Test
     public void bankShouldUnacceptCustomerWhenNicknameValid()
     {
@@ -38,6 +39,7 @@ public class BankTest {
         assertFalse(isSuccess);
 
     }
+
     @Test
     public void bankShouldUnacceptCustomerWhenCustomerExist()
     {
@@ -51,6 +53,7 @@ public class BankTest {
         assertTrue(isFirstSuccess);
         assertFalse(isSecondSuccess);
     }
+
     @Test
     public void bankShouldDespoitMoney() throws OverdraftException {
         //given
@@ -58,10 +61,22 @@ public class BankTest {
         Customer customer=new Customer("yaoping",new Date());
         bank.isAddCustomerValid(customer);
         //when
-        bank.handleRequest(despoitRequst(customer,100.0));
+        bank.handleRequest(despoitRequst(customer, 100.0));
         //then
         assertThat(customer.getAccount().getBalance(), is(100.0));
     }
+    @Test
+    public void bankShouldNotAcceptDespoitMoneyWhenMoneyLessThanZero() throws OverdraftException {
+        //given
+        Bank bank=new Bank();
+        Customer customer=new Customer("yaoping",new Date());
+        bank.isAddCustomerValid(customer);
+        //when
+        bank.handleRequest(despoitRequst(customer,-10.0));
+        //then
+        assertThat(customer.getAccount().getBalance(), is(0.0));
+    }
+
      @Test
      public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance () throws Exception {
          //given
@@ -74,6 +89,7 @@ public class BankTest {
          //then
          assertThat(customer.getAccount().getBalance(),is(50.0));
      }
+
      @Test(expected = OverdraftException.class)
      public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance () throws OverdraftException {
          //given
@@ -83,9 +99,8 @@ public class BankTest {
          //when
          bank.handleRequest(despoitRequst(customer,100.0));
          bank.handleRequest(withdrawRequest(customer,150.0));
-
-
      }
+
     @Test
     public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd()throws OverdraftException
     {

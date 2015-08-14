@@ -1,22 +1,30 @@
 package main.java.com.thoughtworks;
 
 import main.java.com.thoughtworks.exception.OverdrawException;
+import main.java.com.thoughtworks.requests.CustomerRequest;
 
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static main.java.com.thoughtworks.handlers.Handlers.findHandler;
 
 
 public class Bank {
 
     private List<Customer> customerList = new ArrayList<>();
-    private final Map<Customer, Integer> accounts = new HashMap<>();
 
     public boolean addCustomer(Customer customer) {
-        if (!contains(customer) && isValid(customer.getNickName())) {
+        if (!isExist(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
+            sendEmail(customer);
             return true;
         }
         return false;
+    }
+
+    public void handleRequest(CustomerRequest request) throws OverdrawException {
+        if (customerList.contains(request.getCustomer()))
+            findHandler(request.getRequestType()).handle(request);
     }
 
     private boolean isValid(String nickName) {
@@ -24,7 +32,7 @@ public class Bank {
         return pattern.matcher(nickName).matches();
     }
 
-    private boolean contains(Customer customer) {
+    private boolean isExist(Customer customer) {
         for (Customer temp : customerList) {
             if (temp.getNickName().equals(customer.getNickName())) {
                 return true;
@@ -33,23 +41,9 @@ public class Bank {
         return false;
     }
 
-    public int withdraw(Customer customer, int money) throws OverdrawException {
-        if (customerList.contains(customer)) {
-            if (accounts.get(customer) < money) throw new OverdrawException();
-            if (accounts.containsKey(customer)) {
-                accounts.put(customer, accounts.get(customer) - money);
-            } else accounts.put(customer, money);
-        } else accounts.put(customer, 0);
-        return accounts.get(customer);
+    private void sendEmail(Customer customer) {
+        customer.setEmailBox(new EmailBox());
+        customer.getEmailBox().setMessage("Dear " + customer.getNickName() + ", Welcome to the Bank");
+        customer.setEmailAddress(customer.getNickName()+"@thebank.com");
     }
-
-    public int deposit(Customer customer, int money) {
-        if (customerList.contains(customer)) {
-            if (accounts.containsKey(customer)) {
-                accounts.put(customer, accounts.get(customer) + money);
-            } else accounts.put(customer, money);
-        } else accounts.put(customer, 0);
-        return accounts.get(customer);
-    }
-
 }

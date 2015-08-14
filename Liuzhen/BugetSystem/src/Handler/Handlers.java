@@ -1,0 +1,21 @@
+package Handler;
+
+import Request.RequestType;
+
+import java.util.HashMap;
+
+/**
+ * Created by zhenliu on 8/14/15.
+ */
+public class Handlers {
+    private static final HashMap<RequestType,RequestHandler> requestHandlerHashMap = new HashMap<RequestType,RequestHandler> (){
+        {
+            put(RequestType.deposit,new DepositHandler());
+            put(RequestType.withDraw,new WithdrawHandler());
+        }
+    };
+
+    public static RequestHandler findHandler(RequestType requestType) {
+        return requestHandlerHashMap.get(requestType);
+    }
+}

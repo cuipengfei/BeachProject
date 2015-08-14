@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 public class Bank {
 
     private List<Customer> customerList = new ArrayList<>();
-    private final Map<Customer, Integer> accounts = new HashMap<>();
+
 
     public boolean addCustomer(Customer customer) {
-        if (!contains(customer) && isValid(customer.getNickName())) {
+        if (!isExist(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
             return true;
         }
@@ -24,7 +24,7 @@ public class Bank {
         return pattern.matcher(nickName).matches();
     }
 
-    private boolean contains(Customer customer) {
+    private boolean isExist(Customer customer) {
         for (Customer temp : customerList) {
             if (temp.getNickName().equals(customer.getNickName())) {
                 return true;
@@ -35,21 +35,17 @@ public class Bank {
 
     public int withdraw(Customer customer, int money) throws OverdrawException {
         if (customerList.contains(customer)) {
-            if (accounts.get(customer) < money) throw new OverdrawException();
-            if (accounts.containsKey(customer)) {
-                accounts.put(customer, accounts.get(customer) - money);
-            } else accounts.put(customer, money);
-        } else accounts.put(customer, 0);
-        return accounts.get(customer);
+            if (customer.getBalance() < money) throw new OverdrawException();
+                customer.setBalance(customer.getBalance()-money);
+        }
+        return customer.getBalance();
     }
 
     public int deposit(Customer customer, int money) {
         if (customerList.contains(customer)) {
-            if (accounts.containsKey(customer)) {
-                accounts.put(customer, accounts.get(customer) + money);
-            } else accounts.put(customer, money);
-        } else accounts.put(customer, 0);
-        return accounts.get(customer);
+            customer.setBalance(customer.getBalance() + money);
+        }
+        return customer.getBalance();
     }
 
 }

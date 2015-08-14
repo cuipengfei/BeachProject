@@ -16,30 +16,26 @@ import java.util.regex.Pattern;
  * Created by ppyao on 8/12/15.
  */
 public class Bank {
-    LinkedList<Customer> customerLinkedList=new LinkedList<Customer>();
-    static Map<RequestType,CustomerHandler> customerHandlerMap=new HashMap<RequestType,CustomerHandler>();
+    LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
+    static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
+
     static {
         customerHandlerMap.put(RequestType.depositMoney, new DespoitHandler());
-        customerHandlerMap.put(RequestType.withdrawMoney,new WithdrawHandler());
+        customerHandlerMap.put(RequestType.withdrawMoney, new WithdrawHandler());
     }
 
-    public boolean isAddCustomerValid(Customer customer)
-    {
-        if(validateNickname(customer)&&isCustomerNotRepeat(customer))
-        {
+    public boolean AddCustomertoBankwhenValid(Customer customer) {
+        if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
             return true;
         }
         return false;
     }
 
-    private   boolean isCustomerNotRepeat(Customer customer)
-    {
-        for(Customer customer1:customerLinkedList)
-        {
+    private boolean isCustomerNotRepeat(Customer customer) {
+        for (Customer customer1 : customerLinkedList) {
 
-            if(customer1.getNickname().equals(customer.getNickname()))
-            {
+            if (customer1.getNickname().equals(customer.getNickname())) {
                 return false;
 
             }
@@ -48,11 +44,10 @@ public class Bank {
         return true;
     }
 
-    private   boolean validateNickname(Customer customer )
-    {
-        final String strRegex="^[a-z0-9]+$";
-        Pattern pattern=Pattern.compile(strRegex);
-        Matcher matcher=pattern.matcher(customer.getNickname());
+    private boolean validateNickname(Customer customer) {
+        final String strRegex = "^[a-z0-9]+$";
+        Pattern pattern = Pattern.compile(strRegex);
+        Matcher matcher = pattern.matcher(customer.getNickname());
         return matcher.find();
     }
 

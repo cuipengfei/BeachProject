@@ -9,8 +9,7 @@ import com.second.job.tw.request.CustomerRequest;
 public class DespoitHandler implements CustomerHandler {
     @Override
     public double handlers(CustomerRequest customerRequest) throws OverdraftException {
-        if(customerRequest.getMoney()>0)
-        {
+        if (customerRequest.getMoney() > 0) {
             customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
             return customerRequest.getCustomer().getAccount().getBalance();
         }

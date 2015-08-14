@@ -12,11 +12,10 @@ public class WithdrawHandler implements CustomerHandler {
     public double handlers(CustomerRequest customerRequest) throws OverdraftException {
         double money = customerRequest.getMoney();
         Account account = customerRequest.getCustomer().getAccount();
-
         if (money <= account.getBalance()) {
-           return account.minusBalance(money);
+            return account.minusBalance(money);
         }
-            throw new OverdraftException();
+        throw new OverdraftException();
 
     }
 }

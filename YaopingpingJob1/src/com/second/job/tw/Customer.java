@@ -25,6 +25,7 @@ public class Customer {
     public Date getDateofBirth() {
         return dateofBirth1;
     }
+
     public Account getAccount() {
         return account;
     }

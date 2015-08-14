@@ -5,6 +5,8 @@ import main.java.com.thoughtworks.exception.OverdrawException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static main.java.com.thoughtworks.Handlers.findHandler;
+
 
 public class Bank {
 
@@ -19,6 +21,11 @@ public class Bank {
         return false;
     }
 
+    public void handleRequest(CustomerRequest request) throws OverdrawException {
+        if (customerList.contains(request.getCustomer()))
+            findHandler(request.getRequestType()).handle(request);
+    }
+
     private boolean isValid(String nickName) {
         Pattern pattern = Pattern.compile("^[a-z0-9]+$");
         return pattern.matcher(nickName).matches();
@@ -31,26 +38,5 @@ public class Bank {
             }
         }
         return false;
-    }
-
-    private double withdraw(Customer customer, double money) throws OverdrawException {
-        if (customerList.contains(customer)) {
-            if (customer.getBalance() < money) throw new OverdrawException();
-            customer.setBalance(customer.getBalance() - money);
-        }
-        return customer.getBalance();
-    }
-
-    private double deposit(Customer customer, double money) {
-        if (customerList.contains(customer)) {
-            customer.setBalance(customer.getBalance() + money);
-        }
-        return customer.getBalance();
-    }
-
-    public double handle(CustomerRequest request) throws OverdrawException {
-        if (request.getRequestType() == RequestType.Deposit)
-            return deposit(request.getCustomer(), request.getBalance());
-        else return withdraw(request.getCustomer(), request.getBalance());
     }
 }

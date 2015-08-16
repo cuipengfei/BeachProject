@@ -3,6 +3,5 @@ package beach.utils.requests;
 /**
  * Created by mlding on 8/16/15.
  */
-public enum RequestType {
-    deposit,withdraw;
+public class InsufficientException extends Exception {
 }

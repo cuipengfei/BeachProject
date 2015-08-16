@@ -5,13 +5,14 @@ import beach.utils.requests.RequestType;
 import java.util.HashMap;
 
 /**
- * Created by mlding on 8/14/15.
+ * Created by mlding on 8/16/15.
  */
-public final class Handlers {
-    private static final HashMap<RequestType,RequestHandler> handlers = new HashMap<RequestType,RequestHandler>() {
+public class Handlers {
+    private static final HashMap<RequestType, RequestHandler> handlers =
+            new HashMap<RequestType, RequestHandler>(){
         {
-            put(RequestType.Deposit,new DepositHandler());
-            put(RequestType.WithDraw,new WithdrawHandler());
+            put(RequestType.deposit, new DepositHandler());
+            put(RequestType.withdraw, new WithdrawHandler());
         }
     };
 

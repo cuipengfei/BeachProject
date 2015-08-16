@@ -2,19 +2,20 @@ package beach.utils.handlers;
 
 import beach.utils.Account;
 import beach.utils.requests.CustomerRequest;
-import beach.utils.requests.InsufficientFundException;
+import beach.utils.requests.InsufficientException;
 
 /**
- * Created by mlding on 8/14/15.
+ * Created by mlding on 8/16/15.
  */
-public class WithdrawHandler implements RequestHandler{
+public class WithdrawHandler implements RequestHandler {
     @Override
-    public void handle(CustomerRequest request) throws InsufficientFundException{
-        int money = request.getBill();
+    public void handle(CustomerRequest request) throws InsufficientException {
+        int bill = request.getBill();
         Account account = request.getCustomer().getAccount();
 
-        if (account.getMoney() >= money)
-            account.minusMoney(money);
-        else throw new InsufficientFundException();
+        if (account.getMoney() >= bill)
+            account.minus(bill);
+        else
+            throw new InsufficientException();
     }
 }

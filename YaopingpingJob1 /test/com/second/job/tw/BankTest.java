@@ -131,4 +131,15 @@ public class BankTest {
         verify(sender).sendEmail(customer, message);
     }
 
+    @Test
+    public void bankActualSendEmailImitationMockito()
+    {
+        MailSendMockito sender=new MailSendMockito();
+        Bank bank=new Bank(sender);
+        Customer customer=new Customer("yaopingping",new Date());
+        bank.AddCustomertoBankwhenValid(customer);
+
+        assertThat(sender.isSendMailCalled(),is(true));
+    }
+
 }

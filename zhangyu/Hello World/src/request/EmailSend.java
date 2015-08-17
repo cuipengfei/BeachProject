@@ -3,8 +3,7 @@ package request;
 /**
  * Created by yuzhang on 8/17/15.
  */
-public class Email {
-    private String sender;
+public class EmailSend {
     private String content;
 
     public void sendEmail(Customer receiver){

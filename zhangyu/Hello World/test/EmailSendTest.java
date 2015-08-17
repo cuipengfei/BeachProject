@@ -12,12 +12,12 @@ public class EmailSendTest {
 
     @Test
     public void should_message_in_MailBox_equals_WelcomeMessage() throws Exception {
-        EmailSend email = mock(EmailSend.class);
+        EmailSend sender = mock(EmailSend.class);
 
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
-        Bank bank = new Bank(email);
+        Bank bank = new Bank(sender);
         bank.addToBank(customer1);
 
-        verify(email).sendEmail(customer1);
+        verify(sender).sendEmail(customer1);
     }
 }

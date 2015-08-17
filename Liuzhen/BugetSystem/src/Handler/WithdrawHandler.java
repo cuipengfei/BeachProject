@@ -11,7 +11,7 @@ public class WithdrawHandler implements RequestHandler {
             double _moneyWillBeDrawn = request.getMoney();
             double currentMoneyInAccount = _customer.getAccount();
 
-            if(_moneyWillBeDrawn < currentMoneyInAccount) {
+            if(_moneyWillBeDrawn <= currentMoneyInAccount) {
                 _customer.setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
             }
             else throw new OverdrawException();

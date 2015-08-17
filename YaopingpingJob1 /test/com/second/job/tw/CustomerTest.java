@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by ppyao on 8/12/15.
@@ -18,5 +18,6 @@ public class CustomerTest {
         //when
         assertThat(customer.getAccount().getBalance(), is(0.0));
     }
+
 
 }

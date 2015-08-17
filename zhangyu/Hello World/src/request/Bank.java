@@ -10,13 +10,11 @@ import java.util.List;
  * Created by yuzhang on 8/11/15.
  */
 public class Bank {
-    EmailSend eSend;
+    EmailSend sender;
     List<Customer> customers = new ArrayList<Customer>();
 
-    public Bank() {}
-
-    public Bank(EmailSend eSend) {
-        this.eSend = eSend;
+    public Bank(EmailSend sender) {
+        this.sender = sender;
     }
 
     private boolean isValidNickname(Customer customer ){
@@ -38,7 +36,7 @@ public class Bank {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
             customer.setMyMailBox(new MailBox());
-            eSend.sendEmail(customer);
+            sender.sendEmail(customer);
             return "add successful";
         } else {
             return "add failed";

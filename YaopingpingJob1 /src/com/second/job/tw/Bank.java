@@ -17,13 +17,17 @@ import java.util.regex.Pattern;
  */
 public class Bank {
     MailSender mailSender;
+    LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
+    BankManager bankManager=new BankManager();
+    static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
+
+
+    public Bank() {
+    }
 
     public Bank(MailSender mailSender) {
         this.mailSender = mailSender;
     }
-
-    LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
-    static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
     static {
         customerHandlerMap.put(RequestType.depositMoney, new DespoitHandler());
@@ -59,7 +63,15 @@ public class Bank {
     public void handleRequest(CustomerRequest request) throws OverdraftException {
 
         if (customerLinkedList.contains(request.getCustomer())) {
-            customerHandlerMap.get(request.getType()).handlers(request);
+           double balance= customerHandlerMap.get(request.getType()).handlers(request);
+            if(balance>=40000&&request.getCustomer().isPreminum()==false)
+            {
+                String message=request.getCustomer().getNickname()+"is a premium customer";
+                mailSender.sendEmail(bankManager,message);
+                bankManager.getPrminumCustomerList().add(request.getCustomer());
+                request.getCustomer().setIsPreminumDefault(true);
+            }
+
         }
     }
 }

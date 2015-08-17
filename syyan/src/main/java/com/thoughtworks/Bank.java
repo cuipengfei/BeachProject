@@ -16,8 +16,6 @@ public class Bank {
         this.emailSender = emailSender;
     }
 
-    public Bank() {
-    }
 
     private List<Customer> customerList = new ArrayList<>();
 

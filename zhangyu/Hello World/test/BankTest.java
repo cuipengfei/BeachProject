@@ -85,7 +85,7 @@ public class BankTest {
     @Test
     public void should_isCallEmailSend_is_true_when_addToBank() throws Exception {
         MockEmailSend mockSender = new MockEmailSend();
-        
+
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         Bank bank = new Bank(mockSender);
         bank.addToBank(customer1);
@@ -96,6 +96,7 @@ public class BankTest {
     @Test
     public void should_manager_receive_mail_when_customer_turn_to_premium() throws Exception {
         MockEmailSend mockSender = new MockEmailSend();
+
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         Bank bank = new Bank(mockSender);
         bank.addToBank(customer1);

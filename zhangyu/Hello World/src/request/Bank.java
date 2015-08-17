@@ -51,13 +51,12 @@ public class Bank {
         Customer customer = request.getCustomer();
         Handlers.findHandler(request.getType()).handle(request);
 
-        if(request.getType().equals(Type.deposit)){
-            if( customer.getMyAccount().getBalance()>40000 && (customer.isPremium == true)){
-                customer.isPremium = true;
-                sender.setContent(customer.getNickname() + " is now a premium customer");
-                sender.sendEmail(manager);
-            }
+        if( customer.getMyAccount().getBalance()>40000 && (customer.isPremium == false)){
+            customer.isPremium = true;
+            sender.setContent(customer.getNickname() + " is now a premium customer");
+            sender.sendEmail(manager);
         }
+
         return customer.getMyAccount().getBalance();
     }
 

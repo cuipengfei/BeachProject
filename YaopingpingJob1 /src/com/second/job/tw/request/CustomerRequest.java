@@ -2,8 +2,6 @@ package com.second.job.tw.request;
 
 import com.second.job.tw.Customer;
 
-import java.util.Map;
-
 /**
  * Created by ppyao on 8/13/15.
  */

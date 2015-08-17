@@ -9,6 +9,8 @@ import static main.java.com.thoughtworks.requests.CustomerRequest.deposit;
 import static main.java.com.thoughtworks.requests.CustomerRequest.withdraw;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class BankTest {
 
@@ -76,15 +78,15 @@ public class BankTest {
         bank.handleRequest(deposit(unexist, 100));
         assertThat(unexist.getBalance(), is(0d));
     }
+    private Customer customer = new Customer("syyan", new Date());
 
     @Test
-    public void should_send_email_when_customer_is_added() {
-        Customer syyan123 = new Customer("syyan123", new Date());
-        Bank bank = new Bank();
-        bank.addCustomer(syyan123);
-        assertThat(syyan123.getEmailBox().getMessage(), is("Dear syyan123, Welcome to the Bank"));
-        assertThat(syyan123.getEmailAddress(), is("syyan123@thebank.com"));
+    public void should_return_true_when_send_email_success() {
 
+        EmailSender emailSender = mock(EmailSender.class);
+        Bank bank = new Bank(emailSender);
+        bank.addCustomer(customer);
+        verify(emailSender).sendMessage("syyan@thebank.com", "Dear syyan, Welcome to the Bank");
     }
 
 }

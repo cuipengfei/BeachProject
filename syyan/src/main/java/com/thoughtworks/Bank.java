@@ -10,13 +10,21 @@ import static main.java.com.thoughtworks.handlers.Handlers.findHandler;
 
 
 public class Bank {
+    private EmailSender emailSender;
+
+    public Bank(EmailSender emailSender) {
+        this.emailSender = emailSender;
+    }
+
+    public Bank() {
+    }
 
     private List<Customer> customerList = new ArrayList<>();
 
     public boolean addCustomer(Customer customer) {
         if (!isExist(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
-            sendEmail(customer);
+            emailSender.sendMessage(customer.getNickName() + "@thebank.com","Dear " + customer.getNickName() + ", Welcome to the Bank");
             return true;
         }
         return false;
@@ -39,11 +47,5 @@ public class Bank {
             }
         }
         return false;
-    }
-
-    private void sendEmail(Customer customer) {
-        customer.setEmailBox(new EmailBox());
-        customer.getEmailBox().setMessage("Dear " + customer.getNickName() + ", Welcome to the Bank");
-        customer.setEmailAddress(customer.getNickName()+"@thebank.com");
     }
 }

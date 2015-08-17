@@ -12,7 +12,6 @@ public class WithdrawHandler implements RequestHandler {
     public void handle(CustomerRequest request) throws InsufficientException {
         int bill = request.getBill();
         Account account = request.getCustomer().getAccount();
-
         if (account.getMoney() >= bill)
             account.minus(bill);
         else

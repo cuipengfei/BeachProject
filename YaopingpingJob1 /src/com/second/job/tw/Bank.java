@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
  * Created by ppyao on 8/12/15.
  */
 public class Bank {
+    MailSender mailSender;
+
+    public Bank(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
     LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
     static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
@@ -28,8 +34,7 @@ public class Bank {
         if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
             String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
-            MailSend mailSend = new MailSend();
-            mailSend.sendMessage(customer, message);
+            mailSender.sendEmail(customer, message);
             return true;
         }
         return false;

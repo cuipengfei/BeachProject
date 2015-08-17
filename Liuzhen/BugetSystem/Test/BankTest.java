@@ -12,9 +12,7 @@ import java.util.Date;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by zhenliu on 8/13/15.
- */
+
 import static org.mockito.Mockito.*;
 public class BankTest {
 
@@ -71,12 +69,41 @@ public class BankTest {
     }
 
     @Test
-    public void should_call_sendEmail_method_suc_when_use_it() throws Exception {
+    public void should_call_sendEmail_method_successfully_when_a_customer_be_add_into_the_bank() throws Exception {
         MailSender mockSender = Mockito.mock(MailSender.class);
         Bank bank = new Bank(mockSender);
         Customer customer = Customer.createCustomer("liuzhen11",new Date());
+
         bank.add(customer);
 
-        verify(mockSender).sendEmail("thebankmanager@thebank.com", "liuzhen11@thebank.com", "Welcome Message", "Dear liuzhen11, Welcome to the Bank!");
+        verify(mockSender).sendEmail("thebank@thebank.com", "liuzhen11@thebank.com", "Welcome Message", "Dear liuzhen11, Welcome to the Bank!");
+    }
+
+    @Test
+    public void should_send_manager_an_email_when_a_customer_becomes_a_premium_customer_from_a_ordinary_customer() throws Exception {
+        MailSender mockSender = Mockito.mock(MailSender.class);
+        Bank bank = new Bank(mockSender);
+        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+
+        bank.add(customer);
+        bank.handleRequest(CustomerRequest.deposit(customer, 40000.0));
+
+        verify(mockSender).sendEmail("thebank@thebank.com","manager@thebank.com","new premium customer",customer+" is now a premium customer.");
+    }
+
+    @Test
+    public void should_not_send_manager_an_email_when_a_customer_have_been_a_premium_customer_yet() throws Exception {
+        MailSender mockSender = Mockito.mock(MailSender.class);
+        Bank bank = new Bank(mockSender);
+        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+
+        bank.add(customer);
+        bank.handleRequest(CustomerRequest.deposit(customer, 40000.0));
+        bank.handleRequest(CustomerRequest.deposit(customer, 10000.0));
+        bank.handleRequest(CustomerRequest.withDraw(customer, 50000.0));
+        bank.handleRequest(CustomerRequest.deposit(customer, 40000.0));
+
+        verify(mockSender, times(1)).sendEmail("thebank@thebank.com","manager@thebank.com","new premium customer",customer+" is now a premium customer.");
+
     }
 }

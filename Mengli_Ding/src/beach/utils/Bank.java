@@ -13,6 +13,13 @@ import static beach.utils.handlers.Handlers.findHandler;
  */
 public class Bank {
     private List<Customer> customerList = new ArrayList<>();
+    private EmailSender emailSender;
+
+    public Bank(){}
+
+    public Bank(EmailSender emailSender){
+        this.emailSender = emailSender;
+    }
 
     private boolean isNotSameName(Customer customer){
         for (Customer customertemp : customerList){
@@ -39,8 +46,7 @@ public class Bank {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd){
             customerList.add(customer);
-            customer.getEmail().setAddress(customer.getName() + "@thebank.com");
-            customer.getEmail().setContent("Dear " + customer.getName() + ", Welcome to the Bank");
+            emailSender.sendMail(customer);
         }
         return isShouldAdd;
     }

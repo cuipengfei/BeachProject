@@ -1,7 +1,4 @@
-import request.Type;
-import request.Bank;
-import request.Customer;
-import request.CustomerRequest;
+import request.*;
 
 import java.text.SimpleDateFormat;
 
@@ -16,7 +13,8 @@ public class TestCustomer {
         Customer customer3 = new Customer("ZhangYu", sdf.parse("2015-08-13"));
         Customer customer4 = new Customer("zhangyu4", sdf.parse("2015-08-13"));
 
-        Bank bank1 = new Bank();
+        EmailSend sender = new EmailSend();
+        Bank bank1 = new Bank(sender);
 
         bank1.addToBank(customer1);
         bank1.addToBank(customer2);

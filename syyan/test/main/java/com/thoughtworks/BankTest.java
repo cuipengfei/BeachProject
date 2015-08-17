@@ -9,29 +9,30 @@ import static main.java.com.thoughtworks.requests.CustomerRequest.deposit;
 import static main.java.com.thoughtworks.requests.CustomerRequest.withdraw;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class BankTest {
 
+
+    private EmailSender emailSender = mock(EmailSender.class);
+
+    private Bank bank = new Bank(emailSender);
+
     @Test
     public void should_add_success_when_give_the_valid_information() throws Exception {
-
-        Bank bank = new Bank();
         Customer customer = new Customer("yan123", new Date());
         assertTrue(bank.addCustomer(customer));
     }
 
     @Test
     public void should_add_failure_when_give_the_valid_nickName() throws Exception {
-
-        Bank bank = new Bank();
         Customer notValidCustomer = new Customer("YAN", new Date());
         assertFalse(bank.addCustomer(notValidCustomer));
     }
 
     @Test
     public void should_add_failure_when_give_the_same_nickName() throws Exception {
-
-        Bank bank = new Bank();
         Customer customer = new Customer("yan123", new Date());
         assertTrue(bank.addCustomer(customer));
         Customer existCustomer = new Customer("yan123", new Date());
@@ -41,7 +42,7 @@ public class BankTest {
     @Test
     public void should_deposit_money_when_customer_is_valid() throws Exception, OverdrawException {
         Customer syyan = new Customer("syyan123", new Date());
-        Bank bank = new Bank();
+
         bank.addCustomer(syyan);
         bank.handleRequest(deposit(syyan, 100d));
         assertThat(syyan.getBalance(), is(100d));
@@ -50,7 +51,7 @@ public class BankTest {
     @Test
     public void should_withdraw_money_when_balance_is_not_overdraw() throws Exception, OverdrawException {
         Customer syyan = new Customer("syyan123", new Date());
-        Bank bank = new Bank();
+
         bank.addCustomer(syyan);
         bank.handleRequest(deposit(syyan, 100d));
         bank.handleRequest(withdraw(syyan, 100d));
@@ -60,7 +61,7 @@ public class BankTest {
     @Test(expected = OverdrawException.class)
     public void should_not_withdraw_money_when_balance_is_overdraw() throws Exception, OverdrawException {
         Customer syyan = new Customer("syyan123", new Date());
-        Bank bank = new Bank();
+
         bank.addCustomer(syyan);
         bank.handleRequest(deposit(syyan, 100d));
         bank.handleRequest(withdraw(syyan, 200d));
@@ -69,7 +70,7 @@ public class BankTest {
     @Test
     public void should_not_withdraw_or_deposit_money_when_customer_is_not_exist() throws Exception, OverdrawException {
         Customer unexist = new Customer("unexist", new Date());
-        Bank bank = new Bank();
+
         bank.handleRequest(withdraw(unexist, 100d));
         assertThat(unexist.getBalance(), is(0d));
 
@@ -77,14 +78,12 @@ public class BankTest {
         assertThat(unexist.getBalance(), is(0d));
     }
 
-    @Test
-    public void should_send_email_when_customer_is_added() {
-        Customer syyan123 = new Customer("syyan123", new Date());
-        Bank bank = new Bank();
-        bank.addCustomer(syyan123);
-        assertThat(syyan123.getEmailBox().getMessage(), is("Dear syyan123, Welcome to the Bank"));
-        assertThat(syyan123.getEmailAddress(), is("syyan123@thebank.com"));
 
+    @Test
+    public void should_return_true_when_send_email_success() {
+        Customer syyan = new Customer("syyan", new Date());
+        bank.addCustomer(syyan);
+        verify(emailSender).sendMessage("syyan@thebank.com", "Dear syyan, Welcome to the Bank");
     }
 
 }

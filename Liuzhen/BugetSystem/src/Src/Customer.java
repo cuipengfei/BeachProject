@@ -15,6 +15,7 @@ public class Customer {
     private final Date dateOfBirth;
     private double account = 0.0;
     private String message ="";
+    private boolean isPremiumCustomer = false;
 
     private Customer(String _nickName, Date _dateOfBirth)  {
         nickName = _nickName;
@@ -49,12 +50,12 @@ public class Customer {
         return account;
     }
 
-    public String getMessage() {
-        return message;
+    public void setIsPremiumCustomer(boolean isPremiumCustomer) {
+        this.isPremiumCustomer = isPremiumCustomer;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public boolean isPremiumCustomer() {
+        return isPremiumCustomer;
     }
 
 }

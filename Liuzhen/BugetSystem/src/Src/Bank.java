@@ -24,12 +24,20 @@ public class Bank {
     public void handleRequest(CustomerRequest _request) throws Exception{
         if (customerList.contains(_request.getCustomer())){
             Handlers.findHandler(_request.getRequestType()).handle(_request);
+
+            boolean isPremiumCustomerBeforeDepositing = _request.getCustomer().isPremiumCustomer();
+
+            if (_request.getCustomer().getAccount()>=40000) {
+                if (!isPremiumCustomerBeforeDepositing)
+                    mailSender.sendEmail("thebank@thebank.com", "manager@thebank.com", "new premium customer", _request.getCustomer() + " is now a premium customer.");
+                _request.getCustomer().setIsPremiumCustomer(true);
+            }
         }
         else throw new CustomerNotExistException();
     }
 
     private void sendWelcomeMessage(Customer _customer){
-        mailSender.sendEmail("thebankmanager@thebank.com", _customer.getNickName() + "@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
+        mailSender.sendEmail("thebank@thebank.com", _customer.getNickName() + "@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
     }
 
     private boolean shouldAdd(Customer _customer) {

@@ -10,7 +10,12 @@ import java.util.List;
  * Created by yuzhang on 8/11/15.
  */
 public class Bank {
+    EmailSend sender;
     List<Customer> customers = new ArrayList<Customer>();
+
+    public Bank(EmailSend sender) {
+        this.sender = sender;
+    }
 
     private boolean isValidNickname(Customer customer ){
         String nickname = customer.getNickname();
@@ -31,7 +36,7 @@ public class Bank {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
             customer.setMyMailBox(new MailBox());
-            sendEmail(customer);
+            sender.sendEmail(customer);
             return "add successful";
         } else {
             return "add failed";
@@ -42,9 +47,4 @@ public class Bank {
         Handlers.findHandler(request.getType()).handle(request);
         return request.getCustomer().getMyAccount().getBalance();
     }
-
-    private void sendEmail(Customer customer){
-        customer.getMyMailBox().setMessage("Dear " + customer.getNickname() + " , Welcome to bank");
-    }
-
 }

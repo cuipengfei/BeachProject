@@ -6,7 +6,6 @@ import beach.utils.requests.InsufficientException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static beach.utils.EmailSender.sendMail;
 import static beach.utils.handlers.Handlers.findHandler;
 
 /**
@@ -14,6 +13,13 @@ import static beach.utils.handlers.Handlers.findHandler;
  */
 public class Bank {
     private List<Customer> customerList = new ArrayList<>();
+    private EmailSender emailSender;
+
+    public Bank(){}
+
+    public Bank(EmailSender emailSender){
+        this.emailSender = emailSender;
+    }
 
     private boolean isNotSameName(Customer customer){
         for (Customer customertemp : customerList){
@@ -40,7 +46,7 @@ public class Bank {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd){
             customerList.add(customer);
-            sendMail(customer);
+            emailSender.sendMail(customer);
         }
         return isShouldAdd;
     }

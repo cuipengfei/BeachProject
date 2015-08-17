@@ -24,4 +24,8 @@ public class Customer {
     private boolean hasBirthDay(Date birthday) {
         return birthday != null;
     }
+
+    public String nickname() {
+        return this.nickname;
+    }
 }

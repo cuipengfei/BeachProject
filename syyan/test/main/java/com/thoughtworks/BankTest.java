@@ -80,10 +80,23 @@ public class BankTest {
 
 
     @Test
-    public void should_return_true_when_send_email_success() {
+    public void should_use_sendMessage_when_addCustomer() {
         Customer syyan = new Customer("syyan", new Date());
         bank.addCustomer(syyan);
         verify(emailSender).sendMessage("syyan@thebank.com", "Dear syyan, Welcome to the Bank");
     }
+
+    @Test
+    public void should_use_sendMessage_when_customer_balance_is_over_40000() throws Exception, OverdrawException {
+        Customer syyan123 = new Customer("syyan123", new Date());
+
+        bank.addCustomer(syyan123);
+        bank.handleRequest(deposit(syyan123, 40000d));
+        verify(emailSender).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
+        bank.handleRequest(withdraw(syyan123, 40000d));
+        bank.handleRequest(deposit(syyan123, 40000d));
+
+    }
+
 
 }

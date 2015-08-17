@@ -8,7 +8,10 @@ import java.util.List;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
-
+    private MailSender mailSender;
+    public Bank(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
     public boolean add(Customer _customer) {
         if (shouldAdd(_customer)) {
             customerList.add(_customer);
@@ -26,8 +29,7 @@ public class Bank {
     }
 
     private void sendWelcomeMessage(Customer _customer){
-        //_customer.setMessage("Dear" + _customer.getNickName() + ", Welcome to the Bank!");
-        new MailSender().sendEmail("thebankmanager@thebank.com", _customer.getNickName()+"@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
+        mailSender.sendEmail("thebankmanager@thebank.com", _customer.getNickName() + "@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
     }
 
     private boolean shouldAdd(Customer _customer) {

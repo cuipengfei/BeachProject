@@ -6,6 +6,7 @@ import beach.utils.requests.InsufficientException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static beach.utils.EmailSender.sendMail;
 import static beach.utils.handlers.Handlers.findHandler;
 
 /**
@@ -39,8 +40,7 @@ public class Bank {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd){
             customerList.add(customer);
-            customer.getEmail().setAddress(customer.getName() + "@thebank.com");
-            customer.getEmail().setContent("Dear " + customer.getName() + ", Welcome to the Bank");
+            sendMail(customer);
         }
         return isShouldAdd;
     }

@@ -10,6 +10,9 @@ import static beach.utils.requests.CustomerRequest.withdraw;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 
 /**
  * Created by mlding on 8/15/15.
@@ -116,19 +119,20 @@ public class BankTest {
         assertThat(aaa.getAccount().getMoney(), is(0));
     }
 
+    private EmailSender mockedSender;
     @Test
     public void shouldSentMessageIfCustomerWasAdded() throws Exception {
         Customer bbb = Customer.createCustomer("bbb", new Date());
         Bank bank = new Bank();
         bank.addCustomer(bbb);
-
-        assertThat(bbb.getEmail().getContent(), is("Dear " + bbb.getName() + ", Welcome to the Bank"));
+        mockedSender = mock(EmailSender.class);
+        verify(mockedSender);
     }
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() throws Exception {
         Customer bbb = Customer.createCustomer("bbb", new Date());
-
-        assertNull(bbb.getEmail().getContent());
+        mockedSender = mock(EmailSender.class);
+        verify(mockedSender);
     }
 }

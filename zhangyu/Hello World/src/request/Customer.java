@@ -13,6 +13,7 @@ public class Customer {
     private Account myAccount;
     private String emailAddress;
     private MailBox myMailBox;
+    public  boolean isPremium = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;

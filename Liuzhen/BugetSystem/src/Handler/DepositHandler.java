@@ -2,6 +2,7 @@ package Handler;
 
 import Request.CustomerRequest;
 import Src.Customer;
+import Src.MailSender;
 
 public class DepositHandler implements RequestHandler {
     @Override

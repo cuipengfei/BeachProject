@@ -7,11 +7,21 @@ import java.util.Date;
  */
 public class Customer {
 
+
     private String nickname;
     private Date dateofBirth;
     private final Account account = new Account();
     private String emailAddress;
     private String message;
+    private boolean isPreminumDefault = false;
+
+    public void setIsPreminumDefault(boolean isPreminumDefault) {
+        this.isPreminumDefault = isPreminumDefault;
+    }
+
+    public boolean isPreminum() {
+        return isPreminumDefault;
+    }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -37,14 +47,14 @@ public class Customer {
         return account;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public Customer(String nickname, Date dateofBirth) {
         this.nickname = nickname;
         this.dateofBirth = dateofBirth;
         this.emailAddress = nickname + "@bank.com";
 
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

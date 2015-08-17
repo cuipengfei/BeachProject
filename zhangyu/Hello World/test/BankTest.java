@@ -4,6 +4,8 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by yuzhang on 8/14/15.
@@ -58,14 +60,51 @@ public class BankTest {
         bank1.addToBank(customer1);
 
         assertThat(customer1.getMyMailBox().getMessage(),is("Dear zhangyu , Welcome to bank"));
-        assertThat(customer1.getEmailAddress(),is("zhangyu@bank.com"));
+        assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
 
     @Test(expected = NullPointerException.class)
     public void should_throw_exception_when_the_no_added_customer_getMailBox() throws Exception {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
 
-        assertThat(customer1.getMyMailBox().getMessage(),is("Dear zhangyu , Welcome to bank"));
-        assertThat(customer1.getEmailAddress(),is("zhangyu@bank.com"));
+        assertThat(customer1.getMyMailBox().getMessage(), is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
+
+    @Test
+    public void should_call_sendEmail_when_addToBank() throws Exception {
+        EmailSend sender = mock(EmailSend.class);
+
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+        bank.addToBank(customer1);
+
+        verify(sender).sendEmail(customer1);
+    }
+
+    @Test
+    public void should_isCallEmailSend_is_true_when_addToBank() throws Exception {
+        MockEmailSend mockSender = new MockEmailSend();
+
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(mockSender);
+        bank.addToBank(customer1);
+
+        assertTrue(mockSender.isCallEmailSendToCustomer());
+    }
+
+    @Test
+    public void should_manager_receive_mail_when_customer_turn_to_premium() throws Exception {
+        MockEmailSend mockSender = new MockEmailSend();
+
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(mockSender);
+        bank.addToBank(customer1);
+
+        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
+        bank.handleRequest(request1);
+
+        assertTrue(mockSender.isCallEmailSendToManager());
+    }
+
 }

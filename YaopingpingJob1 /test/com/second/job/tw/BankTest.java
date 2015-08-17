@@ -8,8 +8,7 @@ import static com.second.job.tw.request.CustomerRequest.despoitRequst;
 import static com.second.job.tw.request.CustomerRequest.withdrawRequest;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by ppyao on 8/12/15.
@@ -63,9 +62,9 @@ public class BankTest {
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
-        bank.handleRequest(despoitRequst(customer, 100.0));
+        bank.handleRequest(despoitRequst(customer, 5000.0));
         //then
-        assertThat(customer.getAccount().getBalance(), is(100.0));
+        assertThat(customer.getAccount().getBalance(), is(5000.0));
     }
 
     @Test
@@ -84,7 +83,7 @@ public class BankTest {
     @Test
     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
         //given
-        MailSender sender=new MailSender();
+        MailSender sender = new MailSender();
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
@@ -98,7 +97,7 @@ public class BankTest {
     @Test(expected = OverdraftException.class)
     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdraftException {
         //given
-        MailSender sender=new MailSender();
+        MailSender sender = new MailSender();
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
@@ -110,7 +109,7 @@ public class BankTest {
     @Test
     public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd() throws OverdraftException {
         //  given
-        MailSender sender=new MailSender();
+        MailSender sender = new MailSender();
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         //when
@@ -132,14 +131,41 @@ public class BankTest {
     }
 
     @Test
-    public void bankActualSendEmailImitationMockito()
-    {
-        MailSendMockito sender=new MailSendMockito();
-        Bank bank=new Bank(sender);
-        Customer customer=new Customer("yaopingping",new Date());
+    public void bankActualSendEmailImitationMockito() {
+        MailSendMockito sender = new MailSendMockito();
+        Bank bank = new Bank(sender);
+        Customer customer = new Customer("yaopingping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
 
-        assertThat(sender.isSendMailCalled(),is(true));
+        assertThat(sender.isSendMailCalled(), is(true));
     }
 
+    @Test
+    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan4000() throws OverdraftException {
+        //given
+        MailSender sender = mock(MailSender.class);
+        Bank bank = new Bank(sender);
+        Customer customer = new Customer("yaopingping", new Date());
+        //when
+        bank.AddCustomertoBankwhenValid(customer);
+        bank.handleRequest(despoitRequst(customer, 40000.0));
+        String message = customer.getNickname() + "is a premium customer";
+
+        //then
+        verify(sender).sendEmail(bank.bankManager, message);
+    }
+
+    @Test
+    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan4000() throws OverdraftException {
+        //given
+        MailSender sender = mock(MailSender.class);
+        Bank bank = new Bank(sender);
+        Customer customer = new Customer("yaopingping", new Date());
+        //when
+        bank.AddCustomertoBankwhenValid(customer);
+        bank.handleRequest(despoitRequst(customer, 30000.0));
+        String message = customer.getNickname() + "is a premium customer";
+        never();
+    }
+    
 }

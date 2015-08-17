@@ -1,16 +1,14 @@
 package main.java.com.thoughtworks;
 
+import main.java.com.thoughtworks.exception.OverdrawException;
+import org.junit.Test;
+
 import java.util.Date;
 
 import static main.java.com.thoughtworks.requests.CustomerRequest.deposit;
 import static main.java.com.thoughtworks.requests.CustomerRequest.withdraw;
-import static org.junit.Assert.*;
-
-import main.java.com.thoughtworks.exception.OverdrawException;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
-
+import static org.junit.Assert.*;
 
 public class BankTest {
 

@@ -9,17 +9,9 @@ public class Customer {
 
     private String nickname;
     private Date dateofBirth;
-    private Mail mail = null;
     private final Account account = new Account();
     private String emailAddress;
-
-    public Mail getMail() {
-        return mail;
-    }
-
-    public void setMail(Mail mail) {
-        this.mail = mail;
-    }
+    private String message;
 
     public String getEmailAddress() {
         return emailAddress;
@@ -52,4 +44,7 @@ public class Customer {
 
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

@@ -7,14 +7,15 @@ public class Customer {
     private final String nickName;
     private final Date dateOfBirth;
     private double balance;
-
     private EmailBox emailBox;
+    private String emailAddress;
 
-
-    public EmailBox getEmailBox() {
-
-        return emailBox;
+    public Customer(String nickName, Date dateOfBirth) {
+        this.nickName = nickName;
+        this.dateOfBirth = dateOfBirth;
     }
+
+    public EmailBox getEmailBox() {return emailBox;}
 
     public double getBalance() {
         return balance;
@@ -32,22 +33,11 @@ public class Customer {
         return emailAddress;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public Customer(String nickName, Date dateOfBirth) {
-        this.nickName = nickName;
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    private String emailAddress;
+    public String getNickName() {return nickName;}
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
-    public void setEmailBox(EmailBox emailBox) {
-        this.emailBox = emailBox;
-    }
+    public void setEmailBox(EmailBox emailBox) {this.emailBox = emailBox;}
 }

@@ -31,7 +31,8 @@ public class Bank {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
             customer.setMyMailBox(new MailBox());
-            sendEmail(customer);
+            Email email = new Email();
+            email.sendEmail(customer);
             return "add successful";
         } else {
             return "add failed";
@@ -41,10 +42,6 @@ public class Bank {
     public int handleRequest(CustomerRequest request) throws Exception {
         Handlers.findHandler(request.getType()).handle(request);
         return request.getCustomer().getMyAccount().getBalance();
-    }
-
-    private void sendEmail(Customer customer){
-        customer.getMyMailBox().setMessage("Dear " + customer.getNickname() + " , Welcome to bank");
     }
 
 }

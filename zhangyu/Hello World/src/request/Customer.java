@@ -11,12 +11,13 @@ public class Customer {
     private String nickname;
     private Date dateOFBirth;
     private Account myAccount;
-    private String emailAddress = nickname+"@bank.com";
+    private String emailAddress;
     private MailBox myMailBox;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
         this.dateOFBirth = dateOFBirth;
+        this.emailAddress = nickname+"@bank.com";
     }
 
     public String getNickname() {return nickname;}

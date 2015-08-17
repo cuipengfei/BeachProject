@@ -32,7 +32,7 @@ public class BankTest {
         CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,300);
         bank1.handleRequest(request1);
         CustomerRequest request2 = new CustomerRequest(customer1, Type.withdraw,100);
-        assertThat(200, is(bank1.handleRequest(request2)));
+        assertThat(bank1.handleRequest(request2), is(200));
     }
 
     @Test(expected = Exception.class)
@@ -62,6 +62,15 @@ public class BankTest {
         Bank bank1 = new Bank();
         bank1.addToBank(customer1);
 
-        assertThat("Dear zhangyu , Welcome to bank", is(customer1.getMyMailBox().getMessage()));
+        assertThat(customer1.getMyMailBox().getMessage(),is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getEmailAddress(),is("zhangyu@bank.com"));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void should_throw_exception_when_the_no_added_customer_getMailBox() throws Exception {
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+
+        assertThat(customer1.getMyMailBox().getMessage(),is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getEmailAddress(),is("zhangyu@bank.com"));
     }
 }

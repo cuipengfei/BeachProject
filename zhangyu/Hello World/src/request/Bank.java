@@ -26,11 +26,6 @@ public class Bank {
         return false;
     }
 
-/*    private boolean isValidEmailAddress(Customer customer) {
-        String emailAdress = customer.getEmailAddress();
-        return emailAdress.matches("^[_a-z0-9-]+([.][_a-z0-9-]+)*@[a-z0-9-]+([.][a-z0-9-]+)*$");
-    }*/
-
     public String addToBank(Customer customer) {
         if (isValidNickname(customer) && !isRepeative(customer)) {
             this.customers.add(customer);
@@ -48,7 +43,7 @@ public class Bank {
         return request.getCustomer().getMyAccount().getBalance();
     }
 
-    public void sendEmail(Customer customer){
+    private void sendEmail(Customer customer){
         customer.getMyMailBox().setMessage("Dear " + customer.getNickname() + " , Welcome to bank");
     }
 

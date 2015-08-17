@@ -9,5 +9,10 @@ public class DepositHandler implements RequestHandler{
     @Override
     public void handle(CustomerRequest request) {
         request.getCustomer().getMyAccount().deposit(request.getNum());
+        if( request.getCustomer().getMyAccount().getBalance() >40000){
+            request.getCustomer().isPremium = true;
+        }
     }
+
+
 }

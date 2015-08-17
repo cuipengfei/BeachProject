@@ -26,7 +26,8 @@ public class Bank {
     }
 
     private void sendWelcomeMessage(Customer _customer){
-        _customer.setMessage("Dear" + _customer.getNickName() + ", Welcome to the Bank!");
+        //_customer.setMessage("Dear" + _customer.getNickName() + ", Welcome to the Bank!");
+        new MailSender().sendEmail("thebankmanager@thebank.com", _customer.getNickName()+"@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
     }
 
     private boolean shouldAdd(Customer _customer) {

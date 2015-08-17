@@ -1,6 +1,5 @@
 package beach.utils.handlers;
 
-import beach.utils.Account;
 import beach.utils.requests.RequestType;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class Handlers {
             new HashMap<RequestType, RequestHandler>(){
         {
             put(RequestType.deposit, new DepositHandler());
-            put(RequestType.withdraw, new Account.WithdrawHandler());
+            put(RequestType.withdraw, new WithdrawHandler());
         }
     };
 

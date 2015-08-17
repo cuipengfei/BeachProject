@@ -131,13 +131,23 @@ public class BankTest {
         Customer bbb = Customer.createCustomer("bbb", new Date());
         bank.addCustomer(bbb);
 
+        System.out.println(bbb.getEmail().getContent());
+
         verify(mockedSender).sendMail(bbb);
     }
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() throws Exception {
         Customer bbb = Customer.createCustomer("bbb", new Date());
-        mockedSender = mock(EmailSender.class);
         verify(mockedSender).sendMail(bbb);
+    }
+
+    @Test
+    public void shouldSentMessageToManagerIfHavePremiumCustomer() throws Exception {
+        Customer ccc = Customer.createCustomer("ccc", new Date());
+        bank.addCustomer(ccc);
+        bank.handleRequest(deposit(ccc, 60000));
+
+        verify(mockedSender).sendMailToManager(bank.getBankManager(), ccc);
     }
 }

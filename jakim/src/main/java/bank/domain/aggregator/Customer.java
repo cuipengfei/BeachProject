@@ -8,6 +8,7 @@ public class Customer {
 
     private final String nickname;
     private final Date birthday;
+    private final Account account = new Account();
 
     public Customer(String nickname, Date birthday) {
         if (!hasBirthDay(birthday) || !isValidName(nickname)) {
@@ -27,5 +28,9 @@ public class Customer {
 
     public String nickname() {
         return this.nickname;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 }

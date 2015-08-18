@@ -14,7 +14,7 @@ public class Customer {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public void setIsPremiumCustomer(boolean isPremiumCustomer) {this.isPremiumCustomer = isPremiumCustomer;}
+    public void setPremiumCustomer(boolean isPremiumCustomer) {this.isPremiumCustomer = isPremiumCustomer;}
 
     public boolean isPremiumCustomer() {return isPremiumCustomer;}
 

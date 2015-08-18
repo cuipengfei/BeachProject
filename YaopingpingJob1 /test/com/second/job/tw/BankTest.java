@@ -1,5 +1,6 @@
 package com.second.job.tw;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -14,24 +15,30 @@ import static org.mockito.Mockito.*;
  * Created by ppyao on 8/12/15.
  */
 public class BankTest {
-    @Test
-    public void bankAcceptValidCustomer() {
-        MailSender sender = new MailSender();
-        //given
-        Bank bank = new Bank(sender);
-        Customer customer = new Customer("yaoping", new Date());
-        //when
-        boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
-        //then
-        assertTrue(isSuccess);
+    FasterMessageGateway sender;
+    Bank bank;
+
+    @Before
+    public void setUp() throws Exception {
+
+        sender = new FasterMessageGateway();
+        bank = new Bank(sender);
 
     }
 
     @Test
-    public void bankShouldUnacceptCustomerWhenNicknameInValidate() {
+    public void bankAcceptValidCustomer() {
         //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
+        Customer customer = new Customer("yaoping", new Date());
+        //when
+        boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
+
+        //then
+        assertTrue(isSuccess);
+    }
+
+    @Test
+    public void bankShouldUnacceptCustomerWhenNicknameInValidate() {
         Customer customer = new Customer("Yaoping", new Date());
         //when
         boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
@@ -42,63 +49,53 @@ public class BankTest {
 
     @Test
     public void bankShouldUnacceptCustomerWhenCustomerExist() {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer firstCustomer = new Customer("yaoping", new Date());
         Customer secondCustomer = new Customer("yaoping", new Date());
         //when
         boolean isFirstSuccess = bank.AddCustomertoBankwhenValid(firstCustomer);
         boolean isSecondSuccess = bank.AddCustomertoBankwhenValid(secondCustomer);
+
+        //then
         assertTrue(isFirstSuccess);
         assertFalse(isSecondSuccess);
     }
 
     @Test
     public void bankShouldDespoitMoney() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 5000.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(5000.0));
     }
 
     @Test
     public void bankShouldNotAcceptDespoitMoneyWhenMoneyLessThanZero() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, -10.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(0.0));
     }
 
     @Test
     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
         bank.handleRequest(withdrawRequest(customer, 50.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(50.0));
     }
 
     @Test(expected = OverdraftException.class)
     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
@@ -108,64 +105,69 @@ public class BankTest {
 
     @Test
     public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd() throws OverdraftException {
-        //  given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(0.0));
-
     }
 
     @Test
     public void bandActualSendEamil() {
-        MailSender sender = mock(MailSender.class);
-        Bank bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", new Date());
-        String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
-
-        bank.AddCustomertoBankwhenValid(customer);
-        verify(sender).sendEmail(customer, message);
-    }
-
-    @Test
-    public void bankActualSendEmailImitationMockito() {
-        MailSendMockito sender = new MailSendMockito();
-        Bank bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", new Date());
-        bank.AddCustomertoBankwhenValid(customer);
-
-        assertThat(sender.isSendMailCalled(), is(true));
-    }
-
-    @Test
-    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan4000() throws OverdraftException {
         //given
-        MailSender sender = mock(MailSender.class);
+        FasterMessageGateway sender = mock(FasterMessageGateway.class);
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
         //when
         bank.AddCustomertoBankwhenValid(customer);
-        bank.handleRequest(despoitRequst(customer, 40000.0));
-        String message = customer.getNickname() + "is a premium customer";
 
         //then
-        verify(sender).sendEmail(bank.bankManager, message);
+        verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping>,Welcome to the Bank");
+    }
+
+
+
+    @Test
+    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan40000() throws OverdraftException {
+        //given
+        FasterMessageGateway sender=mock(FasterMessageGateway.class);
+        Bank bank=new Bank(sender);
+        Customer customer = new Customer("yaopingping", new Date());
+        //when
+        bank.AddCustomertoBankwhenValid(customer);
+        bank.handleRequest(despoitRequst(customer, 40000.0));
+
+        //then
+        verify(sender).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping is a premium customer");
     }
 
     @Test
-    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan4000() throws OverdraftException {
+    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan40000() throws OverdraftException {
         //given
-        MailSender sender = mock(MailSender.class);
+        FasterMessageGateway sender = mock(FasterMessageGateway.class);
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
         //when
         bank.AddCustomertoBankwhenValid(customer);
         bank.handleRequest(despoitRequst(customer, 30000.0));
-        String message = customer.getNickname() + "is a premium customer";
-        never();
+
+        //then
+        verify(sender, times(0)).sendEmail(bank.bankManager.getEmailAddress(), "send message");
     }
-    
+
+    @Test
+    public void bankShouldAddPreminumOnce() throws OverdraftException {
+        //given
+        FasterMessageGateway sender=mock(FasterMessageGateway.class);
+        Bank bank=new Bank(sender);
+        Customer customer=new Customer("yaoping",new Date());
+        //when
+        bank.AddCustomertoBankwhenValid(customer);
+        bank.handleRequest(despoitRequst(customer, 40000.0));
+        bank.handleRequest(despoitRequst(customer, 10000.0));
+
+        verify(sender,times(1)).sendEmail(bank.bankManager.getEmailAddress(),"yaoping is a premium customer");
+    }
+
 }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
-    private MailSender mailSender;
-    public Bank(MailSender mailSender) {
+    private FasterMailSender mailSender;
+    public Bank(FasterMailSender mailSender) {
         this.mailSender = mailSender;
     }
     public boolean add(Customer _customer) {
@@ -25,11 +25,8 @@ public class Bank {
         if (customerList.contains(_request.getCustomer())){
             Handlers.findHandler(_request.getRequestType()).handle(_request);
 
-            boolean isPremiumCustomerBeforeDepositing = _request.getCustomer().isPremiumCustomer();
-
-            if (_request.getCustomer().getAccount()>=40000) {
-                if (!isPremiumCustomerBeforeDepositing)
-                    mailSender.sendEmail("thebank@thebank.com", "manager@thebank.com", "new premium customer", _request.getCustomer() + " is now a premium customer.");
+            if (_request.getCustomer().getAccount()>=40000 && !_request.getCustomer().isPremiumCustomer()) {
+                mailSender.sendEmail( "manager@thebank.com",_request.getCustomer() + " is now a premium customer.");
                 _request.getCustomer().setIsPremiumCustomer(true);
             }
         }
@@ -37,7 +34,7 @@ public class Bank {
     }
 
     private void sendWelcomeMessage(Customer _customer){
-        mailSender.sendEmail("thebank@thebank.com", _customer.getNickName() + "@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
+        mailSender.sendEmail( _customer.getNickName() + "@thebank.com", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
     }
 
     private boolean shouldAdd(Customer _customer) {

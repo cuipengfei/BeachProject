@@ -12,8 +12,8 @@ public class Customer {
     private Date dateOFBirth;
     private Account myAccount;
     private String emailAddress;
-    private MailBox myMailBox;
-    public  boolean isPremium = false;
+    private String message;
+    private boolean isPremium = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
@@ -31,8 +31,10 @@ public class Customer {
 
     public String getEmailAddress() {return emailAddress;}
 
-    public MailBox getMyMailBox() {return myMailBox;}
+    public String getMessage() {return message;}
 
-    public void setMyMailBox(MailBox myMailBox) {this.myMailBox = myMailBox;}
+    public boolean isPremium() {return isPremium;}
+
+    public void setIsPremium(boolean isPremium) {this.isPremium = isPremium;}
 }
 

@@ -16,17 +16,13 @@ import java.util.regex.Pattern;
  * Created by ppyao on 8/12/15.
  */
 public class Bank {
-    MailSender mailSender;
+    MessageGateway fasterMessageGateway = new FasterMessageGateway();
     LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
-    BankManager bankManager=new BankManager();
+    BankManager bankManager = new BankManager();
     static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
-
-    public Bank() {
-    }
-
-    public Bank(MailSender mailSender) {
-        this.mailSender = mailSender;
+    public Bank(MessageGateway fasterMessageGateway) {
+        this.fasterMessageGateway = fasterMessageGateway;
     }
 
     static {
@@ -38,11 +34,24 @@ public class Bank {
         if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
             String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
-            mailSender.sendEmail(customer, message);
+            fasterMessageGateway.sendEmail(customer.getEmailAddress(), message);
             return true;
         }
         return false;
     }
+
+    public void handleRequest(CustomerRequest request) throws OverdraftException {
+
+        if (customerLinkedList.contains(request.getCustomer())) {
+            customerHandlerMap.get(request.getType()).handlers(request);
+            if (isPrminumCustomer(request.getCustomer())) {
+                fasterMessageGateway.sendEmail(bankManager.getEmailAddress(), request.getCustomer().getNickname() + " is a premium customer");
+                bankManager.getPrminumCustomerList().add(request.getCustomer());
+                request.getCustomer().setIsPreminumDefault(true);
+            }
+        }
+    }
+
 
     private boolean isCustomerNotRepeat(Customer customer) {
         for (Customer customer1 : customerLinkedList) {
@@ -60,18 +69,11 @@ public class Bank {
         return matcher.find();
     }
 
-    public void handleRequest(CustomerRequest request) throws OverdraftException {
-
-        if (customerLinkedList.contains(request.getCustomer())) {
-           double balance= customerHandlerMap.get(request.getType()).handlers(request);
-            if(balance>=40000&&request.getCustomer().isPreminum()==false)
-            {
-                String message=request.getCustomer().getNickname()+"is a premium customer";
-                mailSender.sendEmail(bankManager,message);
-                bankManager.getPrminumCustomerList().add(request.getCustomer());
-                request.getCustomer().setIsPreminumDefault(true);
-            }
-
+    private boolean isPrminumCustomer(Customer customer) {
+        if (customer.getAccount().getBalance() >= 40000 && !(customer.isPreminum())) {
+            return true;
         }
+        return false;
+
     }
 }

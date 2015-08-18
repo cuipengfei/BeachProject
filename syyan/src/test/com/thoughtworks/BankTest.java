@@ -1,7 +1,5 @@
-package java.com.thoughtworks;
+package com.thoughtworks;
 
-import com.thoughtworks.Bank;
-import com.thoughtworks.Customer;
 import com.thoughtworks.exception.OverdrawException;
 import com.thoughtworks.external.FasterMessageGateway;
 import com.thoughtworks.requests.CustomerRequest;
@@ -126,5 +124,15 @@ public class BankTest {
         bank.handleRequest(CustomerRequest.deposit(customer, 10000d));
 
         verify(emailSender, never()).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
+    }
+
+    @Test
+    public void should_set_dateOfJoin_when_customer_is_added() {
+        Customer customer = new Customer("syyan123", new Date());
+        Date date = new Date();
+
+        bank.addCustomer(customer);
+
+        assertThat(customer.getDateOfJoin(), is(date));
     }
 }

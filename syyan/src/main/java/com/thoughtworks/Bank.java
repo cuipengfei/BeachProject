@@ -4,7 +4,9 @@ import com.thoughtworks.external.MessageGateway;
 import com.thoughtworks.requests.CustomerRequest;
 
 import com.thoughtworks.handlers.Handlers;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,7 @@ public class Bank {
     public boolean addCustomer(Customer customer) {
         if (!isExist(customer) && isValid(customer.getNickName())) {
             customerList.add(customer);
+            customer.setDateOfJoin(new Date());
             emailSender.sendMessage(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the Bank");
             return true;
         }

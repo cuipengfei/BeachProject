@@ -93,9 +93,6 @@ public class BankTest {
         bank.addCustomer(syyan123);
         bank.handleRequest(deposit(syyan123, 40000d));
         verify(emailSender).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
-        bank.handleRequest(withdraw(syyan123, 40000d));
-        bank.handleRequest(deposit(syyan123, 40000d));
-
     }
 
 

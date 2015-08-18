@@ -4,26 +4,24 @@ import handle.Account;
 
 import java.util.Date;
 
-/**
- * Created by yuzhang on 8/11/15.
- */
 public class Customer {
     private String nickname;
-    private Date dateOFBirth;
+    private Date dateOfBirth;
     private Account myAccount;
     private String emailAddress;
     private String message;
     private boolean isPremium = false;
+    private Date dateOfJoin;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
-        this.dateOFBirth = dateOFBirth;
+        this.dateOfBirth = dateOFBirth;
         this.emailAddress = nickname+"@bank.com";
     }
 
     public String getNickname() {return nickname;}
 
-    public Date getDateOFBirth() {return dateOFBirth;}
+    public Date getDateOfBirth() {return dateOfBirth;}
 
     public Account getMyAccount() {return myAccount;}
 
@@ -36,5 +34,9 @@ public class Customer {
     public boolean isPremium() {return isPremium;}
 
     public void setIsPremium(boolean isPremium) {this.isPremium = isPremium;}
+
+    public Date getDateOfJoin() {return dateOfJoin;}
+
+    public void setDateOfJoin(Date dateOfJoin) {this.dateOfJoin = dateOfJoin;}
 }
 

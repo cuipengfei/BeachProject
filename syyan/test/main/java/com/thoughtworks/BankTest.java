@@ -21,9 +21,9 @@ public class BankTest {
 
     @Test
     public void should_add_success_when_give_the_valid_information() throws Exception {
-        Customer customer = new Customer("yan123", new Date());
+        Customer syyan123 = new Customer("syyan123", new Date());
 
-        assertTrue(bank.addCustomer(customer));
+        assertTrue(bank.addCustomer(syyan123));
     }
 
     @Test
@@ -35,42 +35,42 @@ public class BankTest {
 
     @Test
     public void should_add_failure_when_give_the_same_nickName() throws Exception {
-        Customer customer = new Customer("yan123", new Date());
+        Customer customer = new Customer("syyan123", new Date());
 
         assertTrue(bank.addCustomer(customer));
-        Customer existCustomer = new Customer("yan123", new Date());
+        Customer existCustomer = new Customer("syyan123", new Date());
 
         assertFalse(bank.addCustomer(existCustomer));
     }
 
     @Test
     public void should_deposit_money_when_customer_is_valid() throws Exception, OverdrawException {
-        Customer syyan = new Customer("syyan123", new Date());
+        Customer syyan123 = new Customer("syyan123", new Date());
 
-        bank.addCustomer(syyan);
-        bank.handleRequest(deposit(syyan, 100d));
+        bank.addCustomer(syyan123);
+        bank.handleRequest(deposit(syyan123, 100d));
 
-        assertThat(syyan.getBalance(), is(100d));
+        assertThat(syyan123.getBalance(), is(100d));
     }
 
     @Test
     public void should_withdraw_money_when_balance_is_not_overdraw() throws Exception, OverdrawException {
-        Customer syyan = new Customer("syyan123", new Date());
+        Customer syyan123 = new Customer("syyan123", new Date());
 
-        bank.addCustomer(syyan);
-        bank.handleRequest(deposit(syyan, 100d));
-        bank.handleRequest(withdraw(syyan, 100d));
+        bank.addCustomer(syyan123);
+        bank.handleRequest(deposit(syyan123, 100d));
+        bank.handleRequest(withdraw(syyan123, 100d));
 
-        assertThat(syyan.getBalance(), is(0d));
+        assertThat(syyan123.getBalance(), is(0d));
     }
 
     @Test(expected = OverdrawException.class)
     public void should_not_withdraw_money_when_balance_is_overdraw() throws Exception, OverdrawException {
-        Customer syyan = new Customer("syyan123", new Date());
+        Customer syyan123 = new Customer("syyan123", new Date());
 
-        bank.addCustomer(syyan);
-        bank.handleRequest(deposit(syyan, 100d));
-        bank.handleRequest(withdraw(syyan, 200d));
+        bank.addCustomer(syyan123);
+        bank.handleRequest(deposit(syyan123, 100d));
+        bank.handleRequest(withdraw(syyan123, 200d));
     }
 
     @Test
@@ -87,11 +87,11 @@ public class BankTest {
 
     @Test
     public void should_use_sendMessage_when_addCustomer() {
-        Customer syyan = new Customer("syyan", new Date());
+        Customer syyan123 = new Customer("syyan123", new Date());
 
-        bank.addCustomer(syyan);
+        bank.addCustomer(syyan123);
 
-        verify(emailSender).sendMessage("syyan@thebank.com", "Dear syyan, Welcome to the Bank");
+        verify(emailSender).sendMessage("syyan123@thebank.com", "Dear syyan123, Welcome to the Bank");
     }
 
     @Test

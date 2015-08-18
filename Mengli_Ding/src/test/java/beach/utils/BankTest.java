@@ -1,7 +1,6 @@
+package beach.utils;
 
 import beach.external.FasterMessageGateway;
-import beach.utils.Bank;
-import beach.utils.Customer;
 import beach.utils.requests.InsufficientException;
 import org.junit.Before;
 import org.junit.Test;

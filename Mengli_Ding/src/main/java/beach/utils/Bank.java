@@ -16,11 +16,13 @@ public class Bank {
     private List<Customer> customerList = new ArrayList<>();
     private MessageGateway messageGateway;
 
+    public Bank() {}
+
     public Bank(MessageGateway messageGateway){
         this.messageGateway = messageGateway;
     }
 
-    private boolean isNotSameName(Customer customer){
+    private boolean isNotSameName(Customer customer) {
         for (Customer customertemp : customerList){
             if (customertemp.getName().equals(customer.getName()))
                 return false;

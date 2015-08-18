@@ -1,8 +1,4 @@
-package Src;
-
-/**
- * Created by zhenliu on 8/18/15.
- */
+package Bank;
 public interface MailSender {
     public void sendEmail(String receiverAddress,String mailContent);
 }

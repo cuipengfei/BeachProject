@@ -2,7 +2,7 @@ package Handler;
 
 import MyException.OverdrawException;
 import Request.CustomerRequest;
-import Src.Customer;
+import Customer.*;
 
 public class WithdrawHandler implements RequestHandler {
     @Override

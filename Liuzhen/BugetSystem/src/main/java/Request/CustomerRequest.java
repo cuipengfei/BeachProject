@@ -1,6 +1,5 @@
 package Request;
-
-import Src.Customer;
+import  Customer.*;
 
 public class CustomerRequest {
     private Customer customer;

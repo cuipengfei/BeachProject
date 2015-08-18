@@ -1,7 +1,8 @@
+import Bank.*;
+import Customer.*;
 import MyException.CustomerNotExistException;
 import MyException.OverdrawException;
 import Request.CustomerRequest;
-import Src.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -9,9 +10,7 @@ import org.mockito.Mockito;
 import java.util.Date;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-
-
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 public class BankTest {
     Bank bank0;

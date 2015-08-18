@@ -1,8 +1,4 @@
-package Src;
-
-/**
- * Created by zhenliu on 8/18/15.
- */
+package Bank;
 public class FasterMailSender implements MailSender{
     @Override
     public void sendEmail(String receiverAddress,String mailContent){

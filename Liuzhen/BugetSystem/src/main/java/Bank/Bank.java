@@ -1,10 +1,10 @@
-package Src;
-
+package Bank;
 import Handler.Handlers;
 import MyException.CustomerNotExistException;
-import Request.CustomerRequest;
+import Request.*;
 import java.util.LinkedList;
 import java.util.List;
+import Customer.*;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();

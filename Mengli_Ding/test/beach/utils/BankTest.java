@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 
@@ -131,13 +132,23 @@ public class BankTest {
         Customer bbb = Customer.createCustomer("bbb", new Date());
         bank.addCustomer(bbb);
 
+        System.out.println(bbb.getEmail().getContent());
+
         verify(mockedSender).sendMail(bbb);
     }
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() throws Exception {
         Customer bbb = Customer.createCustomer("bbb", new Date());
-        mockedSender = mock(EmailSender.class);
-        verify(mockedSender).sendMail(bbb);
+        verify(mockedSender, never()).sendMail(bbb);
+    }
+
+    @Test
+    public void shouldSentMessageToManagerIfHavePremiumCustomer() throws Exception {
+        Customer ccc = Customer.createCustomer("ccc", new Date());
+        bank.addCustomer(ccc);
+        bank.handleRequest(deposit(ccc, 60000));
+
+        verify(mockedSender).sendMailToManager(bank.getBankManager(), ccc);
     }
 }

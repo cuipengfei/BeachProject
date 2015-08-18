@@ -13,12 +13,16 @@ import static beach.utils.handlers.Handlers.findHandler;
  */
 public class Bank {
     private List<Customer> customerList = new ArrayList<>();
+    private BankManager bankManager = new BankManager();
     private EmailSender emailSender;
-
-    public Bank(){}
+    private boolean flag = false;
 
     public Bank(EmailSender emailSender){
         this.emailSender = emailSender;
+    }
+
+    public BankManager getBankManager() {
+        return bankManager;
     }
 
     private boolean isNotSameName(Customer customer){
@@ -39,6 +43,11 @@ public class Bank {
     public void handleRequest(CustomerRequest request) throws InsufficientException {
         if (customerList.contains(request.getCustomer())){
             findHandler(request.getType()).handle(request);
+
+            if (request.getCustomer().getAccount().getMoney() > 40000 && !flag ){
+                emailSender.sendMailToManager(bankManager, request.getCustomer());
+                flag = true;
+            }
         }
     }
 

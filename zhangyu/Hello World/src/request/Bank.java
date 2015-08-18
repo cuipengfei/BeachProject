@@ -12,6 +12,9 @@ import java.util.List;
 public class Bank {
     EmailSend sender;
     List<Customer> customers = new ArrayList<Customer>();
+    private Manager manager = new Manager();
+
+    public Manager getManager() {return manager;}
 
     public Bank(EmailSend sender) {
         this.sender = sender;
@@ -36,6 +39,7 @@ public class Bank {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
             customer.setMyMailBox(new MailBox());
+            sender.setContent("Dear " + customer.getNickname() + " , Welcome to bank");
             sender.sendEmail(customer);
             return "add successful";
         } else {
@@ -44,7 +48,16 @@ public class Bank {
     }
 
     public int handleRequest(CustomerRequest request) throws Exception {
+        Customer customer = request.getCustomer();
         Handlers.findHandler(request.getType()).handle(request);
-        return request.getCustomer().getMyAccount().getBalance();
+
+        if( customer.getMyAccount().getBalance()>40000 && (customer.isPremium == false)){
+            customer.isPremium = true;
+            sender.setContent(customer.getNickname() + " is now a premium customer");
+            sender.sendEmail(manager);
+        }
+
+        return customer.getMyAccount().getBalance();
     }
+
 }

@@ -22,7 +22,5 @@ public class CustomerRequest {
         return customer;
     }
 
-    public Type getType() {
-        return type;
-    }
+    public Type getType() {return type;}
 }

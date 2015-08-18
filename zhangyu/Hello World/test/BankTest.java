@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by yuzhang on 8/14/15.
- */
 public class BankTest {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     EmailSend sender = new EmailSend();
@@ -59,7 +57,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        assertThat(customer1.getMyMailBox().getMessage(),is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getMessage(),is("Dear zhangyu , Welcome to bank"));
         assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
 
@@ -67,7 +65,7 @@ public class BankTest {
     public void should_throw_exception_when_the_no_added_customer_getMailBox() throws Exception {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
 
-        assertThat(customer1.getMyMailBox().getMessage(), is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getMessage(), is("Dear zhangyu , Welcome to bank"));
         assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
 
@@ -79,7 +77,8 @@ public class BankTest {
         Bank bank = new Bank(sender);
         bank.addToBank(customer1);
 
-        verify(sender).sendEmail(customer1);
+        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
+        verify(sender).sendEmail(customer1, content);
     }
 
     @Test
@@ -107,4 +106,34 @@ public class BankTest {
         assertTrue(mockSender.isCallEmailSendToManager());
     }
 
+    @Test
+    public void should_call_sendEmail_to_manager_when_customer_turn_to_premium() throws Exception {
+        EmailSend sender = mock(EmailSend.class);
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
+
+        bank.addToBank(customer1);
+        bank.handleRequest(request1);
+
+        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
+        verify(sender).sendEmail(customer1, content);
+    }
+
+    @Test
+    public void should_manager_should_only_ever_receive_email_once() throws Exception {
+        EmailSend sender = mock(EmailSend.class);
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
+        CustomerRequest request2 = new CustomerRequest(customer1, Type.withdraw,50000);
+
+        bank.addToBank(customer1);
+        bank.handleRequest(request1);
+        bank.handleRequest(request1);
+        bank.handleRequest(request2);
+
+        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
+        verify(sender,times(1)).sendEmail(customer1, content);
+    }
 }

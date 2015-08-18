@@ -7,12 +7,21 @@ public class MockEmailSend extends EmailSend {
     private boolean isCallEmailSendToCustomer = false;
     private boolean isCallEmailSendToManager = false;
 
-    public boolean isCallEmailSendToCustomer() {return isCallEmailSendToCustomer;}
-    public boolean isCallEmailSendToManager() {return isCallEmailSendToManager;}
+    public boolean isCallEmailSendToCustomer() {
+        return isCallEmailSendToCustomer;
+    }
+
+    public boolean isCallEmailSendToManager() {
+        return isCallEmailSendToManager;
+    }
 
     @Override
-    public void sendEmail(Customer receiver) {isCallEmailSendToCustomer = true;}
+    public void sendEmail(Customer receiver, String content) {
+        isCallEmailSendToCustomer = true;
+    }
 
     @Override
-    public void sendEmail(Manager manager) {isCallEmailSendToManager = true;}
+    public void sendEmail(Manager manager, String content) {
+        isCallEmailSendToManager = true;
+    }
 }

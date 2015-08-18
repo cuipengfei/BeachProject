@@ -5,9 +5,5 @@ package request;
  */
 public class Manager {
     private String emailAddress = "manager@thebank.com";
-    private MailBox MailBox = new MailBox();
-
-    public request.MailBox getMailBox() {
-        return MailBox;
-    }
+    private String message;
 }

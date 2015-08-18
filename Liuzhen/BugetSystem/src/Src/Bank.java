@@ -25,7 +25,7 @@ public class Bank {
         if (customerList.contains(_request.getCustomer())){
             Handlers.findHandler(_request.getRequestType()).handle(_request);
 
-            if (_request.getCustomer().getAccount()>=40000 && !_request.getCustomer().isPremiumCustomer()) {
+            if (_request.getCustomer().getAccount()>=40000.0 && !_request.getCustomer().isPremiumCustomer()) {
                 mailSender.sendEmail( "manager@thebank.com",_request.getCustomer() + " is now a premium customer.");
                 _request.getCustomer().setIsPremiumCustomer(true);
             }

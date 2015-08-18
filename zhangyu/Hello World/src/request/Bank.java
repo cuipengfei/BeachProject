@@ -1,22 +1,21 @@
 package request;
 
+import email.EmailSend;
+import email.MessageGateway;
 import handle.Handlers;
 import handle.Account;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by yuzhang on 8/11/15.
- */
 public class Bank {
-    EmailSend sender;
+    MessageGateway sender;
     List<Customer> customers = new ArrayList<Customer>();
     private Manager manager = new Manager();
 
-    public Bank(EmailSend sender) {
-        this.sender = sender;
-    }
+    public Manager getManager() {return manager;}
+
+    public Bank(MessageGateway sender) {this.sender = sender;}
 
     private boolean isValidNickname(Customer customer ){
         String nickname = customer.getNickname();
@@ -37,7 +36,7 @@ public class Bank {
             this.customers.add(customer);
             customer.setMyAccount(new Account());
             String content =  "Dear " + customer.getNickname() + " , Welcome to bank";
-            sender.sendEmail(customer,content);
+            sender.sendEmail(customer.getEmailAddress(),content);
             return "add successful";
         } else {
             return "add failed";
@@ -51,7 +50,7 @@ public class Bank {
         if( customer.getMyAccount().getBalance()>=40000 && !customer.isPremium()){
             customer.setIsPremium(true);
             String content = customer.getNickname() + " is now a premium customer";
-            sender.sendEmail(manager,content);
+            sender.sendEmail(manager.getEmailAddress(),content);
         }
 
         return customer.getMyAccount().getBalance();

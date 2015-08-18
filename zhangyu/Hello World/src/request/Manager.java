@@ -6,4 +6,6 @@ package request;
 public class Manager {
     private String emailAddress = "manager@thebank.com";
     private String message;
+
+    public String getEmailAddress() {return emailAddress;}
 }

@@ -1,7 +1,7 @@
 import org.junit.Test;
 import request.Bank;
 import request.Customer;
-import request.EmailSend;
+import email.EmailSend;
 
 import java.text.SimpleDateFormat;
 import static org.hamcrest.Matchers.is;

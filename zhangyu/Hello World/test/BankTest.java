@@ -1,3 +1,6 @@
+import email.EmailSend;
+import email.FasterEmailSend;
+import email.MockEmailSend;
 import request.*;
 import org.junit.Test;
 
@@ -9,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class BankTest {
+
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     EmailSend sender = new EmailSend();
     Bank bank1 = new Bank(sender);
@@ -78,7 +82,7 @@ public class BankTest {
         bank.addToBank(customer1);
 
         String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
-        verify(sender).sendEmail(customer1, content);
+        verify(sender).sendEmail(customer1.getEmailAddress(), content);
     }
 
     @Test
@@ -89,7 +93,7 @@ public class BankTest {
         Bank bank = new Bank(mockSender);
         bank.addToBank(customer1);
 
-        assertTrue(mockSender.isCallEmailSendToCustomer());
+        assertTrue(mockSender.isCallEmailSend());
     }
 
     @Test
@@ -103,7 +107,7 @@ public class BankTest {
         CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
         bank.handleRequest(request1);
 
-        assertTrue(mockSender.isCallEmailSendToManager());
+        assertTrue(mockSender.isCallEmailSend());
     }
 
     @Test
@@ -116,8 +120,8 @@ public class BankTest {
         bank.addToBank(customer1);
         bank.handleRequest(request1);
 
-        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
-        verify(sender).sendEmail(customer1, content);
+        String content = customer1.getNickname() + " is now a premium customer";
+        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 
     @Test
@@ -133,7 +137,21 @@ public class BankTest {
         bank.handleRequest(request1);
         bank.handleRequest(request2);
 
-        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
-        verify(sender,times(1)).sendEmail(customer1, content);
+        String content = customer1.getNickname() + " is now a premium customer";
+        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
+    }
+
+    @Test
+    public void should_instead_EmailSend_when_using_FasterEmailSend() throws Exception {
+        FasterEmailSend sender = mock(FasterEmailSend.class);
+        Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
+
+        bank.addToBank(customer1);
+        bank.handleRequest(request1);
+
+        String content = customer1.getNickname() + " is now a premium customer";
+        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 }

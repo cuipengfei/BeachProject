@@ -175,7 +175,6 @@ public class BankTest {
         Date date = new Date();
 
         bank1.addToBank(customer1);
-        System.out.println(dataFormat.format(customer1.getDateOfJoin()));
         assertTrue(customer1.getDateOfJoin().equals(date));
     }
 }

@@ -1,6 +1,7 @@
-package beach.utils;
 
 import beach.external.FasterMessageGateway;
+import beach.utils.Bank;
+import beach.utils.Customer;
 import beach.utils.requests.InsufficientException;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,45 +119,45 @@ public class BankTest {
     @Test
     public void shouldNotHandleAnyRequestIfCustomerWasNotAdded() throws Exception {
         //given customer not added
-        Customer aaa = Customer.createCustomer("aaa", new Date());
+        Customer customer = Customer.createCustomer("aaa", new Date());
 
         //when
-        bank.handleRequest(deposit(aaa, 8));
+        bank.handleRequest(deposit(customer, 8));
 
         //then
-        assertThat(aaa.getAccount().getMoney(), is(0));
+        assertThat(customer.getAccount().getMoney(), is(0));
     }
 
     @Test
     public void shouldSentMessageIfCustomerWasAdded() throws Exception {
-        Customer bbb = Customer.createCustomer("bbb", new Date());
-        bank.addCustomer(bbb);
+        Customer customer = Customer.createCustomer("bbb", new Date());
+        bank.addCustomer(customer);
 
         verify(mockedFasterMessageGateway).sendMail(anyString(), anyString());
     }
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() throws Exception {
-        Customer bbb = Customer.createCustomer("bbb", new Date());
+        Customer customer = Customer.createCustomer("bbb", new Date());
         verify(mockedFasterMessageGateway, never()).sendMail(anyString(), anyString());
     }
 
     @Test
     public void shouldSentMessageToManagerIfHavePremiumCustomer() throws Exception {
-        Customer ccc = Customer.createCustomer("ccc", new Date());
-        bank.addCustomer(ccc);
-        bank.handleRequest(deposit(ccc, 60000));
+        Customer customer = Customer.createCustomer("ccc", new Date());
+        bank.addCustomer(customer);
+        bank.handleRequest(deposit(customer, 60000));
 
-        verify(mockedFasterMessageGateway, times(1)).sendMail("manager@thebank.com",  ccc.getName()+ " is now a premium customer");
+        verify(mockedFasterMessageGateway, times(1)).sendMail("manager@thebank.com", customer.getName() + " is now a premium customer");
     }
 
     @Test
     public void shouldNotSentMessageToManagerAgainIfCustomerIsPremiunOnce() throws Exception {
-        Customer ccc = Customer.createCustomer("ccc", new Date());
-        bank.addCustomer(ccc);
-        bank.handleRequest(deposit(ccc, 60000));
-        bank.handleRequest(deposit(ccc, 10000));
-        bank.handleRequest(withdraw(ccc, 60000));
+        Customer customer = Customer.createCustomer("ccc", new Date());
+        bank.addCustomer(customer);
+        bank.handleRequest(deposit(customer, 60000));
+        bank.handleRequest(deposit(customer, 10000));
+        bank.handleRequest(withdraw(customer, 60000));
 
         verify(mockedFasterMessageGateway, times(2)).sendMail(anyString(), anyString());
     }

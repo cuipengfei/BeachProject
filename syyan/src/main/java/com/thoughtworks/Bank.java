@@ -1,21 +1,22 @@
 package main.java.com.thoughtworks;
 
 import main.java.com.thoughtworks.exception.OverdrawException;
+import main.java.com.thoughtworks.external.FasterMessageGateway;
 import main.java.com.thoughtworks.requests.CustomerRequest;
-import main.java.com.thoughtworks.requests.RequestType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static main.java.com.thoughtworks.handlers.Handlers.findHandler;
 
 
 public class Bank {
-    private EmailSender emailSender;
+    private FasterMessageGateway emailSender;
 
     private List<Customer> customerList = new ArrayList<>();
 
-    public Bank(EmailSender emailSender) {
+    public Bank(FasterMessageGateway emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -31,7 +32,8 @@ public class Bank {
     public void handleRequest(CustomerRequest request) throws OverdrawException {
         if (customerList.contains(request.getCustomer()))
             findHandler(request.getRequestType()).handle(request);
-        if (request.getRequestType() == RequestType.Deposit && !request.getCustomer().isPremiumCustomer() && shouldPremiumCustomer(request.getCustomer())) {
+        if (shouldBePremiumCustomer(request.getCustomer())) {
+            request.getCustomer().setPremiumCustomer(true);
             emailSender.sendMessage("manager@thebank.com", request.getCustomer().getNickName() + " is now a premium customer");
         }
     }
@@ -50,9 +52,8 @@ public class Bank {
         return false;
     }
 
-    private boolean shouldPremiumCustomer(Customer customer) {
-        if (customer.getBalance() >= 40000)
-            customer.setIsPremiumCustomer(true);
-        return customer.isPremiumCustomer();
+    private boolean shouldBePremiumCustomer(Customer customer) {
+        return !customer.isPremiumCustomer() && customer.getBalance() >= 40000;
     }
+
 }

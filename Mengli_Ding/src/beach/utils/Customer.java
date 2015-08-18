@@ -9,10 +9,14 @@ public class Customer {
     private final String name;
     private final Date date;
     private final Account account = new Account();
-    private Email email = new Email();
+    private boolean isPremiumCustomer = false;
 
-    public Email getEmail() {
-        return email;
+    public boolean isPremiumCustomer() {
+        return isPremiumCustomer;
+    }
+
+    public void setIsPremiumCustomer(boolean isPremiumCustomer) {
+        this.isPremiumCustomer = isPremiumCustomer;
     }
 
     public Account getAccount() {

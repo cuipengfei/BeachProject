@@ -1,6 +1,6 @@
 package beach.utils;
 
-import beach.external.FasterMessageGateway;
+import beach.external.MessageGateway;
 import beach.utils.requests.CustomerRequest;
 import beach.utils.requests.InsufficientException;
 
@@ -14,10 +14,10 @@ import static beach.utils.handlers.Handlers.findHandler;
  */
 public class Bank {
     private List<Customer> customerList = new ArrayList<>();
-    private FasterMessageGateway fasterMessageGateway;
+    private MessageGateway messageGateway;
 
-    public Bank(FasterMessageGateway fasterMessageGateway){
-        this.fasterMessageGateway = fasterMessageGateway;
+    public Bank(MessageGateway messageGateway){
+        this.messageGateway = messageGateway;
     }
 
     private boolean isNotSameName(Customer customer){
@@ -41,7 +41,7 @@ public class Bank {
 
              Boolean flag = request.getCustomer().isPremiumCustomer();
             if (request.getCustomer().getAccount().getMoney() > 40000 && !flag ){
-                fasterMessageGateway.sendMail("manager@thebank.com", request.getCustomer().getName() + " is now a premium customer");
+                messageGateway.sendMail("manager@thebank.com", request.getCustomer().getName() + " is now a premium customer");
                 request.getCustomer().setIsPremiumCustomer(true);
             }
         }
@@ -51,7 +51,7 @@ public class Bank {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd){
             customerList.add(customer);
-            fasterMessageGateway.sendMail(customer.getName() + "@thebank.com", "Dear " + customer.getName() + ", Welcome to the Bank");
+            messageGateway.sendMail(customer.getName() + "@thebank.com", "Dear " + customer.getName() + ", Welcome to the Bank");
         }
         return isShouldAdd;
     }

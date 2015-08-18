@@ -1,7 +1,10 @@
 package bank.domain.service;
 
 import bank.domain.aggregator.Customer;
-import bank.repository.CustomerRepository;
+import bank.infrastructure.CustomerRepository;
+
+import static bank.domain.event.Event.customerAddedEvent;
+import static bank.domain.event.Event.fire;
 
 public class CustomerService {
     private CustomerRepository customerRepository;
@@ -11,7 +14,12 @@ public class CustomerService {
     }
 
     public boolean addCustomer(Customer customer) {
-        return !isExist(customer) && customerRepository.save(customer);
+        if (!isExist(customer)) {
+            customerRepository.save(customer);
+            fire(customerAddedEvent(customer));
+            return true;
+        }
+        return false;
     }
 
     private boolean isExist(Customer customer) {

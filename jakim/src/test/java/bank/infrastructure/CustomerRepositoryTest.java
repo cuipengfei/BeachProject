@@ -1,4 +1,4 @@
-package bank.repository;
+package bank.infrastructure;
 
 import bank.domain.aggregator.Customer;
 import org.junit.Test;

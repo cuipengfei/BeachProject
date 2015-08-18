@@ -1,4 +1,4 @@
-package bank.repository;
+package bank.infrastructure;
 
 import bank.domain.aggregator.Customer;
 
@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CustomerRepository {
-    private Set<Customer> customers = new HashSet<Customer>();
+    private Set<Customer> customers = new HashSet<>();
 
     public boolean save(Customer customer) {
         return customers.add(customer);

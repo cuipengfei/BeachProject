@@ -3,7 +3,10 @@ package bank.domain.service;
 import bank.domain.aggregator.Account;
 import bank.domain.aggregator.Customer;
 import bank.domain.exception.OverdrawException;
-import bank.repository.CustomerRepository;
+import bank.infrastructure.CustomerRepository;
+
+import static bank.domain.event.Event.fire;
+import static bank.domain.event.Event.newPremiumEvent;
 
 public class BankingService {
     private CustomerRepository customerRepository;
@@ -13,7 +16,16 @@ public class BankingService {
     }
 
     public float deposit(Customer customer, float amount) {
-        return getAccount(customer).add(amount);
+        float balance = getAccount(customer).add(amount);
+        if (newPremium(customer, balance)) {
+            customer.setPremium(true);
+            fire(newPremiumEvent(customer));
+        }
+        return balance;
+    }
+
+    private boolean newPremium(Customer customer, float balance) {
+        return balance >= 40000 && !customer.isPremium();
     }
 
     public float withdraw(Customer customer, float amount) {

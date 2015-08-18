@@ -2,7 +2,7 @@ package bank.domain.service;
 
 import bank.domain.aggregator.Customer;
 import bank.domain.exception.OverdrawException;
-import bank.repository.CustomerRepository;
+import bank.infrastructure.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;
 

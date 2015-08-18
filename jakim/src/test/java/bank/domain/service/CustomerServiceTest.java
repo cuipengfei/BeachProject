@@ -1,7 +1,7 @@
 package bank.domain.service;
 
 import bank.domain.aggregator.Customer;
-import bank.repository.CustomerRepository;
+import bank.infrastructure.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,8 +34,8 @@ public class CustomerServiceTest {
     @Test
     public void should_not_add_customer_when_customer_already_exist_with_nickname() throws Exception {
         Customer customer = new Customer("jakim", new Date());
+        customerRepository.save(customer);
 
-        assertTrue(customerService.addCustomer(customer));
         assertTrue(customerRepository.findByNickname("jakim").isPresent());
 
         Customer sameCustomer = new Customer("jakim", new Date());

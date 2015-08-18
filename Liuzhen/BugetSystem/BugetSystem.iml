@@ -9,6 +9,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="junit-4.7" level="project" />
+<<<<<<< HEAD
     <orderEntry type="library" name="mockito-all-1.9.5" level="project" />
+=======
+    <orderEntry type="library" name="Maven: org.mockito:mockito-all:1.9.5" level="project" />
+    <orderEntry type="library" name="mockito-1.9" level="project" />
+>>>>>>> d5d290ed55cf9a9887b7de5c126eef7364c8596a
   </component>
 </module>

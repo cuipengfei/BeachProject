@@ -1,6 +1,5 @@
-package java;
+package beach.utils;
 
-import beach.utils.Customer;
 import org.junit.Test;
 
 import java.util.Date;

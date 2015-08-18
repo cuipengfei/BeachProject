@@ -4,11 +4,17 @@ import main.java.com.thoughtworks.Customer;
 import main.java.com.thoughtworks.exception.OverdrawException;
 import main.java.com.thoughtworks.requests.CustomerRequest;
 
-public class Deposit implements Handler {
+public class WithdrawHandler implements Handler {
     @Override
-    public double handle(CustomerRequest customerRequest) throws OverdrawException {
+    public double handle(CustomerRequest customerRequest){
+
         Customer customer = customerRequest.getCustomer();
-        customer.setBalance(customer.getBalance() + customerRequest.getBalance());
+        double money = customerRequest.getBalance();
+
+        if (customer.getBalance() < customerRequest.getBalance()) throw new OverdrawException();
+        customer.setBalance(customer.getBalance() - money);
+
         return customer.getBalance();
+
     }
 }

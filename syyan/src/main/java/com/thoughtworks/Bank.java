@@ -1,6 +1,5 @@
 package main.java.com.thoughtworks;
 
-import main.java.com.thoughtworks.exception.OverdrawException;
 import main.java.com.thoughtworks.external.FasterMessageGateway;
 import main.java.com.thoughtworks.requests.CustomerRequest;
 
@@ -29,7 +28,7 @@ public class Bank {
         return false;
     }
 
-    public void handleRequest(CustomerRequest request) throws OverdrawException {
+    public void handleRequest(CustomerRequest request) {
         if (customerList.contains(request.getCustomer()))
             findHandler(request.getRequestType()).handle(request);
         if (shouldBePremiumCustomer(request.getCustomer())) {

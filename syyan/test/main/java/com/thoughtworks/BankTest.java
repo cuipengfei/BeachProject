@@ -20,21 +20,21 @@ public class BankTest {
     private Bank bank = new Bank(emailSender);
 
     @Test
-    public void should_add_success_when_give_the_valid_information() throws Exception {
+    public void should_add_success_when_give_the_valid_information() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         assertTrue(bank.addCustomer(syyan123));
     }
 
     @Test
-    public void should_add_failure_when_give_the_valid_nickName() throws Exception {
+    public void should_add_failure_when_give_the_valid_nickName() {
         Customer notValidCustomer = new Customer("YAN", new Date());
 
         assertFalse(bank.addCustomer(notValidCustomer));
     }
 
     @Test
-    public void should_add_failure_when_give_the_same_nickName() throws Exception {
+    public void should_add_failure_when_give_the_same_nickName() {
         Customer customer = new Customer("syyan123", new Date());
 
         assertTrue(bank.addCustomer(customer));
@@ -44,7 +44,7 @@ public class BankTest {
     }
 
     @Test
-    public void should_deposit_money_when_customer_is_valid() throws Exception, OverdrawException {
+    public void should_deposit_money_when_customer_is_valid() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
@@ -54,7 +54,7 @@ public class BankTest {
     }
 
     @Test
-    public void should_withdraw_money_when_balance_is_not_overdraw() throws Exception, OverdrawException {
+    public void should_withdraw_money_when_balance_is_not_overdraw() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
@@ -65,7 +65,7 @@ public class BankTest {
     }
 
     @Test(expected = OverdrawException.class)
-    public void should_not_withdraw_money_when_balance_is_overdraw() throws Exception, OverdrawException {
+    public void should_not_withdraw_money_when_balance_is_overdraw() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
@@ -74,7 +74,7 @@ public class BankTest {
     }
 
     @Test
-    public void should_not_withdraw_or_deposit_money_when_customer_is_not_exist() throws Exception, OverdrawException {
+    public void should_not_withdraw_or_deposit_money_when_customer_is_not_exist() {
         Customer unexist = new Customer("unexist", new Date());
 
         bank.handleRequest(withdraw(unexist, 100d));
@@ -95,7 +95,7 @@ public class BankTest {
     }
 
     @Test
-    public void should_use_sendMessage_when_customer_balance_is_over_40000() throws Exception, OverdrawException {
+    public void should_use_sendMessage_when_customer_balance_is_over_40000() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
@@ -105,7 +105,7 @@ public class BankTest {
     }
 
     @Test
-    public void should_use_sendMessage_only_once_when_customer_is_deposit_or_withdraw() throws Exception, OverdrawException {
+    public void should_use_sendMessage_only_once_when_customer_is_deposit_or_withdraw() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
@@ -114,16 +114,16 @@ public class BankTest {
         bank.handleRequest(withdraw(syyan123, 50000d));
         bank.handleRequest(deposit(syyan123, 40000d));
 
-        verify(emailSender,times(1)).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
+        verify(emailSender, times(1)).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
     }
 
     @Test
-    public void should_not_use_sendMessage_only_once_when_customer_is_not_over_40000() throws Exception, OverdrawException {
+    public void should_not_use_sendMessage_only_once_when_customer_is_not_over_40000() {
         Customer syyan123 = new Customer("syyan123", new Date());
 
         bank.addCustomer(syyan123);
         bank.handleRequest(deposit(syyan123, 10000d));
 
-        verify(emailSender,never()).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
+        verify(emailSender, never()).sendMessage("manager@thebank.com", "syyan123 is now a premium customer");
     }
 }

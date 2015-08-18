@@ -27,9 +27,10 @@ public class CustomerRequest {
     }
 
     public static CustomerRequest withdraw(Customer customer, double balance) {
-        return  new CustomerRequest(customer,RequestType.Withdraw,balance);
+        return new CustomerRequest(customer, RequestType.Withdraw, balance);
     }
+
     public static CustomerRequest deposit(Customer customer, double balance) {
-        return  new CustomerRequest(customer,RequestType.Deposit,balance);
+        return new CustomerRequest(customer, RequestType.Deposit, balance);
     }
 }

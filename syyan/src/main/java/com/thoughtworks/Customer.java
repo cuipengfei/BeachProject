@@ -1,4 +1,4 @@
-package main.java.com.thoughtworks;
+package com.thoughtworks;
 
 import java.util.*;
 

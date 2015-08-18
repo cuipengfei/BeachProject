@@ -1,7 +1,7 @@
-package main.java.com.thoughtworks.handlers;
+package com.thoughtworks.handlers;
 
-import main.java.com.thoughtworks.Customer;
-import main.java.com.thoughtworks.requests.CustomerRequest;
+import com.thoughtworks.Customer;
+import com.thoughtworks.requests.CustomerRequest;
 
 public class DepositHandler implements Handler {
     @Override

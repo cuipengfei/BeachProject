@@ -1,4 +1,4 @@
-package main.java.com.thoughtworks.exception;
+package com.thoughtworks.exception;
 
 
 public class OverdrawException extends RuntimeException {

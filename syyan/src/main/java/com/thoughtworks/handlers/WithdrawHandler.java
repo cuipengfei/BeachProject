@@ -1,8 +1,8 @@
-package main.java.com.thoughtworks.handlers;
+package com.thoughtworks.handlers;
 
-import main.java.com.thoughtworks.Customer;
-import main.java.com.thoughtworks.exception.OverdrawException;
-import main.java.com.thoughtworks.requests.CustomerRequest;
+import com.thoughtworks.Customer;
+import com.thoughtworks.exception.OverdrawException;
+import com.thoughtworks.requests.CustomerRequest;
 
 public class WithdrawHandler implements Handler {
     @Override

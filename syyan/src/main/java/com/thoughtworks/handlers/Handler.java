@@ -1,7 +1,7 @@
-package main.java.com.thoughtworks.handlers;
+package com.thoughtworks.handlers;
 
 
-import main.java.com.thoughtworks.requests.CustomerRequest;
+import com.thoughtworks.requests.CustomerRequest;
 
 public interface Handler {
     double handle(CustomerRequest customerRequest);

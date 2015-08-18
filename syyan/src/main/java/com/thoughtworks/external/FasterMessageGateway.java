@@ -1,8 +1,8 @@
-package main.java.com.thoughtworks.external;
+package com.thoughtworks.external;
 
 public class FasterMessageGateway implements MessageGateway {
     @Override
-    public void sendMessage(String receiver, String message) {
+    public void sendMessage(String receiverAddress, String message) {
 
     }
 }

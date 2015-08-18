@@ -1,21 +1,20 @@
-package main.java.com.thoughtworks;
+package com.thoughtworks;
 
-import main.java.com.thoughtworks.external.FasterMessageGateway;
-import main.java.com.thoughtworks.requests.CustomerRequest;
+import com.thoughtworks.external.MessageGateway;
+import com.thoughtworks.requests.CustomerRequest;
 
+import com.thoughtworks.handlers.Handlers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static main.java.com.thoughtworks.handlers.Handlers.findHandler;
-
 
 public class Bank {
-    private FasterMessageGateway emailSender;
+    private MessageGateway emailSender;
 
     private List<Customer> customerList = new ArrayList<>();
 
-    public Bank(FasterMessageGateway emailSender) {
+    public Bank(MessageGateway emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -29,11 +28,12 @@ public class Bank {
     }
 
     public void handleRequest(CustomerRequest request) {
-        if (customerList.contains(request.getCustomer()))
-            findHandler(request.getRequestType()).handle(request);
-        if (shouldBePremiumCustomer(request.getCustomer())) {
-            request.getCustomer().setPremiumCustomer(true);
-            emailSender.sendMessage("manager@thebank.com", request.getCustomer().getNickName() + " is now a premium customer");
+        if (customerList.contains(request.getCustomer())) {
+            Handlers.findHandler(request.getRequestType()).handle(request);
+            if (shouldBePremiumCustomer(request.getCustomer())) {
+                request.getCustomer().setPremiumCustomer(true);
+                emailSender.sendMessage("manager@thebank.com", request.getCustomer().getNickName() + " is now a premium customer");
+            }
         }
     }
 

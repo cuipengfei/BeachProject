@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
-    private FasterMailSender mailSender;
-    public Bank(FasterMailSender mailSender) {
+    private MailSender mailSender;
+    public Bank(MailSender mailSender) {
         this.mailSender = mailSender;
     }
     public boolean add(Customer _customer) {

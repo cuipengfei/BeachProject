@@ -1,10 +1,8 @@
 package request;
 
-import email.EmailSend;
 import email.MessageGateway;
 import handle.Handlers;
 import handle.Account;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

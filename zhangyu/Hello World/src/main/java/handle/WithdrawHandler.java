@@ -8,6 +8,6 @@ import request.CustomerRequest;
 public class WithdrawHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) throws Exception {
-        request.getCustomer().getMyAccount().withdraw(request.getNum());
+        request.getCustomer().getMyAccount().sub(request.getNum());
     }
 }

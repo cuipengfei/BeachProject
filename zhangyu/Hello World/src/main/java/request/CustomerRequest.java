@@ -23,4 +23,12 @@ public class CustomerRequest {
     }
 
     public Type getType() {return type;}
+
+    public static CustomerRequest deposit(Customer customer, int num){
+       return new CustomerRequest(customer,Type.deposit,num);
+    }
+
+    public static CustomerRequest withdraw(Customer customer, int num){
+        return new CustomerRequest(customer,Type.withdraw,num);
+    }
 }

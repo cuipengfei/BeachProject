@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class Bank {
     MailSender mailSender;
     LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
-    BankManager bankManager=new BankManager();
+    BankManager bankManager = new BankManager();
     static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
 
@@ -44,6 +44,20 @@ public class Bank {
         return false;
     }
 
+    public void handleRequest(CustomerRequest request) throws OverdraftException {
+
+        if (customerLinkedList.contains(request.getCustomer())) {
+            double balance = customerHandlerMap.get(request.getType()).handlers(request);
+
+            if (isPrminumCustomer(request.getCustomer())) {
+                mailSender.sendEmail(bankManager, request.getCustomer().getNickname() + " is a premium customer");
+                bankManager.getPrminumCustomerList().add(request.getCustomer());
+                request.getCustomer().setIsPreminumDefault(true);
+            }
+        }
+    }
+
+
     private boolean isCustomerNotRepeat(Customer customer) {
         for (Customer customer1 : customerLinkedList) {
             if (customer.getNickname().equals(customer1.getNickname())) {
@@ -60,18 +74,11 @@ public class Bank {
         return matcher.find();
     }
 
-    public void handleRequest(CustomerRequest request) throws OverdraftException {
-
-        if (customerLinkedList.contains(request.getCustomer())) {
-           double balance= customerHandlerMap.get(request.getType()).handlers(request);
-            if(balance>=40000&&request.getCustomer().isPreminum()==false)
-            {
-                String message=request.getCustomer().getNickname()+"is a premium customer";
-                mailSender.sendEmail(bankManager,message);
-                bankManager.getPrminumCustomerList().add(request.getCustomer());
-                request.getCustomer().setIsPreminumDefault(true);
-            }
-
+    private boolean isPrminumCustomer(Customer customer) {
+        if (customer.getAccount().getBalance() >= 40000 && !(customer.isPreminum())) {
+            return true;
         }
+        return false;
+
     }
 }

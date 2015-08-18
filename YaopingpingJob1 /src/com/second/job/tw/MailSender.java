@@ -6,13 +6,12 @@ package com.second.job.tw;
 public class MailSender {
 
 
-    public void sendEmail(Customer customer,String message)
-    {
-        customer.setMessage(message);
+    public void sendEmail(Customer customer, String message) {
+
     }
-    public void sendEmail(BankManager  bankManager,String message)
-    {
-      bankManager.setMessage(message);
+
+    public void sendEmail(BankManager bankManager, String message) {
+
     }
 
 }

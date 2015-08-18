@@ -16,7 +16,6 @@ public class MailSendMockito extends MailSender {
     }
 
     public void sendEmail(BankManager bankManager, String message) {
-        bankManager.setMessage(message);
-        isSendMailCalled = true;
+
     }
 }

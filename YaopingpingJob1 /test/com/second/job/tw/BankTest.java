@@ -1,5 +1,6 @@
 package com.second.job.tw;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -14,17 +15,27 @@ import static org.mockito.Mockito.*;
  * Created by ppyao on 8/12/15.
  */
 public class BankTest {
+    MailSender sender;
+    Bank bank;
+
+    @Before
+    public void setUp() throws Exception {
+
+        sender = new MailSender();
+        bank = new Bank(sender);
+
+    }
+
     @Test
     public void bankAcceptValidCustomer() {
-        MailSender sender = new MailSender();
+
         //given
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         //when
         boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
+
         //then
         assertTrue(isSuccess);
-
     }
 
     @Test
@@ -50,6 +61,8 @@ public class BankTest {
         //when
         boolean isFirstSuccess = bank.AddCustomertoBankwhenValid(firstCustomer);
         boolean isSecondSuccess = bank.AddCustomertoBankwhenValid(secondCustomer);
+
+        //then
         assertTrue(isFirstSuccess);
         assertFalse(isSecondSuccess);
     }
@@ -63,6 +76,7 @@ public class BankTest {
         bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 5000.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(5000.0));
     }
@@ -76,6 +90,7 @@ public class BankTest {
         bank.AddCustomertoBankwhenValid(customer);
         //when
         bank.handleRequest(despoitRequst(customer, -10.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(0.0));
     }
@@ -90,6 +105,7 @@ public class BankTest {
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
         bank.handleRequest(withdrawRequest(customer, 50.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(50.0));
     }
@@ -114,34 +130,39 @@ public class BankTest {
         Customer customer = new Customer("yaoping", new Date());
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
+
         //then
         assertThat(customer.getAccount().getBalance(), is(0.0));
-
     }
 
     @Test
     public void bandActualSendEamil() {
+        //given
         MailSender sender = mock(MailSender.class);
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
-        String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
-
+        //when
         bank.AddCustomertoBankwhenValid(customer);
-        verify(sender).sendEmail(customer, message);
+
+        //then
+        verify(sender).sendEmail(customer, "Dear <yaopingping>,Welcome to the Bank");
     }
 
     @Test
     public void bankActualSendEmailImitationMockito() {
+        //given
         MailSendMockito sender = new MailSendMockito();
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
+        //when
         bank.AddCustomertoBankwhenValid(customer);
 
+        //then
         assertThat(sender.isSendMailCalled(), is(true));
     }
 
     @Test
-    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan4000() throws OverdraftException {
+    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan40000() throws OverdraftException {
         //given
         MailSender sender = mock(MailSender.class);
         Bank bank = new Bank(sender);
@@ -149,14 +170,13 @@ public class BankTest {
         //when
         bank.AddCustomertoBankwhenValid(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
-        String message = customer.getNickname() + "is a premium customer";
 
         //then
-        verify(sender).sendEmail(bank.bankManager, message);
+        verify(sender).sendEmail(bank.bankManager, "yaopingping is a premium customer");
     }
 
     @Test
-    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan4000() throws OverdraftException {
+    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan40000() throws OverdraftException {
         //given
         MailSender sender = mock(MailSender.class);
         Bank bank = new Bank(sender);
@@ -164,8 +184,9 @@ public class BankTest {
         //when
         bank.AddCustomertoBankwhenValid(customer);
         bank.handleRequest(despoitRequst(customer, 30000.0));
-        String message = customer.getNickname() + "is a premium customer";
-        never();
+
+        //then
+        verify(sender, times(0)).sendEmail(bank.bankManager, "send message");
     }
-    
+
 }

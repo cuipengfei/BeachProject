@@ -8,7 +8,7 @@ import request.CustomerRequest;
 public class DepositHandler implements RequestHandler{
     @Override
     public void handle(CustomerRequest request) {
-        request.getCustomer().getMyAccount().deposit(request.getNum());
+        request.getCustomer().getMyAccount().add(request.getNum());
     }
 
 

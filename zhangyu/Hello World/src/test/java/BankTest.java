@@ -22,8 +22,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,300);
-        bank1.handleRequest(request1);
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
     }
 
     @Test
@@ -31,10 +30,9 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,300);
-        bank1.handleRequest(request1);
-        CustomerRequest request2 = new CustomerRequest(customer1, Type.withdraw,100);
-        assertThat(bank1.handleRequest(request2), is(200));
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+
+        assertThat(bank1.handleRequest(CustomerRequest.withdraw(customer1, 100)), is(200));
     }
 
     @Test(expected = Exception.class)
@@ -42,18 +40,15 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,300);
-        bank1.handleRequest(request1);
-        CustomerRequest request2 = new CustomerRequest(customer1, Type.withdraw,301);
-        bank1.handleRequest(request2);
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+        bank1.handleRequest(CustomerRequest.withdraw(customer1, 301));
     }
 
     @Test(expected = NullPointerException.class)
     public void should_throw_NullPointerException_when_the_no_added_customer_deposit() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
 
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,300);
-        bank1.handleRequest(request1);
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
     }
 
     @Test
@@ -61,7 +56,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        assertThat(customer1.getMessage(),is("Dear zhangyu , Welcome to bank"));
+        assertThat(customer1.getMessage(), is("Dear zhangyu , Welcome to bank"));
         assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
 
@@ -81,7 +76,7 @@ public class BankTest {
         Bank bank = new Bank(sender);
         bank.addToBank(customer1);
 
-        String content =  "Dear " + customer1.getNickname() + " , Welcome to bank";
+        String content = "Dear " + customer1.getNickname() + " , Welcome to bank";
         verify(sender).sendEmail(customer1.getEmailAddress(), content);
     }
 
@@ -99,13 +94,11 @@ public class BankTest {
     @Test
     public void should_manager_receive_mail_when_customer_turn_to_premium() throws Exception {
         MockEmailSend mockSender = new MockEmailSend();
-
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Bank bank = new Bank(mockSender);
-        bank.addToBank(customer1);
 
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
-        bank.handleRequest(request1);
+        bank.addToBank(customer1);
+        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
 
         assertTrue(mockSender.isCallEmailSend());
     }
@@ -115,13 +108,12 @@ public class BankTest {
         EmailSend sender = mock(EmailSend.class);
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Bank bank = new Bank(sender);
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
 
         bank.addToBank(customer1);
-        bank.handleRequest(request1);
+        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
 
         String content = customer1.getNickname() + " is now a premium customer";
-        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
+        verify(sender, times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 
     @Test
@@ -129,16 +121,14 @@ public class BankTest {
         EmailSend sender = mock(EmailSend.class);
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Bank bank = new Bank(sender);
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
-        CustomerRequest request2 = new CustomerRequest(customer1, Type.withdraw,50000);
 
         bank.addToBank(customer1);
-        bank.handleRequest(request1);
-        bank.handleRequest(request1);
-        bank.handleRequest(request2);
+        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
+        bank.handleRequest(CustomerRequest.deposit(customer1, 20000));
+        bank.handleRequest(CustomerRequest.withdraw(customer1, 40000));
 
         String content = customer1.getNickname() + " is now a premium customer";
-        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
+        verify(sender, times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 
     @Test
@@ -146,13 +136,12 @@ public class BankTest {
         EmailSend sender = mock(EmailSend.class);
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Bank bank = new Bank(sender);
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,39999);
 
         bank.addToBank(customer1);
-        bank.handleRequest(request1);
+        bank.handleRequest(CustomerRequest.deposit(customer1, 39999));
 
         String content = customer1.getNickname() + " is now a premium customer";
-        verify(sender,never()).sendEmail(bank.getManager().getEmailAddress(), content);
+        verify(sender, never()).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 
     @Test
@@ -160,13 +149,12 @@ public class BankTest {
         FasterEmailSend sender = mock(FasterEmailSend.class);
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Bank bank = new Bank(sender);
-        CustomerRequest request1 = new CustomerRequest(customer1, Type.deposit,40001);
 
         bank.addToBank(customer1);
-        bank.handleRequest(request1);
+        bank.handleRequest(CustomerRequest.deposit(customer1, 40001));
 
         String content = customer1.getNickname() + " is now a premium customer";
-        verify(sender,times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
+        verify(sender, times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
     }
 
     @Test
@@ -175,6 +163,7 @@ public class BankTest {
         Date date = new Date();
 
         bank1.addToBank(customer1);
+        
         assertTrue(customer1.getDateOfJoin().equals(date));
     }
 }

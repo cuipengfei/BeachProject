@@ -15,20 +15,19 @@ import static org.mockito.Mockito.*;
  * Created by ppyao on 8/12/15.
  */
 public class BankTest {
-    MailSender sender;
+    FasterMessageGateway sender;
     Bank bank;
 
     @Before
     public void setUp() throws Exception {
 
-        sender = new MailSender();
+        sender = new FasterMessageGateway();
         bank = new Bank(sender);
 
     }
 
     @Test
     public void bankAcceptValidCustomer() {
-
         //given
         Customer customer = new Customer("yaoping", new Date());
         //when
@@ -40,9 +39,6 @@ public class BankTest {
 
     @Test
     public void bankShouldUnacceptCustomerWhenNicknameInValidate() {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("Yaoping", new Date());
         //when
         boolean isSuccess = bank.AddCustomertoBankwhenValid(customer);
@@ -53,9 +49,6 @@ public class BankTest {
 
     @Test
     public void bankShouldUnacceptCustomerWhenCustomerExist() {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer firstCustomer = new Customer("yaoping", new Date());
         Customer secondCustomer = new Customer("yaoping", new Date());
         //when
@@ -69,9 +62,6 @@ public class BankTest {
 
     @Test
     public void bankShouldDespoitMoney() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
@@ -83,9 +73,6 @@ public class BankTest {
 
     @Test
     public void bankShouldNotAcceptDespoitMoneyWhenMoneyLessThanZero() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
@@ -97,9 +84,6 @@ public class BankTest {
 
     @Test
     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
@@ -112,9 +96,6 @@ public class BankTest {
 
     @Test(expected = OverdraftException.class)
     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdraftException {
-        //given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         bank.AddCustomertoBankwhenValid(customer);
         //when
@@ -124,9 +105,6 @@ public class BankTest {
 
     @Test
     public void bandShouldNotAcceptAnyRequestWhenCustomerNotAdd() throws OverdraftException {
-        //  given
-        MailSender sender = new MailSender();
-        Bank bank = new Bank(sender);
         Customer customer = new Customer("yaoping", new Date());
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
@@ -138,47 +116,36 @@ public class BankTest {
     @Test
     public void bandActualSendEamil() {
         //given
-        MailSender sender = mock(MailSender.class);
+        FasterMessageGateway sender = mock(FasterMessageGateway.class);
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
         //when
         bank.AddCustomertoBankwhenValid(customer);
 
         //then
-        verify(sender).sendEmail(customer, "Dear <yaopingping>,Welcome to the Bank");
+        verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping>,Welcome to the Bank");
     }
 
-    @Test
-    public void bankActualSendEmailImitationMockito() {
-        //given
-        MailSendMockito sender = new MailSendMockito();
-        Bank bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", new Date());
-        //when
-        bank.AddCustomertoBankwhenValid(customer);
 
-        //then
-        assertThat(sender.isSendMailCalled(), is(true));
-    }
 
     @Test
     public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan40000() throws OverdraftException {
         //given
-        MailSender sender = mock(MailSender.class);
-        Bank bank = new Bank(sender);
+        FasterMessageGateway sender=mock(FasterMessageGateway.class);
+        Bank bank=new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
         //when
         bank.AddCustomertoBankwhenValid(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
 
         //then
-        verify(sender).sendEmail(bank.bankManager, "yaopingping is a premium customer");
+        verify(sender).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping is a premium customer");
     }
 
     @Test
     public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan40000() throws OverdraftException {
         //given
-        MailSender sender = mock(MailSender.class);
+        FasterMessageGateway sender = mock(FasterMessageGateway.class);
         Bank bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", new Date());
         //when
@@ -186,7 +153,21 @@ public class BankTest {
         bank.handleRequest(despoitRequst(customer, 30000.0));
 
         //then
-        verify(sender, times(0)).sendEmail(bank.bankManager, "send message");
+        verify(sender, times(0)).sendEmail(bank.bankManager.getEmailAddress(), "send message");
+    }
+
+    @Test
+    public void bankShouldAddPreminumOnce() throws OverdraftException {
+        //given
+        FasterMessageGateway sender=mock(FasterMessageGateway.class);
+        Bank bank=new Bank(sender);
+        Customer customer=new Customer("yaoping",new Date());
+        //when
+        bank.AddCustomertoBankwhenValid(customer);
+        bank.handleRequest(despoitRequst(customer, 40000.0));
+        bank.handleRequest(despoitRequst(customer, 10000.0));
+
+        verify(sender,times(1)).sendEmail(bank.bankManager.getEmailAddress(),"yaoping is a premium customer");
     }
 
 }

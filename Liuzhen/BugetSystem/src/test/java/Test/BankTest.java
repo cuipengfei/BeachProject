@@ -1,5 +1,9 @@
+package Test;
+
 import Bank.*;
 import Customer.*;
+import MailSender.FasterMailSender;
+import MailSender.*;
 import MyException.CustomerNotExistException;
 import MyException.OverdrawException;
 import Request.CustomerRequest;
@@ -10,6 +14,7 @@ import org.mockito.Mockito;
 import java.util.Date;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 public class BankTest {
@@ -110,5 +115,10 @@ public class BankTest {
 
     }
 
+    @Test
+    public void should_add_joining_date_when_a_customer_be_added_successfully() throws Exception {
+        bank0.add(customer);
 
+        assertNotNull(customer.getJoiningDate());
+    }
 }

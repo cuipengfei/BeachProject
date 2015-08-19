@@ -1,6 +1,7 @@
-package com.second.job.tw.request;
+package request;
 
-import com.second.job.tw.Customer;
+import entity.Customer;
+
 
 /**
  * Created by ppyao on 8/13/15.
@@ -10,7 +11,7 @@ public class CustomerRequest {
     private RequestType type;
     private double money;
 
-    public CustomerRequest(Customer customer, RequestType type, double money) {
+    private CustomerRequest(Customer customer, RequestType type, double money) {
         this.customer = customer;
         this.type = type;
         this.money = money;
@@ -29,6 +30,9 @@ public class CustomerRequest {
     }
 
     public static CustomerRequest despoitRequst(Customer customer, double money) {
+
+        new CustomerRequest(customer, RequestType.depositMoney, money);
+
         return new CustomerRequest(customer, RequestType.depositMoney, money);
     }
 

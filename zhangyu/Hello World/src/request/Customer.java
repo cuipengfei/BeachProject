@@ -4,25 +4,25 @@ import handle.Account;
 
 import java.util.Date;
 
-/**
- * Created by yuzhang on 8/11/15.
- */
 public class Customer {
     private String nickname;
-    private Date dateOFBirth;
+    private Date dateOfBirth;
     private Account myAccount;
     private String emailAddress;
-    private MailBox myMailBox;
+    private String message;
+    private boolean isPremium = false;
+    private Date dateOfJoin;
+    private boolean isPassTwoYear = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
-        this.dateOFBirth = dateOFBirth;
+        this.dateOfBirth = dateOFBirth;
         this.emailAddress = nickname+"@bank.com";
     }
 
     public String getNickname() {return nickname;}
 
-    public Date getDateOFBirth() {return dateOFBirth;}
+    public Date getDateOfBirth() {return dateOfBirth;}
 
     public Account getMyAccount() {return myAccount;}
 
@@ -30,8 +30,18 @@ public class Customer {
 
     public String getEmailAddress() {return emailAddress;}
 
-    public MailBox getMyMailBox() {return myMailBox;}
+    public String getMessage() {return message;}
 
-    public void setMyMailBox(MailBox myMailBox) {this.myMailBox = myMailBox;}
+    public boolean isPremium() {return isPremium;}
+
+    public void setIsPremium(boolean isPremium) {this.isPremium = isPremium;}
+
+    public Date getDateOfJoin() {return dateOfJoin;}
+
+    public void setDateOfJoin(Date dateOfJoin) {this.dateOfJoin = dateOfJoin;}
+
+    public boolean isPassTwoYear() {return isPassTwoYear;}
+
+    public void setIsPassTwoYear(boolean isPassTwoYear) {this.isPassTwoYear = isPassTwoYear;}
 }
 

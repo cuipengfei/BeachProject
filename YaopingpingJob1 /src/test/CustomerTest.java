@@ -1,5 +1,4 @@
-package com.second.job.tw;
-
+import entity.Customer;
 import org.junit.Test;
 
 import java.util.Date;

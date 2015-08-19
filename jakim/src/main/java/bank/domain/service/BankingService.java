@@ -18,7 +18,7 @@ public class BankingService {
     public float deposit(Customer customer, float amount) {
         float balance = getAccount(customer).add(amount);
         if (newPremium(customer, balance)) {
-            customer.setPremium(true);
+            customer.upgrade();
             fire(newPremiumEvent(customer));
         }
         return balance;

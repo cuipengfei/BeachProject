@@ -12,6 +12,7 @@ public class Customer {
     private final Account account = new Account();
     private String email;
     private boolean premium;
+    private Date joinDate;
 
     public Customer(String nickname, Date birthday) {
         if (!hasBirthDay(birthday) || !isValidName(nickname)) {
@@ -52,7 +53,15 @@ public class Customer {
         return premium;
     }
 
-    public void setPremium(boolean premium) {
-        this.premium = premium;
+    public void upgrade() {
+        this.premium = true;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
     }
 }

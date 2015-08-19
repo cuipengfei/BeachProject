@@ -14,8 +14,7 @@ public class CustomerService {
     }
 
     public boolean addCustomer(Customer customer) {
-        if (!isExist(customer)) {
-            customerRepository.save(customer);
+        if (!isExist(customer) && customerRepository.save(customer)) {
             fire(customerAddedEvent(customer));
             return true;
         }

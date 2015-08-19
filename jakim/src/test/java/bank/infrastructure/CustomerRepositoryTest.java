@@ -1,6 +1,9 @@
 package bank.infrastructure;
 
 import bank.domain.aggregator.Customer;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.util.Date;
@@ -16,6 +19,7 @@ public class CustomerRepositoryTest {
         boolean result = repository.save(customer);
 
         assertTrue(result);
+        assertThat(customer.getJoinDate(), isToday());
     }
 
     @Test
@@ -26,5 +30,23 @@ public class CustomerRepositoryTest {
         repository.save(new Customer("jakim", new Date()));
 
         assertTrue(repository.findByNickname("jakim").isPresent());
+    }
+
+    private Matcher<Date> isToday() {
+        return new BaseMatcher<Date>() {
+            @Override
+            public boolean matches(Object o) {
+                return today().getDate() == ((Date)o).getDate();
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+
+            private Date today() {
+                return new Date();
+            }
+        };
     }
 }

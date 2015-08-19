@@ -9,7 +9,7 @@ public class CustomerRequest {
     private Customer customer;
     private Type type;
     private int num;
-    private Date currentDate;
+    private Date currentDate = new Date();
 
     public int getNum() {
         return num;

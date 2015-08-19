@@ -1,7 +1,5 @@
 package request;
 
-import handle.Account;
-
 import java.util.Date;
 
 public class Customer {

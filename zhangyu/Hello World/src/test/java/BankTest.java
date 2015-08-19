@@ -1,6 +1,7 @@
 import email.EmailSend;
 import email.FasterEmailSend;
 import email.MockEmailSend;
+import exception.OverDrawException;
 import request.*;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class BankTest {
         assertThat(bank1.handleRequest(CustomerRequest.withdraw(customer1, 100)), is(200));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = OverDrawException.class)
     public void should_throw_exception_when_overdraw() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
@@ -50,23 +51,6 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
 
         bank1.handleRequest(deposit(customer1, 300));
-    }
-
-    @Test
-    public void should_message_in_MailBox_equals_WelcomeMessage() throws Exception {
-        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
-        bank1.addToBank(customer1);
-
-        assertThat(customer1.getMessage(), is("Dear zhangyu , Welcome to bank"));
-        assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void should_throw_exception_when_the_no_added_customer_getMailBox() throws Exception {
-        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
-
-        assertThat(customer1.getMessage(), is("Dear zhangyu , Welcome to bank"));
-        assertThat(customer1.getEmailAddress(), is("zhangyu@bank.com"));
     }
 
     @Test

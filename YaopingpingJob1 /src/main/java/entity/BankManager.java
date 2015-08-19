@@ -1,4 +1,4 @@
-package com.second.job.tw;
+package entity;
 
 import java.util.LinkedList;
 

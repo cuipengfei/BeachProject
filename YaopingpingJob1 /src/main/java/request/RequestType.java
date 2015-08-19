@@ -1,4 +1,4 @@
-package com.second.job.tw.request;
+package request;
 
 /**
  * Created by ppyao on 8/13/15.

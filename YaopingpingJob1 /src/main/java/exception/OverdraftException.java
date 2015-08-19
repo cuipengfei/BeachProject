@@ -1,4 +1,4 @@
-package com.second.job.tw;
+package exception;
 
 /**
  * Created by ppyao on 8/13/15.

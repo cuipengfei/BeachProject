@@ -1,4 +1,4 @@
-package com.second.job.tw;
+package entity;
 
 import java.util.Date;
 
@@ -6,14 +6,17 @@ import java.util.Date;
  * Created by ppyao on 8/12/15.
  */
 public class Customer {
-
-
+    private Date joinBankDay;
     private String nickname;
     private Date dateofBirth;
     private final Account account = new Account();
     private String emailAddress;
     private String message;
     private boolean isPreminumDefault = false;
+
+    public Date getJoinBankDay() {
+        return joinBankDay;
+    }
 
     public void setIsPreminumDefault(boolean isPreminumDefault) {
         this.isPreminumDefault = isPreminumDefault;
@@ -56,5 +59,9 @@ public class Customer {
         this.dateofBirth = dateofBirth;
         this.emailAddress = nickname + "@bank.com";
 
+    }
+
+    public void setJoinBankDay(Date joinBankDay) {
+        this.joinBankDay = joinBankDay;
     }
 }

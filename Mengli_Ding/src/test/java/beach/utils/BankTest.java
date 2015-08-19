@@ -12,6 +12,7 @@ import static beach.utils.requests.CustomerRequest.withdraw;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -161,4 +162,23 @@ public class BankTest {
         verify(mockedFasterMessageGateway, times(2)).sendMail(anyString(), anyString());
     }
 
+    @Test
+    public void shouldSetJoiningDateIfCustomerAddedToBank() throws Exception {
+        Customer customer = Customer.createCustomer("ddd", new Date());
+        bank.addCustomer(customer);
+
+        assertThat(customer.getJoiningDate(), is(new Date()));
+    }
+
+    @Test
+    public void shouldNotSetJoiningDateIfCustomerNotAddedToBank() throws Exception {
+        Customer customer = Customer.createCustomer("ddd", new Date());
+
+        assertNull(customer.getJoiningDate());
+    }
+
+    @Test
+    public void testName() throws Exception {
+
+    }
 }

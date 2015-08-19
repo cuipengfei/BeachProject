@@ -7,9 +7,18 @@ import java.util.Date;
  */
 public class Customer {
     private final String name;
-    private final Date date;
+    private final Date birthdDate;
     private final Account account = new Account();
     private boolean isPremiumCustomer = false;
+    private Date joiningDate = null;
+
+    public void setJoiningDate(Date joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public Date getJoiningDate() {
+        return joiningDate;
+    }
 
     public boolean isPremiumCustomer() {
         return isPremiumCustomer;
@@ -31,7 +40,7 @@ public class Customer {
 
     public Customer(String name, Date date){
         this.name = name;
-        this.date = date;
+        this.birthdDate = date;
     }
 
     public static Customer invalidCustomer(){

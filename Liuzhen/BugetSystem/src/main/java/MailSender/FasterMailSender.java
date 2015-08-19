@@ -1,4 +1,5 @@
-package Bank;
+package MailSender;
+
 public class FasterMailSender implements MailSender{
     @Override
     public void sendEmail(String receiverAddress,String mailContent){

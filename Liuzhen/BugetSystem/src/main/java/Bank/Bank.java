@@ -1,10 +1,14 @@
 package Bank;
+
+import Customer.Customer;
 import Handler.Handlers;
+import MailSender.MailSender;
 import MyException.CustomerNotExistException;
-import Request.*;
+import Request.CustomerRequest;
+
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import Customer.*;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
@@ -15,6 +19,7 @@ public class Bank {
     public boolean add(Customer _customer) {
         if (shouldAdd(_customer)) {
             customerList.add(_customer);
+            _customer.setJoiningDate(new Date());
             sendWelcomeMessage(_customer);
         }
 

@@ -15,6 +15,7 @@ public class Customer {
     private double account = 0.0;
     private String message ="";
     private boolean isPremiumCustomer = false;
+    private Date joiningDate;
 
     private Customer(String _nickName, Date _dateOfBirth)  {
         nickName = _nickName;
@@ -55,6 +56,14 @@ public class Customer {
 
     public boolean isPremiumCustomer() {
         return isPremiumCustomer;
+    }
+
+    public void setJoiningDate(Date joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public Date getJoiningDate() {
+        return joiningDate;
     }
 
 }

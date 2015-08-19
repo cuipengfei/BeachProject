@@ -10,6 +10,7 @@ public class Customer {
     private final Date birthdDate;
     private final Account account = new Account();
     private boolean isPremiumCustomer = false;
+    private boolean isActivated = false;
     private Date joiningDate = null;
 
     public void setJoiningDate(Date joiningDate) {
@@ -18,6 +19,14 @@ public class Customer {
 
     public Date getJoiningDate() {
         return joiningDate;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setIsActivated(boolean isActivated) {
+        this.isActivated = isActivated;
     }
 
     public boolean isPremiumCustomer() {

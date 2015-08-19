@@ -2,7 +2,6 @@ package beach.utils;
 
 import beach.external.MessageGateway;
 import beach.utils.requests.CustomerRequest;
-import beach.utils.requests.InsufficientException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +36,7 @@ public class Bank {
 
     }
 
-    public void handleRequest(CustomerRequest request) throws InsufficientException {
+    public void handleRequest(CustomerRequest request){
         if (customerList.contains(request.getCustomer())) {
             findHandler(request.getType()).handle(request);
 
@@ -59,16 +58,16 @@ public class Bank {
         return isShouldAdd;
     }
 
-    private boolean IsCustomerBeenWithBankOverTwoYears(Customer customer){
+    private boolean IsCustomerBeenWithBankForTwoYears(Customer customer){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(customer.getJoiningDate());
         calendar.add(Calendar.YEAR, 2);
-        return calendar.before(new Date());
+        return calendar.equals(new Date());
     }
 
     public void addBonus(Customer customer){
         int balance = customer.getAccount().getMoney();
-        if (IsCustomerBeenWithBankOverTwoYears(customer) && balance >0)
+        if (IsCustomerBeenWithBankForTwoYears(customer) && customer.isActivated())
             balance += 5;
     }
 

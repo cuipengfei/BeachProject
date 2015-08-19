@@ -9,5 +9,6 @@ public class DepositHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) {
         request.getCustomer().getAccount().add(request.getBill());
+        request.getCustomer().setIsActivated(true);
     }
 }

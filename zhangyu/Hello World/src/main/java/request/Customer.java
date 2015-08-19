@@ -12,6 +12,7 @@ public class Customer {
     private String message;
     private boolean isPremium = false;
     private Date dateOfJoin;
+    private boolean isPassTwoYear = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
@@ -38,5 +39,9 @@ public class Customer {
     public Date getDateOfJoin() {return dateOfJoin;}
 
     public void setDateOfJoin(Date dateOfJoin) {this.dateOfJoin = dateOfJoin;}
+
+    public boolean isPassTwoYear() {return isPassTwoYear;}
+
+    public void setIsPassTwoYear(boolean isPassTwoYear) {this.isPassTwoYear = isPassTwoYear;}
 }
 

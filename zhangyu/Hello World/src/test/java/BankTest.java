@@ -10,6 +10,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static request.CustomerRequest.deposit;
 
 public class BankTest {
 
@@ -22,7 +23,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+        bank1.handleRequest(deposit(customer1, 300));
     }
 
     @Test
@@ -30,7 +31,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+        bank1.handleRequest(deposit(customer1, 300));
 
         assertThat(bank1.handleRequest(CustomerRequest.withdraw(customer1, 100)), is(200));
     }
@@ -40,7 +41,7 @@ public class BankTest {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         bank1.addToBank(customer1);
 
-        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+        bank1.handleRequest(deposit(customer1, 300));
         bank1.handleRequest(CustomerRequest.withdraw(customer1, 301));
     }
 
@@ -48,7 +49,7 @@ public class BankTest {
     public void should_throw_NullPointerException_when_the_no_added_customer_deposit() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
 
-        bank1.handleRequest(CustomerRequest.deposit(customer1, 300));
+        bank1.handleRequest(deposit(customer1, 300));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class BankTest {
         Bank bank = new Bank(mockSender);
 
         bank.addToBank(customer1);
-        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
+        bank.handleRequest(deposit(customer1, 40000));
 
         assertTrue(mockSender.isCallEmailSend());
     }
@@ -110,7 +111,7 @@ public class BankTest {
         Bank bank = new Bank(sender);
 
         bank.addToBank(customer1);
-        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
+        bank.handleRequest(deposit(customer1, 40000));
 
         String content = customer1.getNickname() + " is now a premium customer";
         verify(sender, times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
@@ -123,8 +124,8 @@ public class BankTest {
         Bank bank = new Bank(sender);
 
         bank.addToBank(customer1);
-        bank.handleRequest(CustomerRequest.deposit(customer1, 40000));
-        bank.handleRequest(CustomerRequest.deposit(customer1, 20000));
+        bank.handleRequest(deposit(customer1, 40000));
+        bank.handleRequest(deposit(customer1, 20000));
         bank.handleRequest(CustomerRequest.withdraw(customer1, 40000));
 
         String content = customer1.getNickname() + " is now a premium customer";
@@ -138,7 +139,7 @@ public class BankTest {
         Bank bank = new Bank(sender);
 
         bank.addToBank(customer1);
-        bank.handleRequest(CustomerRequest.deposit(customer1, 39999));
+        bank.handleRequest(deposit(customer1, 39999));
 
         String content = customer1.getNickname() + " is now a premium customer";
         verify(sender, never()).sendEmail(bank.getManager().getEmailAddress(), content);
@@ -151,7 +152,7 @@ public class BankTest {
         Bank bank = new Bank(sender);
 
         bank.addToBank(customer1);
-        bank.handleRequest(CustomerRequest.deposit(customer1, 40001));
+        bank.handleRequest(deposit(customer1, 40001));
 
         String content = customer1.getNickname() + " is now a premium customer";
         verify(sender, times(1)).sendEmail(bank.getManager().getEmailAddress(), content);
@@ -163,7 +164,31 @@ public class BankTest {
         Date date = new Date();
 
         bank1.addToBank(customer1);
-        
         assertTrue(customer1.getDateOfJoin().equals(date));
+    }
+
+    @Test
+    public void should_get_bonus_when_customer_added_to_bank_for_two_year() throws Exception {
+        EmailSend sender = new EmailSend();
+        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+
+        bank.addToBank(customer1);
+        bank.handleRequest(deposit(customer1, 40001, dataFormat.parse("2017-08-30")));
+
+        assertThat(customer1.getMyAccount().getBalance(),is(40006));
+    }
+
+    @Test
+    public void should_customer_only_get_bonus_once_() throws Exception {
+        EmailSend sender = new EmailSend();
+        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
+        Bank bank = new Bank(sender);
+
+        bank.addToBank(customer1);
+        bank.handleRequest(deposit(customer1, 40000, dataFormat.parse("2017-08-30")));
+        bank.handleRequest(deposit(customer1, 10000, dataFormat.parse("2017-08-31")));
+
+        assertThat(customer1.getMyAccount().getBalance(),is(50005));
     }
 }

@@ -1,5 +1,6 @@
 package handle;
 
+import request.Customer;
 import request.CustomerRequest;
 
 /**
@@ -8,7 +9,16 @@ import request.CustomerRequest;
 public class DepositHandler implements RequestHandler{
     @Override
     public void handle(CustomerRequest request) {
-        request.getCustomer().getMyAccount().add(request.getNum());
+        int num = request.getNum();
+        Customer customer = request.getCustomer();
+        long day = (request.getCurrentDate().getTime()-customer.getDateOfJoin().getTime())/(24*60*60*1000);
+
+        if(!customer.isPassTwoYear() && day > 365*2) {
+            customer.setIsPassTwoYear(true);
+            num += 5;
+        }
+
+        customer.getMyAccount().add(num);
     }
 
 

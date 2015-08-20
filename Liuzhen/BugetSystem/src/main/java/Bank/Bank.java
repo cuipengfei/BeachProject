@@ -32,22 +32,26 @@ public class Bank {
             Handlers.findHandler(_request.getRequestType()).handle(_request);
 
             if (_request.getCustomer().getAccount()>=40000.0 && !_request.getCustomer().isPremiumCustomer()) {
-                mailSender.sendEmail( "manager@thebank.com",_request.getCustomer() + " is now a premium customer.");
+                mailSender.sendEmail("manager@thebank.com", _request.getCustomer() + " is now a premium customer.");
                 _request.getCustomer().setIsPremiumCustomer(true);
             }
 
-            Calendar customerJoinDate = _request.getCustomer().getJoiningDate();
-            Calendar dateOfToday = Calendar.getInstance();
-            if ((_request.getCustomer().getTwoYearsBonus() == 0.0)
-                    &&(_request.getRequestType().compareTo(RequestType.deposit)==0)
-                    &&((customerJoinDate.get(Calendar.YEAR)+2) <= dateOfToday.get(Calendar.YEAR))
-                    && (customerJoinDate.get(Calendar.MONTH) <= dateOfToday.get(Calendar.MONTH))
-                    && (customerJoinDate.get(Calendar.DATE) <= dateOfToday.get(Calendar.DATE))){
-                _request.getCustomer().setTwoYearsBonus(5.0);
-                _request.getCustomer().setAccount(_request.getCustomer().getAccount()+5.0);
-            }
+            handleTwoYearBonus(_request);
         }
         else throw new CustomerNotExistException();
+    }
+
+    private void handleTwoYearBonus(CustomerRequest _request) {
+        Calendar customerJoinDate = _request.getCustomer().getJoiningDate();
+        Calendar dateOfToday = Calendar.getInstance();
+        if ((_request.getCustomer().getTwoYearsBonus() == 0.0)
+                &&(_request.getRequestType().compareTo(RequestType.deposit)==0)
+                &&((customerJoinDate.get(Calendar.YEAR)+2) <= dateOfToday.get(Calendar.YEAR))
+                && (customerJoinDate.get(Calendar.MONTH) <= dateOfToday.get(Calendar.MONTH))
+                && (customerJoinDate.get(Calendar.DATE) <= dateOfToday.get(Calendar.DATE))){
+            _request.getCustomer().setTwoYearsBonus(5.0);
+            _request.getCustomer().setAccount(_request.getCustomer().getAccount()+5.0);
+        }
     }
 
     private void sendWelcomeMessage(Customer _customer){

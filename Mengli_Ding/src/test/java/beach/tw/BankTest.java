@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import static beach.tw.requests.CustomerRequest.deposit;
@@ -118,7 +119,7 @@ public class BankTest {
     }
 
     @Test
-    public void shouldNotHandleAnyRequestIfCustomerWasNotAdded() {
+    public void shouldNotHandleAnyRequestIfCustomerWasNotAdded() throws ParseException {
         //given customer not added
         Customer customer = Customer.createCustomer("aaa", new Date());
 
@@ -166,10 +167,11 @@ public class BankTest {
     @Test
     public void shouldSetJoiningDateIfCustomerAddedToBank() throws ParseException {
         Customer customer = Customer.createCustomer("ddd", new Date());
-        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
         bank.addCustomer(customer);
 
-        assertThat(customer.getJoiningDate().getDay(), is(date.getDay()));
+        assertThat(customer.getJoiningDate().get(Calendar.DAY_OF_MONTH), is(calendar.get(Calendar.DAY_OF_MONTH)));
     }
 
     @Test
@@ -183,8 +185,14 @@ public class BankTest {
     public void shouldAddBonusWhenOverTwoYears() throws ParseException {
         Customer customer = Customer.createCustomer("ddd", new Date());
         bank.addCustomer(customer);
-        bank.handleRequest(deposit(customer, 6));
+        Calendar calendar = customer.getJoiningDate();
+        calendar.add(Calendar.YEAR, -2);
+//        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        customer.setJoiningDate(calendar);
 
-        assertThat(customer.getAccount().getMoney(), is(11));
+        bank.handleRequest(deposit(customer, 6));
+        bank.handleRequest(deposit(customer, 7));
+
+        assertThat(customer.getAccount().getMoney(), is(18));
     }
 }

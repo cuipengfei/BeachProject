@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Mengli_Ding" level="project" />
     <orderEntry type="module" module-name="main" />
+    <orderEntry type="library" name="mockito-1.9" level="project" />
   </component>
 </module>

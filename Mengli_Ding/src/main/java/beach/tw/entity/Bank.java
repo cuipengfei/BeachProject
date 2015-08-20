@@ -4,9 +4,9 @@ import beach.external.MessageGateway;
 import beach.tw.handlers.Handlers;
 import beach.tw.requests.CustomerRequest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class Bank {
 
     }
 
-    public void handleRequest(CustomerRequest request){
+    public void handleRequest(CustomerRequest request) {
         if (customerList.contains(request.getCustomer())) {
             Handlers.findHandler(request.getType()).handle(request);
 
@@ -47,17 +47,15 @@ public class Bank {
         }
     }
 
-    public boolean addCustomer(Customer customer) throws ParseException {
+    public boolean addCustomer(Customer customer) {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd) {
             customerList.add(customer);
             messageGateway.sendMail(customer.getName() + "@thebank.com", "Dear " + customer.getName() + ", Welcome to the Bank");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-            customer.setJoiningDate(sdf.parse("1993-12-23"));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            customer.setJoiningDate(calendar);
         }
         return isShouldAdd;
     }
-
-
-
 }

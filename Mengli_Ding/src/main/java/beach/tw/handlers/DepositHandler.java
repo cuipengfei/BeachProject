@@ -1,5 +1,6 @@
 package beach.tw.handlers;
 
+import beach.tw.entity.Account;
 import beach.tw.entity.Customer;
 import beach.tw.requests.CustomerRequest;
 
@@ -12,20 +13,23 @@ import java.util.Date;
 public class DepositHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) {
-
-        if (IsCustomerBeenWithBankOverTwoYears(request.getCustomer()))
-            request.getCustomer().getAccount().add(request.getBill() + 5);
-        else
-            request.getCustomer().getAccount().add(request.getBill());
+        Customer customer = request.getCustomer();
+        Account account = customer.getAccount();
+        if (isCustomerBeenWithBankOverTwoYears(customer) && !customer.isGetBonus()){
+            account.add(request.getBill() + 5);
+            customer.setIsGetBonus(true);
+        }
+        else{
+            account.add(request.getBill());
+        }
     }
 
-    private boolean IsCustomerBeenWithBankOverTwoYears(Customer customer){
-        Calendar calendar1 = Calendar.getInstance();
+    private boolean isCustomerBeenWithBankOverTwoYears(Customer customer) {
+        Calendar joiningDate = customer.getJoiningDate();
         Calendar calendar2 = Calendar.getInstance();
-        calendar1.setTime(customer.getJoiningDate());
         calendar2.setTime(new Date());
-        calendar1.add(Calendar.YEAR, 2);
-        return calendar1.before(calendar2);
+        joiningDate.add(Calendar.YEAR, 2);
+        return joiningDate.before(calendar2);
     }
 
 }

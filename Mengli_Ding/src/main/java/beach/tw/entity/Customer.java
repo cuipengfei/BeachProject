@@ -1,5 +1,6 @@
 package beach.tw.entity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -10,14 +11,23 @@ public class Customer {
     private final Date birthdDate;
     private final Account account = new Account();
     private boolean isPremiumCustomer = false;
-    private Date joiningDate;
+    private boolean isGetBonus = false;
+    private Calendar joiningDate;
 
-    public void setJoiningDate(Date joiningDate) {
+    public void setJoiningDate(Calendar joiningDate) {
         this.joiningDate = joiningDate;
     }
 
-    public Date getJoiningDate() {
+    public Calendar getJoiningDate() {
         return joiningDate;
+    }
+
+    public void setIsGetBonus(boolean isGetBonus) {
+        this.isGetBonus = isGetBonus;
+    }
+
+    public boolean isGetBonus() {
+        return isGetBonus;
     }
 
     public boolean isPremiumCustomer() {

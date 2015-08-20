@@ -4,9 +4,6 @@ import beach.tw.requests.RequestType;
 
 import java.util.HashMap;
 
-/**
- * Created by mlding on 8/16/15.
- */
 public class Handlers {
     private static final HashMap<RequestType, RequestHandler> handlers =
             new HashMap<RequestType, RequestHandler>(){

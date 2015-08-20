@@ -14,6 +14,7 @@ import java.util.List;
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
     private MailSender mailSender;
+
     public Bank(MailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -44,6 +45,7 @@ public class Bank {
     private void handleTwoYearBonus(CustomerRequest _request) {
         Calendar customerJoinDate = _request.getCustomer().getJoiningDate();
         Calendar dateOfToday = Calendar.getInstance();
+
         if ((_request.getCustomer().getTwoYearsBonus() == 0.0)
                 &&(_request.getRequestType().compareTo(RequestType.deposit)==0)
                 &&((customerJoinDate.get(Calendar.YEAR)+2) <= dateOfToday.get(Calendar.YEAR))
@@ -61,15 +63,18 @@ public class Bank {
     private boolean shouldAdd(Customer _customer) {
         boolean isNotValidNickName = (_customer != Customer.getInvalidCustomer());
         boolean isExistName = isExistName(_customer);
+
         return  isNotValidNickName && !isExistName;
     }
 
     private boolean isExistName(Customer _customer) {
         boolean isExistName = false;
+
         for(Customer customer: customerList) {
             if (customer.getNickName().equals(_customer.getNickName()) )
                 isExistName = true;
         }
+
         return isExistName;
     }
 

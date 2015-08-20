@@ -49,7 +49,7 @@ public class BankTest {
         bank.addCustomer(customer);
         bank.handleRequest(CustomerRequest.deposit(customer, 100d));
 
-        assertThat(customer.getBalance(), is(100d));
+        assertThat(customer.getBalance(), is(105d));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class BankTest {
         bank.handleRequest(CustomerRequest.deposit(customer, 100d));
         bank.handleRequest(CustomerRequest.withdraw(customer, 100d));
 
-        assertThat(customer.getBalance(), is(0d));
+        assertThat(customer.getBalance(), is(5d));
     }
 
     @Test(expected = OverdrawException.class)
@@ -133,6 +133,30 @@ public class BankTest {
 
         bank.addCustomer(customer);
 
+        assertThat(customer.getDateOfJoin().getDay(), is(date.getDay()));
+    }
+
+    @Test
+    public void should_set_dateOfJoin_when_customer_is_added_test() {
+        Customer customer = new Customer("syyan123", new Date());
+
+        Date date = new Date();
+        System.out.println(date.getTime());
+
+        bank.addCustomer(customer);
+        System.out.println(customer.getDateOfJoin().getTime());
+
         assertThat(customer.getDateOfJoin(), is(date));
     }
+
+
+
+    @Test
+    public void testAssert() throws Exception {
+        String s1 = "Monday";
+        String s2 = new String("Monday");
+        assertThat(s1, is(s2));
+        assertEquals(s1, s2);
+    }
+
 }

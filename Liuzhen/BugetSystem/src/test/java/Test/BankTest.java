@@ -12,22 +12,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 public class BankTest {
-    public Bank bank0;
+    public Bank bank0, bank1;
     public Customer customer;
     public MailSender mockSender;
-    public Bank bank1;
 
     @Before
     public void setUp() throws Exception {
         bank0 = new Bank(new StandardMailSender());
-        customer = Customer.createCustomer("liuzhen11", new Date());
+        customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
         mockSender = Mockito.mock(FasterMailSender.class);
         bank1 = new Bank(mockSender);
     }
@@ -46,7 +45,6 @@ public class BankTest {
         bank0.handleRequest(CustomerRequest.deposit(customer, 1000.0));
 
         assertThat(customer.getAccount(), is(1000.0));
-
     }
 
     @Test
@@ -74,7 +72,7 @@ public class BankTest {
 
     @Test
     public void should_call_sendEmail_method_successfully_when_a_customer_be_add_into_the_bank() throws Exception {
-        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+        Customer customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
 
         bank1.add(customer);
 
@@ -83,7 +81,7 @@ public class BankTest {
 
     @Test
     public void should_send_manager_an_email_when_a_customer_becomes_a_premium_customer_from_a_ordinary_customer() throws Exception {
-        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+        Customer customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
 
         bank1.add(customer);
         bank1.handleRequest(CustomerRequest.deposit(customer, 40000.0));
@@ -93,7 +91,7 @@ public class BankTest {
 
     @Test
     public void should_not_send_manager_an_email_when_a_customer_have_been_a_premium_customer_yet() throws Exception {
-        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+        Customer customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
 
         bank1.add(customer);
         bank1.handleRequest(CustomerRequest.deposit(customer, 40000.0));
@@ -102,24 +100,39 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.deposit(customer, 40000.0));
 
         verify(mockSender, times(1)).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
-
     }
 
     @Test
     public void should_not_send_manager_an_email_when_a_customer_doesnot_meet_the_condition_of_been_premium() throws Exception {
-        Customer customer = Customer.createCustomer("liuzhen11",new Date());
+        Customer customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
 
         bank1.add(customer);
         bank1.handleRequest(CustomerRequest.deposit(customer, 100.0));
 
         verify(mockSender, never()).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
-
     }
 
     @Test
     public void should_add_joining_date_when_a_customer_be_added_successfully() throws Exception {
-        bank0.add(customer);
+        bank1.add(customer);
 
-        assertEquals(customer.getJoiningDate().toString(), new Date().toString());
+        assertEquals(customer.getJoiningDate(), Calendar.getInstance());
+    }
+
+    @Test
+    public void should_get_bonus_when_a_customer_has_been_added_for_two_years() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2013);
+        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.DATE, 1);
+        Customer customer1 = Customer.createCustomer("jeanliu",Calendar.getInstance());
+
+        bank1.add(customer1);
+        customer1.setJoiningDate(calendar);
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
+        bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
+
+        assertThat(customer1.getTwoYearsBonus(),is(5.0));
+        assertThat(customer1.getAccount(),is(205.0));
     }
 }

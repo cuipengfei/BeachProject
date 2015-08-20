@@ -18,9 +18,12 @@ import java.util.regex.Pattern;
  */
 public class Bank {
     public MessageGateway messageGateway;
-    public LinkedList<Customer> customerLinkedList = new LinkedList<Customer>();
+    public List<Customer> customerLinkedList = new LinkedList<Customer>();
     public BankManager bankManager = new BankManager();
     public static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
+
+    public Bank() {
+    }
 
     public Bank(MessageGateway messageGateway) {
         this.messageGateway = messageGateway;
@@ -34,10 +37,12 @@ public class Bank {
     public boolean AddCustomertoBankwhenValidCustomer(Customer customer) {
         if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
-
             String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
             messageGateway.sendEmail(customer.getEmailAddress(), message);
-            customer.setJoinBankDay(new Date());
+            Calendar joinBankDay = Calendar.getInstance();
+            joinBankDay.set(2013, 4, 1);
+            // joinBankDay.setTime(new Date());
+            customer.setJoinBankDay(joinBankDay);
             return true;
         }
         return false;
@@ -47,9 +52,9 @@ public class Bank {
 
         if (customerLinkedList.contains(request.getCustomer())) {
             customerHandlerMap.get(request.getType()).handlers(request);
+
             if (isPrminumCustomer(request.getCustomer())) {
                 messageGateway.sendEmail(bankManager.getEmailAddress(), request.getCustomer().getNickname() + " is a premium customer");
-                bankManager.getPrminumCustomerList().add(request.getCustomer());
                 request.getCustomer().setIsPreminumDefault(true);
             }
         }
@@ -64,17 +69,10 @@ public class Bank {
         return true;
     }
 
-  private boolean validateNickname(Customer customer) {
+    private boolean validateNickname(Customer customer) {
         final String strRegex = "^[a-z0-9]+$";
         Pattern pattern = Pattern.compile(strRegex);
         Matcher matcher = pattern.matcher(customer.getNickname());
-        return matcher.find();
-    }
-    private boolean validateNickname(ApplicationList application)
-    {
-        final String strRegex = "^[a-z0-9]+$";
-        Pattern pattern = Pattern.compile(strRegex);
-        Matcher matcher = pattern.matcher(application.getNickname());
         return matcher.find();
     }
 

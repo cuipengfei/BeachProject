@@ -1,6 +1,6 @@
 package Customer;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,19 +11,20 @@ public class Customer {
     private static final Customer invalidCustomer = new Customer(null,null);
 
     private final String nickName;
-    private final Date dateOfBirth;
+    private final Calendar dateOfBirth;
     private double account = 0.0;
     private String message ="";
     private boolean isPremiumCustomer = false;
-    private Date joiningDate;
+    private Calendar joiningDate;
+    private double twoYearsBonus = 0.0;
 
-    private Customer(String _nickName, Date _dateOfBirth)  {
+    private Customer(String _nickName, Calendar _dateOfBirth)  {
         nickName = _nickName;
         dateOfBirth = _dateOfBirth;
     }
     public static Customer getInvalidCustomer() {return invalidCustomer;}
 
-    public static Customer createCustomer(String _nickName, Date _dateOfBirth) {
+    public static Customer createCustomer(String _nickName, Calendar _dateOfBirth) {
         if (isValidNickName(_nickName))
             return new Customer(_nickName, _dateOfBirth);
         else
@@ -58,12 +59,19 @@ public class Customer {
         return isPremiumCustomer;
     }
 
-    public void setJoiningDate(Date joiningDate) {
+    public void setJoiningDate(Calendar joiningDate) {
         this.joiningDate = joiningDate;
     }
 
-    public Date getJoiningDate() {
+    public Calendar getJoiningDate() {
         return joiningDate;
     }
 
+    public double getTwoYearsBonus() {
+        return twoYearsBonus;
+    }
+
+    public void setTwoYearsBonus(double twoYearsBonus) {
+        this.twoYearsBonus = twoYearsBonus;
+    }
 }

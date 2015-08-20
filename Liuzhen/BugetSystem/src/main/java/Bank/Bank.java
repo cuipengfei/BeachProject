@@ -5,8 +5,9 @@ import Handler.Handlers;
 import MailSender.MailSender;
 import MyException.CustomerNotExistException;
 import Request.CustomerRequest;
+import Request.RequestType;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Bank {
     public boolean add(Customer _customer) {
         if (shouldAdd(_customer)) {
             customerList.add(_customer);
-            _customer.setJoiningDate(new Date());
+            _customer.setJoiningDate(Calendar.getInstance());
             sendWelcomeMessage(_customer);
         }
 
@@ -33,6 +34,17 @@ public class Bank {
             if (_request.getCustomer().getAccount()>=40000.0 && !_request.getCustomer().isPremiumCustomer()) {
                 mailSender.sendEmail( "manager@thebank.com",_request.getCustomer() + " is now a premium customer.");
                 _request.getCustomer().setIsPremiumCustomer(true);
+            }
+
+            Calendar customerJoinDate = _request.getCustomer().getJoiningDate();
+            Calendar dateOfToday = Calendar.getInstance();
+            if ((_request.getCustomer().getTwoYearsBonus() == 0.0)
+                    &&(_request.getRequestType().compareTo(RequestType.deposit)==0)
+                    &&((customerJoinDate.get(Calendar.YEAR)+2) <= dateOfToday.get(Calendar.YEAR))
+                    && (customerJoinDate.get(Calendar.MONTH) <= dateOfToday.get(Calendar.MONTH))
+                    && (customerJoinDate.get(Calendar.DATE) <= dateOfToday.get(Calendar.DATE))){
+                _request.getCustomer().setTwoYearsBonus(5.0);
+                _request.getCustomer().setAccount(_request.getCustomer().getAccount()+5.0);
             }
         }
         else throw new CustomerNotExistException();

@@ -1,9 +1,8 @@
 package com.thoughtworks;
 
 import com.thoughtworks.external.MessageGateway;
-import com.thoughtworks.requests.CustomerRequest;
-
 import com.thoughtworks.handlers.Handlers;
+import com.thoughtworks.requests.CustomerRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,8 +21,8 @@ public class Bank {
 
     public boolean addCustomer(Customer customer) {
         if (!isExist(customer) && isValid(customer.getNickName())) {
-            customerList.add(customer);
             customer.setDateOfJoin(new Date());
+            customerList.add(customer);
             emailSender.sendMessage(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the Bank");
             return true;
         }
@@ -57,5 +56,4 @@ public class Bank {
     private boolean shouldBePremiumCustomer(Customer customer) {
         return !customer.isPremiumCustomer() && customer.getBalance() >= 40000;
     }
-
 }

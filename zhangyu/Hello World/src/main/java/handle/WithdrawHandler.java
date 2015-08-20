@@ -15,7 +15,6 @@ public class WithdrawHandler implements RequestHandler {
         if (num > account.getBalance()) {
             throw new OverDrawException("overdraw");
         }
-        account.sub(num);
-
+        else account.sub(num);
     }
 }

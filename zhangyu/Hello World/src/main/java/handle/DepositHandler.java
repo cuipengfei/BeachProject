@@ -3,6 +3,8 @@ package handle;
 import request.Customer;
 import request.CustomerRequest;
 
+import java.util.Calendar;
+
 /**
  * Created by yuzhang on 8/14/15.
  */
@@ -11,9 +13,8 @@ public class DepositHandler implements RequestHandler{
     public void handle(CustomerRequest request) {
         int num = request.getNum();
         Customer customer = request.getCustomer();
-        long day = (request.getCurrentDate().getTime()-customer.getDateOfJoin().getTime())/(24*60*60*1000);
 
-        if(!customer.isPassTwoYear() && day > 365*2) {
+        if(isGiveBonus(request)) {
             customer.setIsPassTwoYear(true);
             num += 5;
         }
@@ -21,5 +22,13 @@ public class DepositHandler implements RequestHandler{
         customer.getMyAccount().add(num);
     }
 
+    private boolean isGiveBonus(CustomerRequest request){
+        Customer customer = request.getCustomer();
+        Calendar dateOfJoin = customer.getDateOfJoin();
+        Calendar currentDate = Calendar.getInstance();
+        dateOfJoin.add(Calendar.YEAR, 2);
+
+        return (!customer.isPassTwoYear() && dateOfJoin.before(currentDate));
+    }
 
 }

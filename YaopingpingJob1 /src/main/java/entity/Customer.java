@@ -1,20 +1,21 @@
 package entity;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by ppyao on 8/12/15.
  */
 public class Customer {
-    private Date joinBankDay;
+    private Calendar joinBankDay;
     private String nickname;
-    private Date dateofBirth;
+    private Calendar dateofBirth;
     private final Account account = new Account();
     private String emailAddress;
     private String message;
-    private boolean isPreminumDefault = false;
+    private boolean isPreminumDefault;
+    private boolean acceptReward;
 
-    public Date getJoinBankDay() {
+    public Calendar getJoinBankDay() {
         return joinBankDay;
     }
 
@@ -34,15 +35,11 @@ public class Customer {
         this.emailAddress = emailAddress;
     }
 
-    public Date getDateofBirth1() {
-        return dateofBirth;
-    }
-
     public String getNickname() {
         return nickname;
     }
 
-    public Date getDateofBirth() {
+    public Calendar getDateofBirth() {
         return dateofBirth;
     }
 
@@ -54,14 +51,22 @@ public class Customer {
         this.message = message;
     }
 
-    public Customer(String nickname, Date dateofBirth) {
+    public Customer(String nickname, Calendar dateofBirth) {
         this.nickname = nickname;
         this.dateofBirth = dateofBirth;
         this.emailAddress = nickname + "@bank.com";
 
     }
 
-    public void setJoinBankDay(Date joinBankDay) {
+    public boolean isAcceptReward() {
+        return acceptReward;
+    }
+
+    public void setAcceptReward(boolean acceptReward) {
+        this.acceptReward = acceptReward;
+    }
+
+    public void setJoinBankDay(Calendar joinBankDay) {
         this.joinBankDay = joinBankDay;
     }
 }

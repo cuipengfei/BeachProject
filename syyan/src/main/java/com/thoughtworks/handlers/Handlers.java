@@ -1,6 +1,6 @@
-package main.java.com.thoughtworks.handlers;
+package com.thoughtworks.handlers;
 
-import main.java.com.thoughtworks.requests.RequestType;
+import com.thoughtworks.requests.RequestType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ public class Handlers {
 
     private static Map<RequestType, Handler> handlers = new HashMap<RequestType, Handler>() {
         {
-            put(RequestType.Deposit, new Deposit());
-            put(RequestType.Withdraw, new Withdraw());
+            put(RequestType.Deposit, new DepositHandler());
+            put(RequestType.Withdraw, new WithdrawHandler());
         }
     };
 

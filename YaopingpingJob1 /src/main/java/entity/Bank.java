@@ -34,14 +34,13 @@ public class Bank {
         customerHandlerMap.put(RequestType.withdrawMoney, new WithdrawHandler());
     }
 
-    public boolean AddCustomertoBankwhenValidCustomer(Customer customer) {
+    public boolean addCustomertoBankwhenValidCustomer(Customer customer) {
         if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
             customerLinkedList.add(customer);
             String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
             messageGateway.sendEmail(customer.getEmailAddress(), message);
             Calendar joinBankDay = Calendar.getInstance();
-            joinBankDay.set(2013, 4, 1);
-            // joinBankDay.setTime(new Date());
+            joinBankDay.setTime(new Date());
             customer.setJoinBankDay(joinBankDay);
             return true;
         }

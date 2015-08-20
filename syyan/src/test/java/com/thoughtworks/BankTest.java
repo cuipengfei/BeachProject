@@ -135,7 +135,7 @@ public class BankTest {
 
         bank.addCustomer(customer);
 
-        assertThat(customer.getDateOfJoin(), is(calendar.getTime()));
+        assertThat(customer.getDateOfJoin().get(Calendar.DATE), is(calendar.get(Calendar.DATE)));
     }
 
 }

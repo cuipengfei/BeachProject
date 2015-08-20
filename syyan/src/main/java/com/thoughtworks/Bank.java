@@ -23,7 +23,7 @@ public class Bank {
         if (!isExist(customer) && isValid(customer.getNickName())) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            customer.setDateOfJoin(calendar.getTime());
+            customer.setDateOfJoin(calendar);
             customerList.add(customer);
             emailSender.sendMessage(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the Bank");
             return true;

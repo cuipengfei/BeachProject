@@ -8,7 +8,7 @@ public class Customer {
     private final Date dateOfBirth;
     private double balance;
     private boolean isPremiumCustomer = false;
-    private Date dateOfJoin;
+    private Calendar dateOfJoin;
     private boolean isGiveBonus;
 
     public Customer(String nickName, Date dateOfBirth) {
@@ -16,7 +16,7 @@ public class Customer {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public void setDateOfJoin(Date dateOfJoin) {this.dateOfJoin = dateOfJoin;}
+    public void setDateOfJoin(Calendar dateOfJoin) {this.dateOfJoin = dateOfJoin;}
 
     public void setPremiumCustomer(boolean isPremiumCustomer) {
         this.isPremiumCustomer = isPremiumCustomer;
@@ -30,7 +30,7 @@ public class Customer {
 
     public void setBalance(double balance) {this.balance = balance;}
 
-    public Date getDateOfJoin() {return dateOfJoin;}
+    public Calendar getDateOfJoin() {return dateOfJoin;}
 
     public String getNickName() {
         return nickName;

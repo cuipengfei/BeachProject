@@ -2,7 +2,7 @@ package Handler;
 
 import MyException.OverdrawException;
 import Request.CustomerRequest;
-import Src.Customer;
+import Customer.*;
 
 public class WithdrawHandler implements RequestHandler {
     @Override
@@ -11,7 +11,7 @@ public class WithdrawHandler implements RequestHandler {
             double _moneyWillBeDrawn = request.getMoney();
             double currentMoneyInAccount = _customer.getAccount();
 
-            if(_moneyWillBeDrawn < currentMoneyInAccount) {
+            if(_moneyWillBeDrawn <= currentMoneyInAccount) {
                 _customer.setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
             }
             else throw new OverdrawException();

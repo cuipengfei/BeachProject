@@ -1,17 +1,25 @@
-package Src;
+package Bank;
 
+import Customer.Customer;
 import Handler.Handlers;
+import MailSender.MailSender;
 import MyException.CustomerNotExistException;
 import Request.CustomerRequest;
+
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
-
+    private MailSender mailSender;
+    public Bank(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
     public boolean add(Customer _customer) {
         if (shouldAdd(_customer)) {
             customerList.add(_customer);
+            _customer.setJoiningDate(new Date());
             sendWelcomeMessage(_customer);
         }
 
@@ -21,13 +29,17 @@ public class Bank {
     public void handleRequest(CustomerRequest _request) throws Exception{
         if (customerList.contains(_request.getCustomer())){
             Handlers.findHandler(_request.getRequestType()).handle(_request);
+
+            if (_request.getCustomer().getAccount()>=40000.0 && !_request.getCustomer().isPremiumCustomer()) {
+                mailSender.sendEmail( "manager@thebank.com",_request.getCustomer() + " is now a premium customer.");
+                _request.getCustomer().setIsPremiumCustomer(true);
+            }
         }
         else throw new CustomerNotExistException();
     }
 
     private void sendWelcomeMessage(Customer _customer){
-        //_customer.setMessage("Dear" + _customer.getNickName() + ", Welcome to the Bank!");
-        new MailSender().sendEmail("thebankmanager@thebank.com", _customer.getNickName()+"@thebank.com", "Welcome Message", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
+        mailSender.sendEmail( _customer.getNickName() + "@thebank.com", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
     }
 
     private boolean shouldAdd(Customer _customer) {

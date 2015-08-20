@@ -1,7 +1,6 @@
-package Src;
+package Customer;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +14,8 @@ public class Customer {
     private final Date dateOfBirth;
     private double account = 0.0;
     private String message ="";
+    private boolean isPremiumCustomer = false;
+    private Date joiningDate;
 
     private Customer(String _nickName, Date _dateOfBirth)  {
         nickName = _nickName;
@@ -49,12 +50,20 @@ public class Customer {
         return account;
     }
 
-    public String getMessage() {
-        return message;
+    public void setIsPremiumCustomer(boolean isPremiumCustomer) {
+        this.isPremiumCustomer = isPremiumCustomer;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public boolean isPremiumCustomer() {
+        return isPremiumCustomer;
+    }
+
+    public void setJoiningDate(Date joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public Date getJoiningDate() {
+        return joiningDate;
     }
 
 }

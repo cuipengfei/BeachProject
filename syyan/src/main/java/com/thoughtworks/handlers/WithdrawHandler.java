@@ -9,11 +9,8 @@ public class WithdrawHandler implements Handler {
     public double handle(CustomerRequest customerRequest){
 
         Customer customer = customerRequest.getCustomer();
-        double money = customerRequest.getBalance();
-
         if (customer.getBalance() < customerRequest.getBalance()) throw new OverdrawException();
-        customer.setBalance(customer.getBalance() - money);
-
+        customer.setBalance(customer.getBalance() - customerRequest.getBalance());
         return customer.getBalance();
 
     }

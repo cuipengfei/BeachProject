@@ -5,7 +5,6 @@ import Handler.Handlers;
 import MailSender.MailSender;
 import MyException.CustomerNotExistException;
 import Request.CustomerRequest;
-import Request.RequestType;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -36,25 +35,11 @@ public class Bank {
                 mailSender.sendEmail("manager@thebank.com", _request.getCustomer() + " is now a premium customer.");
                 _request.getCustomer().setIsPremiumCustomer(true);
             }
-
-            handleTwoYearBonus(_request);
         }
         else throw new CustomerNotExistException();
     }
 
-    private void handleTwoYearBonus(CustomerRequest _request) {
-        Calendar customerJoinDate = _request.getCustomer().getJoiningDate();
-        Calendar dateOfToday = Calendar.getInstance();
 
-        if ((_request.getCustomer().getTwoYearsBonus() == 0.0)
-                &&(_request.getRequestType().compareTo(RequestType.deposit)==0)
-                &&((customerJoinDate.get(Calendar.YEAR)+2) <= dateOfToday.get(Calendar.YEAR))
-                && (customerJoinDate.get(Calendar.MONTH) <= dateOfToday.get(Calendar.MONTH))
-                && (customerJoinDate.get(Calendar.DATE) <= dateOfToday.get(Calendar.DATE))){
-            _request.getCustomer().setTwoYearsBonus(5.0);
-            _request.getCustomer().setAccount(_request.getCustomer().getAccount()+5.0);
-        }
-    }
 
     private void sendWelcomeMessage(Customer _customer){
         mailSender.sendEmail( _customer.getNickName() + "@thebank.com", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");

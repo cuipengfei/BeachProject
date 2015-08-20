@@ -5,7 +5,7 @@ import com.thoughtworks.handlers.Handlers;
 import com.thoughtworks.requests.CustomerRequest;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -21,7 +21,9 @@ public class Bank {
 
     public boolean addCustomer(Customer customer) {
         if (!isExist(customer) && isValid(customer.getNickName())) {
-            customer.setDateOfJoin(new Date());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            customer.setDateOfJoin(calendar);
             customerList.add(customer);
             emailSender.sendMessage(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the Bank");
             return true;

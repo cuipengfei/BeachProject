@@ -16,7 +16,7 @@ public class Customer {
     private String message ="";
     private boolean isPremiumCustomer = false;
     private Calendar joiningDate;
-    private double twoYearsBonus = 0.0;
+    private boolean hasReceivedTwoYearsBonus = false;
 
     private Customer(String _nickName, Calendar _dateOfBirth)  {
         nickName = _nickName;
@@ -67,11 +67,11 @@ public class Customer {
         return joiningDate;
     }
 
-    public double getTwoYearsBonus() {
-        return twoYearsBonus;
+    public boolean hasReceivedTwoYearsBonus() {
+        return hasReceivedTwoYearsBonus;
     }
 
-    public void setTwoYearsBonus(double twoYearsBonus) {
-        this.twoYearsBonus = twoYearsBonus;
+    public void setHasReceivedTwoYearsBonus(boolean hasReceivedTwoYearsBonus) {
+        this.hasReceivedTwoYearsBonus = hasReceivedTwoYearsBonus;
     }
 }

@@ -116,23 +116,24 @@ public class BankTest {
     public void should_add_joining_date_when_a_customer_be_added_successfully() throws Exception {
         bank1.add(customer);
 
-        assertEquals(customer.getJoiningDate(), Calendar.getInstance());
+        assertEquals(customer.getJoiningDate().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.YEAR));
+        assertEquals(customer.getJoiningDate().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.MONTH));
+        assertEquals(customer.getJoiningDate().get(Calendar.DATE), Calendar.getInstance().get(Calendar.DATE));
     }
 
     @Test
-    public void should_get_bonus_when_a_customer_has_been_added_for_two_years() throws Exception {
+    public void should_get_bonus_just_once_when_a_customer_has_been_added_for_two_years() throws Exception {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2013);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DATE, 1);
+        calendar.add(Calendar.YEAR,-3);
         Customer customer1 = Customer.createCustomer("jeanliu",Calendar.getInstance());
 
         bank1.add(customer1);
         customer1.setJoiningDate(calendar);
         bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
         bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
+        bank1.handleRequest(CustomerRequest.withDraw(customer1,100.0));
 
-        assertThat(customer1.getTwoYearsBonus(),is(5.0));
-        assertThat(customer1.getAccount(),is(205.0));
+        assertEquals(customer1.hasReceivedTwoYearsBonus(),true);
+        assertThat(customer1.getAccount(),is(105.0));
     }
 }

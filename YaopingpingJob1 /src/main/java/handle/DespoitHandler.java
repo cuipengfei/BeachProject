@@ -1,7 +1,9 @@
 package handle;
 
-import entity.BankManager;
+import entity.Customer;
 import request.CustomerRequest;
+
+import java.util.Calendar;
 
 /**
  * Created by ppyao on 8/13/15.
@@ -9,11 +11,19 @@ import request.CustomerRequest;
 public class DespoitHandler implements CustomerHandler {
     @Override
     public double handlers(CustomerRequest customerRequest) {
-        if (!customerRequest.getCustomer().isAcceptReward() && BankManager.calInterval(customerRequest.getCustomer())) {
-            customerRequest.getCustomer().setAcceptReward(true);
-            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + 5.0);
+        double bouse=5.0;
+        if (isGiveBouse(customerRequest.getCustomer())) {
+                  customerRequest.getCustomer().setAcceptReward(true);
+            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + bouse);
 
         }
         return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
+    }
+
+    private boolean isGiveBouse(Customer customer) {
+        Calendar joinBankDay = customer.getJoinBankDay();
+        joinBankDay.add(Calendar.YEAR,2);
+        return !customer.isAcceptReward() && joinBankDay.before(Calendar.getInstance());
+
     }
 }

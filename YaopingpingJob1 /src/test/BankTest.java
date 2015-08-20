@@ -22,6 +22,7 @@ public class BankTest {
     public MailSender sender;
     public Bank bank;
     public Calendar birthday;
+    Calendar calendar;
 
     @Before
     public void setUp() throws Exception {
@@ -29,8 +30,8 @@ public class BankTest {
         bank = new Bank(sender);
         birthday = Calendar.getInstance();
         birthday.set(1999, 4, 1);
-
-
+        calendar=Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-3);
     }
 
     @Test
@@ -38,7 +39,7 @@ public class BankTest {
         //given
         Customer customer = new Customer("yaoping", birthday);
         //when
-        boolean isSuccess = bank.AddCustomertoBankwhenValidCustomer(customer);
+        boolean isSuccess = bank.addCustomertoBankwhenValidCustomer(customer);
 
         //then
         assertTrue(isSuccess);
@@ -48,7 +49,7 @@ public class BankTest {
     public void bankShouldUnacceptCustomerWhenNicknameInValidate() {
         Customer customer = new Customer("Yaoping", birthday);
         //when
-        boolean isSuccess = bank.AddCustomertoBankwhenValidCustomer(customer);
+        boolean isSuccess = bank.addCustomertoBankwhenValidCustomer(customer);
 
         // then
         assertFalse(isSuccess);
@@ -59,8 +60,8 @@ public class BankTest {
         Customer firstCustomer = new Customer("yaoping", birthday);
         Customer secondCustomer = new Customer("yaoping", birthday);
         //when
-        boolean isFirstSuccess = bank.AddCustomertoBankwhenValidCustomer(firstCustomer);
-        boolean isSecondSuccess = bank.AddCustomertoBankwhenValidCustomer(secondCustomer);
+        boolean isFirstSuccess = bank.addCustomertoBankwhenValidCustomer(firstCustomer);
+        boolean isSecondSuccess = bank.addCustomertoBankwhenValidCustomer(secondCustomer);
 
         //then
         assertTrue(isFirstSuccess);
@@ -70,29 +71,17 @@ public class BankTest {
     @Test
     public void bankShouldDespoitMoney() throws OverdraftException {
         Customer customer = new Customer("yaoping", birthday);
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 5000.0));
         //then
         assertThat(customer.getAccount().getBalance(), is(5000.0));
     }
 
-
-    @Test
-    public void bankShouldNotAcceptDespoitMoneyWhenMoneyLessThanZero() throws OverdraftException {
-        Customer customer = new Customer("yaoping", birthday);
-        bank.AddCustomertoBankwhenValidCustomer(customer);
-        //when
-        bank.handleRequest(despoitRequst(customer, -10.0));
-
-        //then
-        assertThat(customer.getAccount().getBalance(), is(0.0));
-    }
-
     @Test
     public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
         Customer customer = new Customer("yaoping", birthday);
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
         bank.handleRequest(withdrawRequest(customer, 50.0));
@@ -104,7 +93,7 @@ public class BankTest {
     @Test(expected = OverdraftException.class)
     public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdraftException {
         Customer customer = new Customer("yaoping", birthday);
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         //when
         bank.handleRequest(despoitRequst(customer, 100.0));
         bank.handleRequest(withdrawRequest(customer, 150.0));
@@ -127,7 +116,7 @@ public class BankTest {
         bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", birthday);
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
 
         //then
         verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping>,Welcome to the Bank");
@@ -141,7 +130,7 @@ public class BankTest {
         bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", birthday);
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
 
         //then
@@ -155,7 +144,7 @@ public class BankTest {
         bank = new Bank(sender);
         Customer customer = new Customer("yaopingping", birthday);
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 30000.0));
 
         //then
@@ -169,7 +158,7 @@ public class BankTest {
         bank = new Bank(sender);
         Customer customer = new Customer("yaoping", birthday);
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
         bank.handleRequest(despoitRequst(customer, 10000.0));
 
@@ -182,7 +171,7 @@ public class BankTest {
         bank = new Bank(sender);
         Customer customer = new Customer("yaoping", birthday);
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
 
         verify(sender).sendEmail(matches(bank.bankManager.getEmailAddress()), matches("yaoping is a premium customer"));
@@ -190,30 +179,38 @@ public class BankTest {
 
     @Test
     public void bankShouldGiveRewardWhenJoinBankDayMoreThan2() throws OverdraftException {
+        //given
         Customer customer = new Customer("yaoping", birthday);
+
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
+        customer.setJoinBankDay(calendar);
         bank.handleRequest(despoitRequst(customer, 40000.0));
-        System.out.println(customer.getAccount().getBalance());
+
+        //then
         assertThat(customer.getAccount().getBalance(), is(40005.0));
 
     }
 
     @Test
     public void bankShouldNotGiveRewardWhenJoinBankDayLessThan2() throws OverdraftException {
+        //given
         Customer customer = new Customer("yaoping", birthday);
+
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
-        System.out.println(customer.getAccount().getBalance());
+
+        //then
         assertThat(customer.getAccount().getBalance(), is(40000.0));
     }
 
     @Test
     public void bankShouldNotGiveRewardWhenCustomerIsAcceptedReward() throws OverdraftException {
         Customer customer = new Customer("yaoping", birthday);
+
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
         bank.handleRequest(despoitRequst(customer, 10000.0));
         System.out.println(customer.getAccount().getBalance());
@@ -222,12 +219,15 @@ public class BankTest {
 
     @Test
     public void bankShouldGiveRewardWhenDespoit() throws OverdraftException {
+        //given
         Customer customer = new Customer("yaoping", birthday);
+
         //when
-        bank.AddCustomertoBankwhenValidCustomer(customer);
+        bank.addCustomertoBankwhenValidCustomer(customer);
         bank.handleRequest(despoitRequst(customer, 40000.0));
         bank.handleRequest(withdrawRequest(customer, 10000.0));
-        System.out.println(customer.getAccount().getBalance());
+
+        //then
         assertThat(customer.getAccount().getBalance(), is(30005.0));
     }
 

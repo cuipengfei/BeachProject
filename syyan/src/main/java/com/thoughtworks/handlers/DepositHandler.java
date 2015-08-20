@@ -4,25 +4,25 @@ import com.thoughtworks.Customer;
 import com.thoughtworks.requests.CustomerRequest;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class DepositHandler implements Handler {
     @Override
     public double handle(CustomerRequest customerRequest) {
         Customer customer = customerRequest.getCustomer();
         customer.setBalance(customer.getBalance() + customerRequest.getBalance());
-        giveBonus(customer);
+        if (isJoiningOverTwoYears(customer)) giveBonus(customer);
         return customer.getBalance();
     }
 
-    private void giveBonus(Customer customer) {
+    private boolean isJoiningOverTwoYears(Customer customer) {
         Calendar calendar = Calendar.getInstance();
-       // calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.YEAR, -2);
+        return (!customer.isGiveBonus() && calendar.after(customer.getDateOfJoin()));
+    }
 
-        calendar.set(2011,12,12);
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 2);
-        if (calendar.getTime().before(new Date())) {
-            customer.setBalance(customer.getBalance() + 5);
-        }
+    private void giveBonus(Customer customer) {
+        customer.setGiveBonus(true);
+        customer.setBalance(customer.getBalance() + 5);
     }
 }

@@ -45,7 +45,6 @@ public class BankTest {
         bank0.handleRequest(CustomerRequest.deposit(customer, 1000.0));
 
         assertThat(customer.getAccount(), is(1000.0));
-
     }
 
     @Test
@@ -101,7 +100,6 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.deposit(customer, 40000.0));
 
         verify(mockSender, times(1)).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
-
     }
 
     @Test
@@ -112,7 +110,6 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.deposit(customer, 100.0));
 
         verify(mockSender, never()).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
-
     }
 
     @Test

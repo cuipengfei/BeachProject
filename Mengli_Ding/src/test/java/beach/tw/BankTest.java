@@ -169,7 +169,7 @@ public class BankTest {
         Date date = new Date();
         bank.addCustomer(customer);
 
-        assertThat(customer.getJoiningDate().getYear(), is(date.getYear()));
+        assertThat(customer.getJoiningDate().getDay(), is(date.getDay()));
     }
 
     @Test
@@ -184,7 +184,6 @@ public class BankTest {
         Customer customer = Customer.createCustomer("ddd", new Date());
         bank.addCustomer(customer);
         bank.handleRequest(deposit(customer, 6));
-        bank.addBonus(customer);
 
         assertThat(customer.getAccount().getMoney(), is(11));
     }

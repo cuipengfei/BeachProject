@@ -7,8 +7,6 @@ import beach.tw.requests.CustomerRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,18 +58,6 @@ public class Bank {
         return isShouldAdd;
     }
 
-    private boolean IsCustomerBeenWithBankOverTwoYears(Customer customer){
-        Calendar calendar1 = Calendar.getInstance();
-        Calendar calendar2 = Calendar.getInstance();
-        calendar1.setTime(customer.getJoiningDate());
-        calendar2.setTime(new Date());
-        calendar1.add(Calendar.YEAR, 2);
-        return calendar1.before(calendar2);
-    }
 
-    public void addBonus(Customer customer){
-        if (IsCustomerBeenWithBankOverTwoYears(customer) && customer.isActivated())
-            customer.getAccount().add(5);
-    }
 
 }

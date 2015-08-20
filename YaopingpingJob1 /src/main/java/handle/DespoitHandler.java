@@ -1,6 +1,6 @@
 package handle;
 
-import exception.OverdraftException;
+import entity.BankManager;
 import request.CustomerRequest;
 
 /**
@@ -8,12 +8,12 @@ import request.CustomerRequest;
  */
 public class DespoitHandler implements CustomerHandler {
     @Override
-    public double handlers(CustomerRequest customerRequest) throws OverdraftException {
-        if (customerRequest.getMoney() > 0) {
-            customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
-            return customerRequest.getCustomer().getAccount().getBalance();
-        }
-        return customerRequest.getCustomer().getAccount().getBalance();
+    public double handlers(CustomerRequest customerRequest) {
+        if (!customerRequest.getCustomer().isAcceptReward() && BankManager.calInterval(customerRequest.getCustomer())) {
+            customerRequest.getCustomer().setAcceptReward(true);
+            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + 5.0);
 
+        }
+        return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
     }
 }

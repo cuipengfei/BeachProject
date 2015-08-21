@@ -16,7 +16,8 @@ public class Customer {
     private String message ="";
     private boolean isPremiumCustomer = false;
     private Calendar joiningDate;
-    private boolean hasReceivedTwoYearsBonus = false;
+    private boolean hasReceivedTwoYearsBonus;
+    private boolean overdraftAllowed;
 
     private Customer(String _nickName, Calendar _dateOfBirth)  {
         nickName = _nickName;
@@ -73,5 +74,13 @@ public class Customer {
 
     public void setHasReceivedTwoYearsBonus(boolean hasReceivedTwoYearsBonus) {
         this.hasReceivedTwoYearsBonus = hasReceivedTwoYearsBonus;
+    }
+
+    public boolean isOverdraftAllowed() {
+        return overdraftAllowed;
+    }
+
+    public void setOverdraftAllowed(boolean overdraftAllowed) {
+        this.overdraftAllowed = overdraftAllowed;
     }
 }

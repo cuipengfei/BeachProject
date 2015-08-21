@@ -14,6 +14,7 @@ public class Customer {
     private String message;
     private boolean isPreminumDefault;
     private boolean acceptReward;
+    private boolean overdraftAllowed;
 
     public Calendar getJoinBankDay() {
         return joinBankDay;
@@ -68,5 +69,13 @@ public class Customer {
 
     public void setJoinBankDay(Calendar joinBankDay) {
         this.joinBankDay = joinBankDay;
+    }
+
+    public boolean isOverdraftAllowed() {
+        return overdraftAllowed;
+    }
+
+    public void setOverdraftAllowed(boolean overdraftAllowed) {
+        this.overdraftAllowed = overdraftAllowed;
     }
 }

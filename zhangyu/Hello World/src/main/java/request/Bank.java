@@ -4,6 +4,7 @@ import email.MessageGateway;
 import handle.Handlers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,8 @@ public class Bank {
     private Manager manager = new Manager();
 
     public Manager getManager() {return manager;}
+
+    public Bank() {}
 
     public Bank(MessageGateway sender) {
         this.sender = sender;
@@ -39,7 +42,7 @@ public class Bank {
     public boolean addToBank(Customer customer) {
         if (isValidNickname(customer) && !isRepeative(customer)) {
             customers.add(customer);
-            customer.setDateOfJoin(new Date());
+            customer.setDateOfJoin(Calendar.getInstance());
             customer.setMyAccount(new Account());
             String content = "Dear " + customer.getNickname() + " , Welcome to bank";
             sender.sendEmail(customer.getEmailAddress(), content);

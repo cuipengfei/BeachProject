@@ -1,5 +1,6 @@
 package request;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Customer {
@@ -9,8 +10,9 @@ public class Customer {
     private String emailAddress;
     private String message;
     private boolean isPremium = false;
-    private Date dateOfJoin;
+    private Calendar dateOfJoin;
     private boolean isPassTwoYear = false;
+    private boolean OverdraftAllowed = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
@@ -34,12 +36,17 @@ public class Customer {
 
     public void setIsPremium(boolean isPremium) {this.isPremium = isPremium;}
 
-    public Date getDateOfJoin() {return dateOfJoin;}
+    public Calendar getDateOfJoin() {return dateOfJoin;}
 
-    public void setDateOfJoin(Date dateOfJoin) {this.dateOfJoin = dateOfJoin;}
+    public void setDateOfJoin(Calendar dateOfJoin) {this.dateOfJoin = dateOfJoin;}
 
     public boolean isPassTwoYear() {return isPassTwoYear;}
 
     public void setIsPassTwoYear(boolean isPassTwoYear) {this.isPassTwoYear = isPassTwoYear;}
+
+    public boolean isOverdraftAllowed() {return OverdraftAllowed;}
+
+    public void setOverdraftAllowed(boolean OverdraftAllowed) {this.OverdraftAllowed = OverdraftAllowed;}
+
 }
 

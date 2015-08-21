@@ -55,6 +55,7 @@ public class Bank {
             if (isPrminumCustomer(request.getCustomer())) {
                 messageGateway.sendEmail(bankManager.getEmailAddress(), request.getCustomer().getNickname() + " is a premium customer");
                 request.getCustomer().setIsPreminumDefault(true);
+
             }
         }
     }

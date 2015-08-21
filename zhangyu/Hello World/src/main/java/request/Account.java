@@ -19,5 +19,4 @@ public class Account {
         this.balance -= num;
         return this.balance;
     }
-
 }

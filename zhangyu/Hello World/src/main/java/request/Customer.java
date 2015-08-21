@@ -12,6 +12,7 @@ public class Customer {
     private boolean isPremium = false;
     private Calendar dateOfJoin;
     private boolean isPassTwoYear = false;
+    private boolean OverdraftAllowed = false;
 
     public Customer(String nickname, Date dateOFBirth) {
         this.nickname = nickname;
@@ -42,5 +43,10 @@ public class Customer {
     public boolean isPassTwoYear() {return isPassTwoYear;}
 
     public void setIsPassTwoYear(boolean isPassTwoYear) {this.isPassTwoYear = isPassTwoYear;}
+
+    public boolean isOverdraftAllowed() {return OverdraftAllowed;}
+
+    public void setOverdraftAllowed(boolean OverdraftAllowed) {this.OverdraftAllowed = OverdraftAllowed;}
+
 }
 

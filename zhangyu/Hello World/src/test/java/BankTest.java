@@ -2,6 +2,7 @@ import email.EmailSend;
 import email.FasterEmailSend;
 import email.MockEmailSend;
 import exception.OverDrawException;
+import exception.OverLimitException;
 import request.*;
 import org.junit.Test;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ public class BankTest {
 
         bank.handleRequest(deposit(customer1, 300));
 
-        assertThat(bank.handleRequest(CustomerRequest.withdraw(customer1, 100)), is(200));
+        assertThat(bank.handleRequest(withdraw(customer1, 100)), is(200));
     }
 
     @Test(expected = OverDrawException.class)
@@ -42,7 +43,7 @@ public class BankTest {
         bank.addToBank(customer1);
 
         bank.handleRequest(deposit(customer1, 300));
-        bank.handleRequest(CustomerRequest.withdraw(customer1, 301));
+        bank.handleRequest(withdraw(customer1, 301));
     }
 
     @Test(expected = NullPointerException.class)
@@ -182,5 +183,40 @@ public class BankTest {
         bank.handleRequest(withdraw(customer1, 300));
 
         assertThat(customer1.getMyAccount().getBalance(),is(5));
+    }
+
+    @Test
+    public void should_OverDraftAllowed_Customer_can_withdraw_beyond_zero() throws Exception {
+        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
+        customer1.setOverdraftAllowed(true);
+        bank.addToBank(customer1);
+
+        bank.handleRequest(deposit(customer1, 300));
+        bank.handleRequest(withdraw(customer1, 301));
+
+        assertThat(customer1.getMyAccount().getBalance(),is(-1));
+    }
+
+    @Test(expected = OverLimitException.class)
+    public void should_throw_Exception_when_OverDraftAllowed_customer_OverDrawNum_is_1001() throws Exception {
+        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
+        customer1.setOverdraftAllowed(true);
+        bank.addToBank(customer1);
+
+        bank.handleRequest(deposit(customer1, 1000));
+        bank.handleRequest(withdraw(customer1, 2001));
+    }
+
+    @Test(expected = OverDrawException.class)
+    public void should_throw_Exception_when_customer_whose_balance_is_negative_and_OverDraftAllowed_removed_withdraw() throws Exception {
+        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
+        bank.addToBank(customer1);
+
+        customer1.setOverdraftAllowed(true);
+        bank.handleRequest(deposit(customer1, 1000));
+        bank.handleRequest(withdraw(customer1, 1001));
+
+        customer1.setOverdraftAllowed(false);
+        bank.handleRequest(withdraw(customer1, 1));
     }
 }

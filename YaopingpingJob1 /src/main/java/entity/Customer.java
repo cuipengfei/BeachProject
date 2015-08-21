@@ -9,12 +9,11 @@ public class Customer {
     private Calendar joinBankDay;
     private String nickname;
     private Calendar dateofBirth;
-    private final Account account = new Account();
+    private Account account;
     private String emailAddress;
     private boolean isPreminumDefault;
     private boolean acceptReward;
     private boolean overdraftAllowed;
-    private double overdraftAmount;
 
     public Calendar getJoinBankDay() {
         return joinBankDay;
@@ -48,7 +47,14 @@ public class Customer {
         return account;
     }
 
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     public Customer(String nickname, Calendar dateofBirth) {
+        if (!isValidName(nickname)) {
+            throw new IllegalArgumentException();
+        }
         this.nickname = nickname;
         this.dateofBirth = dateofBirth;
         this.emailAddress = nickname + "@bank.com";
@@ -75,11 +81,7 @@ public class Customer {
         this.overdraftAllowed = overdraftAllowed;
     }
 
-    public double getOverdraftAmount() {
-        return overdraftAmount;
-    }
-
-    public void setOverdraftAmount(double overdraftAmount) {
-        this.overdraftAmount = overdraftAmount;
+    private boolean isValidName(String nickname) {
+        return nickname.matches("^[a-z0-9]+$");
     }
 }

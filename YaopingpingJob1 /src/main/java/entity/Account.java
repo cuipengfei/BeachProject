@@ -4,7 +4,8 @@ package entity;
  * Created by ppyao on 8/12/15.
  */
 public class Account {
-    private double balance = 0.0;
+    private double balance;
+    private double overdraftLimit;
 
     public void setBalance(double balance) {
         this.balance = balance;
@@ -20,5 +21,18 @@ public class Account {
 
     public double minusBalance(double money) {
         return balance -= money;
+    }
+
+    public Account() {
+        this.balance = 0.0;
+        this.overdraftLimit = 0.0;
+    }
+
+    public double getOverdraftLimit() {
+        return overdraftLimit;
+    }
+
+    public void setOverdraftLimit(double overdraftLimit) {
+        this.overdraftLimit = overdraftLimit;
     }
 }

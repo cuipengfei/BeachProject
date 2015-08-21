@@ -10,14 +10,14 @@ import java.util.Calendar;
  */
 public class DespoitHandler implements CustomerHandler {
     @Override
-    public double handlers(CustomerRequest customerRequest) {
+    public double handle(CustomerRequest customerRequest) {
         double bonus = 5.0;
         if (isGiveBonus(customerRequest.getCustomer())) {
             customerRequest.getCustomer().setAcceptReward(true);
-            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + bonus);
+            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount() + bonus);
 
         }
-        return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
+        return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount());
     }
 
     private boolean isGiveBonus(Customer customer) {

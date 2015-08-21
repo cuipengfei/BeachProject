@@ -1,26 +1,36 @@
 package handle;
 
 import entity.Account;
-import exception.OverdraftException;
+import entity.Customer;
+import exception.OverdrawException;
 import request.CustomerRequest;
 
 
-/**
- * Created by ppyao on 8/13/15.
- */
 public class WithdrawHandler implements CustomerHandler {
     @Override
-    public double handlers(CustomerRequest customerRequest) throws OverdraftException {
-        double money = customerRequest.getMoney();
-        Account account = customerRequest.getCustomer().getAccount();
-        double overdraftAmount = customerRequest.getCustomer().getOverdraftAmount();
+    public double handle(CustomerRequest customerRequest) throws OverdrawException {
+        double withdrawAmount = customerRequest.getAmount();
+        Customer customer = customerRequest.getCustomer();
+        Account account = customer.getAccount();
 
-        double limitAmount = customerRequest.getCustomer().isOverdraftAllowed() ? overdraftAmount : 0.0;
-        if (money <= account.getBalance() || money <= account.getBalance() + limitAmount) {
-            return account.minusBalance(money);
+        if (!overdraft(withdrawAmount, account) || canOverdraft(withdrawAmount, customer, account)) {
+            return account.minusBalance(withdrawAmount);
         }
-        throw new OverdraftException("overdraw");
+        throw new OverdrawException("Overdraw");
     }
 
+    private boolean canOverdraft(double withdrawAmount, Customer customer, Account account) {
+        return overdraft(withdrawAmount, account)
+                && customer.isOverdraftAllowed()
+                && !exceedsLimit(withdrawAmount, account);
+    }
+
+    private boolean overdraft(double amount, Account account) {
+        return amount > account.getBalance();
+    }
+
+    private boolean exceedsLimit(double amount, Account account) {
+        return amount - account.getBalance() > account.getOverdraftLimit();
+    }
 
 }

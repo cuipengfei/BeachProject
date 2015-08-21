@@ -1,12 +1,12 @@
 package handle;
 
 
-import exception.OverdraftException;
+import exception.OverdrawException;
 import request.CustomerRequest;
 
 /**
  * Created by ppyao on 8/13/15.
  */
 public interface CustomerHandler {
-    double handlers(CustomerRequest customerRequest) throws OverdraftException;
+    double handle(CustomerRequest customerRequest) throws OverdrawException;
 }

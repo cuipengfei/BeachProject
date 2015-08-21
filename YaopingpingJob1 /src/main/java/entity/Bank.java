@@ -1,7 +1,7 @@
 package entity;
 
 import email.MessageGateway;
-import exception.OverdraftException;
+import exception.OverdrawException;
 import handle.CustomerHandler;
 import handle.DespoitHandler;
 import handle.WithdrawHandler;
@@ -9,8 +9,6 @@ import request.CustomerRequest;
 import request.RequestType;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -18,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class Bank {
     public MessageGateway messageGateway;
-    public List<Customer> customerLinkedList = new LinkedList<Customer>();
+    public List<Customer> customers = new LinkedList<Customer>();
     public BankManager bankManager = new BankManager();
     public static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
@@ -28,26 +26,33 @@ public class Bank {
 
     static {
         customerHandlerMap.put(RequestType.depositMoney, new DespoitHandler());
-        customerHandlerMap.put(RequestType.withdrawMoney, new WithdrawHandler());
+        customerHandlerMap.put(RequestType.withdraw, new WithdrawHandler());
     }
 
-    public boolean addCustomertoBankwhenValidCustomer(Customer customer) {
-        if (validateNickname(customer) && isCustomerNotRepeat(customer)) {
-            customerLinkedList.add(customer);
-            String message = "Dear <" + customer.getNickname() + ">,Welcome to the Bank";
-            messageGateway.sendEmail(customer.getEmailAddress(), message);
-            Calendar joinBankDay = Calendar.getInstance();
-            joinBankDay.setTime(new Date());
-            customer.setJoinBankDay(joinBankDay);
+    public boolean addCustomer(Customer customer) {
+        if (!isCustomerRepeated(customer)) {
+            customers.add(initCustomer(customer));
+            sendWelcomeMessage(customer);
             return true;
         }
         return false;
     }
 
-    public void handleRequest(CustomerRequest request) throws OverdraftException {
+    private void sendWelcomeMessage(Customer customer) {
+        String message = String.format("Dear <%s>,Welcome to the Bank", customer.getNickname());
+        messageGateway.sendEmail(customer.getEmailAddress(), message);
+    }
 
-        if (customerLinkedList.contains(request.getCustomer())) {
-            customerHandlerMap.get(request.getType()).handlers(request);
+    private Customer initCustomer(Customer customer) {
+        customer.setAccount(new Account());
+        customer.setJoinBankDay(Calendar.getInstance());
+        return customer;
+    }
+
+    public void handleRequest(CustomerRequest request) throws OverdrawException {
+
+        if (customers.contains(request.getCustomer())) {
+            customerHandlerMap.get(request.getType()).handle(request);
 
             if (isPrminumCustomer(request.getCustomer())) {
                 messageGateway.sendEmail(bankManager.getEmailAddress(), request.getCustomer().getNickname() + " is a premium customer");
@@ -57,20 +62,12 @@ public class Bank {
         }
     }
 
-    private boolean isCustomerNotRepeat(Customer customer) {
-        for (Customer customer1 : customerLinkedList) {
-            if (customer.getNickname().equals(customer1.getNickname())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean validateNickname(Customer customer) {
-        final String strRegex = "^[a-z0-9]+$";
-        Pattern pattern = Pattern.compile(strRegex);
-        Matcher matcher = pattern.matcher(customer.getNickname());
-        return matcher.find();
+    private boolean isCustomerRepeated(Customer searchingCustomer) {
+        return customers.stream()
+                .filter(customer ->
+                        customer.getNickname().equals(searchingCustomer.getNickname())
+                )
+                .findFirst().isPresent();
     }
 
     private boolean isPrminumCustomer(Customer customer) {

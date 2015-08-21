@@ -3,22 +3,26 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by ppyao on 8/12/15.
- */
 public class CustomerTest {
+
     @Test
-    public void defaultCustomerisAccount() {
-        Calendar birthday = Calendar.getInstance();
-        birthday.set(1989, 4, 1);
-        //given
-        Customer customer = new Customer("yaoping", birthday);
+    public void should_create_customer_with_valid_initial_account_given_valid_name() {
         //when
-        assertThat(customer.getAccount().getBalance(), is(0.0));
+        Customer customer = new Customer("yaoping", Calendar.getInstance());
+
+        //then
+        assertNotNull(customer);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void should_not_create_a_customer_if_nickname_contains_uppercase() throws Exception {
+        new Customer("UPPERCASE", Calendar.getInstance());
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void should_not_create_a_customer_if_nickname_contains_special_characters() throws Exception {
+        new Customer("@!@@#", Calendar.getInstance());
+    }
 }

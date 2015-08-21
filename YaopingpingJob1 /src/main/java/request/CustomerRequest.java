@@ -9,12 +9,12 @@ import entity.Customer;
 public class CustomerRequest {
     private Customer customer;
     private RequestType type;
-    private double money;
+    private double amount;
 
-    private CustomerRequest(Customer customer, RequestType type, double money) {
+    private CustomerRequest(Customer customer, RequestType type, double amount) {
         this.customer = customer;
         this.type = type;
-        this.money = money;
+        this.amount = amount;
     }
 
     public Customer getCustomer() {
@@ -25,15 +25,15 @@ public class CustomerRequest {
         return type;
     }
 
-    public double getMoney() {
-        return money;
+    public double getAmount() {
+        return amount;
     }
 
-    public static CustomerRequest despoitRequst(Customer customer, double money) {
+    public static CustomerRequest depositRequest(Customer customer, double money) {
         return new CustomerRequest(customer, RequestType.depositMoney, money);
     }
 
     public static CustomerRequest withdrawRequest(Customer customer, double money) {
-        return new CustomerRequest(customer, RequestType.withdrawMoney, money);
+            return new CustomerRequest(customer, RequestType.withdraw, money);
     }
 }

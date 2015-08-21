@@ -1,5 +1,6 @@
 package com.thoughtworks;
 
+import com.thoughtworks.exception.NotExistCustomerException;
 import com.thoughtworks.external.MessageGateway;
 import com.thoughtworks.handlers.Handlers;
 import com.thoughtworks.requests.CustomerRequest;
@@ -39,6 +40,7 @@ public class Bank {
                 emailSender.sendMessage("manager@thebank.com", request.getCustomer().getNickName() + " is now a premium customer");
             }
         }
+        else throw new NotExistCustomerException();
     }
 
     private boolean isValid(String nickName) {

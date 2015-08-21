@@ -5,13 +5,14 @@ import java.util.*;
 
 public class Customer {
     private final String nickName;
-    private final Date dateOfBirth;
+    private final Calendar dateOfBirth;
     private double balance;
-    private boolean isPremiumCustomer = false;
+    private boolean isPremiumCustomer;
     private Calendar dateOfJoin;
     private boolean isGiveBonus;
+    private boolean isOverdraftAllowed;
 
-    public Customer(String nickName, Date dateOfBirth) {
+    public Customer(String nickName, Calendar dateOfBirth) {
         this.nickName = nickName;
         this.dateOfBirth = dateOfBirth;
     }
@@ -24,9 +25,7 @@ public class Customer {
 
     public boolean isPremiumCustomer() {return isPremiumCustomer;}
 
-    public double getBalance() {
-        return balance;
-    }
+    public double getBalance() {return balance;}
 
     public void setBalance(double balance) {this.balance = balance;}
 
@@ -40,4 +39,7 @@ public class Customer {
 
     public boolean isGiveBonus() {return isGiveBonus;}
 
+    public void setOverdraftAllowed(boolean isOverdraftAllowedCustomer) {this.isOverdraftAllowed = isOverdraftAllowedCustomer;}
+
+    public boolean isOverdraftAllowed() {return isOverdraftAllowed;}
 }

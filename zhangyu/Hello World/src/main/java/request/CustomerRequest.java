@@ -22,6 +22,10 @@ public class CustomerRequest {
     }
 
     public static CustomerRequest withdraw(Customer customer, int num) {
-        return new CustomerRequest(customer, Type.withdraw, num);
+        if(customer.isOverdraftAllowed()) {
+            return new CustomerRequest(customer, Type.overdraft, num);
+        } else {
+            return new CustomerRequest(customer, Type.withdraw, num);
+        }
     }
 }

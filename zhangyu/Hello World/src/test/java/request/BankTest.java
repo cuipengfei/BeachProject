@@ -1,9 +1,9 @@
+package request;
+
 import email.EmailSend;
 import email.FasterEmailSend;
 import email.MockEmailSend;
 import exception.OverDrawException;
-import exception.OverLimitException;
-import request.*;
 import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -140,11 +140,11 @@ public class BankTest {
         bank.addToBank(customer1);
         int dayOfJoin = customer1.getDateOfJoin().get(Calendar.DAY_OF_MONTH);
         int addTime = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        assertEquals(dayOfJoin,addTime);
+        assertEquals(dayOfJoin, addTime);
     }
 
     @Test
-    public void should_get_bonus_when_customer_added_to_bank_for_two_year_and_one_day() throws Exception {
+    public void should_get_bonus_once_when_customer_added_to_bank_for_two_year_and_one_day() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         Calendar dateOfJoin = Calendar.getInstance();
         bank.addToBank(customer1);
@@ -172,39 +172,23 @@ public class BankTest {
     }
 
     @Test
-    public void should_only_get_once_bonus() throws Exception {
-        Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
-        Calendar dateOfJoin = Calendar.getInstance();
-        bank.addToBank(customer1);
-
-        dateOfJoin.add(Calendar.YEAR, -3);
-        customer1.setDateOfJoin(dateOfJoin);
-        bank.handleRequest(deposit(customer1, 300));
-        bank.handleRequest(withdraw(customer1, 300));
-
-        assertThat(customer1.getMyAccount().getBalance(),is(5));
-    }
-
-    @Test
     public void should_OverDraftAllowed_Customer_can_withdraw_beyond_zero() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         customer1.setOverdraftAllowed(true);
         bank.addToBank(customer1);
 
-        bank.handleRequest(deposit(customer1, 300));
-        bank.handleRequest(withdraw(customer1, 301));
+        bank.handleRequest(withdraw(customer1, 300));
 
-        assertThat(customer1.getMyAccount().getBalance(),is(-1));
+        assertThat(customer1.getMyAccount().getBalance(),is(-300));
     }
 
-    @Test(expected = OverLimitException.class)
+    @Test(expected = OverDrawException.class)
     public void should_throw_Exception_when_OverDraftAllowed_customer_OverDrawNum_is_1001() throws Exception {
         Customer customer1 = new Customer("zhangyu", dataFormat.parse("2015-08-11"));
         customer1.setOverdraftAllowed(true);
         bank.addToBank(customer1);
 
-        bank.handleRequest(deposit(customer1, 1000));
-        bank.handleRequest(withdraw(customer1, 2001));
+        bank.handleRequest(withdraw(customer1, 1001));
     }
 
     @Test(expected = OverDrawException.class)
@@ -213,10 +197,9 @@ public class BankTest {
         bank.addToBank(customer1);
 
         customer1.setOverdraftAllowed(true);
-        bank.handleRequest(deposit(customer1, 1000));
-        bank.handleRequest(withdraw(customer1, 1001));
+        bank.handleRequest(withdraw(customer1, 300));
 
         customer1.setOverdraftAllowed(false);
-        bank.handleRequest(withdraw(customer1, 1));
+        bank.handleRequest(withdraw(customer1, 300));
     }
 }

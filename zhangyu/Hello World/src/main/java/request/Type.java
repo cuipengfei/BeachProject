@@ -5,6 +5,6 @@ package request;
  */
 
 public enum Type{
-    deposit, withdraw
+    deposit, overdraft, withdraw
 }
 

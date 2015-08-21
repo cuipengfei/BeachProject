@@ -1,7 +1,9 @@
+package request;
+
 import org.junit.Test;
 import request.Bank;
 import request.Customer;
-import request.EmailSend;
+import email.EmailSend;
 
 import java.text.SimpleDateFormat;
 import static org.hamcrest.Matchers.is;
@@ -18,6 +20,6 @@ public class CustomerTest {
         Customer customer1 = new Customer("zhangyu", sdf.parse("2015-08-11"));
         EmailSend sender = new EmailSend();
         Bank bank1 = new Bank(sender);
-        assertThat("add successful", is(bank1.addToBank(customer1)));
+        assertTrue(bank1.addToBank(customer1));
     }
 }

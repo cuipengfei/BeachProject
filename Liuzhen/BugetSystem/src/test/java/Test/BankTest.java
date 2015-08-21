@@ -133,7 +133,7 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.withDraw(customer1, 100.0));
 
         assertEquals(customer1.hasReceivedTwoYearsBonus(), true);
-        assertThat(customer1.getAccount(),is(105.0));
+        assertThat(customer1.getAccount(), is(105.0));
     }
 
     @Test
@@ -145,6 +145,14 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.withDraw(customer, 100.0));
 
         assertThat(customer.getAccount(),is(-600.0));
+    }
+
+    @Test(expected = OverdrawException.class)
+    public void should_overdraft_failed_when_a_customer_overdraft_money_more_than_limit_mount() throws Exception {
+        customer.setOverdraftAllowed(true);
+        bank1.add(customer);
+
+        bank1.handleRequest(CustomerRequest.withDraw(customer, 1100.0));
     }
 
     @Test(expected = OverdrawException.class)

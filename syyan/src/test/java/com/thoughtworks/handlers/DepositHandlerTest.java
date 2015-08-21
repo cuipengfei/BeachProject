@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class DepositHandlerTest {
+
     private Customer customer;
     private Handler handler;
 
@@ -20,15 +21,14 @@ public class DepositHandlerTest {
     public void setUp() throws Exception {
         customer = new Customer("syyan123", Calendar.getInstance());
         handler = new DepositHandler();
-    }
-
-    @Test
-    public void should_get_bonus_when_customer_is_join_above_2_years() throws ParseException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.YEAR, -3);
         customer.setDateOfJoin(calendar);
+    }
 
+    @Test
+    public void should_get_bonus_when_customer_is_join_above_2_years() throws ParseException {
         handler.handle(new CustomerRequest(customer, RequestType.Deposit, 10000d));
 
         assertThat(customer.getBalance(), is(10005d));
@@ -36,11 +36,6 @@ public class DepositHandlerTest {
 
     @Test
     public void should_get_bonus_only_once_when_customer_is_join_above_2_years() throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.YEAR, -3);
-        customer.setDateOfJoin(calendar);
-
         handler.handle(new CustomerRequest(customer, RequestType.Deposit, 10000d));
         handler.handle(new CustomerRequest(customer, RequestType.Deposit, 10000d));
 

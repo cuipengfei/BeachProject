@@ -1,6 +1,7 @@
 package handle;
 
 import entity.Account;
+import entity.Customer;
 import exception.OverdraftException;
 import request.CustomerRequest;
 
@@ -16,7 +17,22 @@ public class WithdrawHandler implements CustomerHandler {
         if (money <= account.getBalance()) {
             return account.minusBalance(money);
         }
+        else if(overdraftLimit1000(customerRequest.getCustomer()))
+        {
+            return account.minusBalance(money);
+        }
         throw new OverdraftException();
+    }
 
+    public boolean overdraftLimit1000(Customer customer) throws OverdraftException{
+        double overdraftAmount = 1000;
+        if (customer.isOverdraftAllowed()) {
+            customer.getAccount().addBalance(overdraftAmount);
+            return  true;
+        }
+        else
+        {
+            throw new OverdraftException();
+        }
     }
 }

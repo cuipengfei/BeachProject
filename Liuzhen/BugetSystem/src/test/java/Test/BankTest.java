@@ -11,7 +11,6 @@ import Request.CustomerRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
@@ -131,9 +130,30 @@ public class BankTest {
         customer1.setJoiningDate(calendar);
         bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
         bank1.handleRequest(CustomerRequest.deposit(customer1, 100.0));
-        bank1.handleRequest(CustomerRequest.withDraw(customer1,100.0));
+        bank1.handleRequest(CustomerRequest.withDraw(customer1, 100.0));
 
-        assertEquals(customer1.hasReceivedTwoYearsBonus(),true);
+        assertEquals(customer1.hasReceivedTwoYearsBonus(), true);
         assertThat(customer1.getAccount(),is(105.0));
+    }
+
+    @Test
+    public void should_overdraft_limit_money_successfully_when_a_customer_is_allowed_to_do_that() throws Exception {
+        customer.setOverdraftAllowed(true);
+        bank1.add(customer);
+
+        bank1.handleRequest(CustomerRequest.withDraw(customer, 500.0));
+        bank1.handleRequest(CustomerRequest.withDraw(customer, 100.0));
+
+        assertThat(customer.getAccount(),is(-600.0));
+    }
+
+    @Test(expected = OverdrawException.class)
+    public void should_overdraft_failed_when_a_customer_with_a_negative_balance_and_whose_overdraft_facility_is_removed() throws Exception {
+        customer.setOverdraftAllowed(true);
+        bank1.add(customer);
+
+        bank1.handleRequest(CustomerRequest.withDraw(customer, 500.0));
+        customer.setOverdraftAllowed(false);
+        bank1.handleRequest(CustomerRequest.withDraw(customer, 100.0));
     }
 }

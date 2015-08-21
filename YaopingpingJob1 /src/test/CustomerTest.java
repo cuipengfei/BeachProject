@@ -12,10 +12,10 @@ import static org.junit.Assert.assertThat;
 public class CustomerTest {
     @Test
     public void defaultCustomerisAccount() {
-        Calendar birthday=Calendar.getInstance();
-        birthday.set(1989,4,1);
+        Calendar birthday = Calendar.getInstance();
+        birthday.set(1989, 4, 1);
         //given
-        Customer customer = new Customer("yaoping",birthday);
+        Customer customer = new Customer("yaoping", birthday);
         //when
         assertThat(customer.getAccount().getBalance(), is(0.0));
     }

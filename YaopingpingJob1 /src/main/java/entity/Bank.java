@@ -22,9 +22,6 @@ public class Bank {
     public BankManager bankManager = new BankManager();
     public static Map<RequestType, CustomerHandler> customerHandlerMap = new HashMap<RequestType, CustomerHandler>();
 
-    public Bank() {
-    }
-
     public Bank(MessageGateway messageGateway) {
         this.messageGateway = messageGateway;
     }

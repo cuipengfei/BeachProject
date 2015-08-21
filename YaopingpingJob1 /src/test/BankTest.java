@@ -237,26 +237,42 @@ public class BankTest {
 
 
     @Test
-    public void withdrawMoreThanCustomerBalanceWhenOverdraftAllowed() throws OverdraftException {
+    public void withdrawWhenCustomerOverdraftAllowed() throws OverdraftException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
         //when
         bank.addCustomertoBankwhenValidCustomer(customer);
         customer.setOverdraftAllowed(true);
-        bank.handleRequest(despoitRequst(customer, 40000.0));
-        bank.handleRequest(withdrawRequest(customer, 40500.0));
+        customer.setOverdraftAmount(1000.0);
+        bank.handleRequest(withdrawRequest(customer, 100.0));
+        bank.handleRequest(withdrawRequest(customer, 600.0));
 
         //then
-        assertThat(customer.getAccount().getBalance(), is(500.0));
+        assertThat(customer.getAccount().getBalance(), is(-700.0));
     }
 
     @Test(expected = OverdraftException.class)
-    public void rejectWithdrawMoreThanCustomerBalanceWhenOverdraftCancel() throws OverdraftException {
-        Customer customer = new Customer("yaoping", birthday);
+    public void withdrawRepeatedlyLessThanOverdraftAmount() throws OverdraftException {
+        Customer customer = new Customer("yaoping", Calendar.getInstance());
         //when
         bank.addCustomertoBankwhenValidCustomer(customer);
-        customer.setOverdraftAllowed(false);
-        bank.handleRequest(despoitRequst(customer, 100.0));
-        bank.handleRequest(withdrawRequest(customer, 150.0));
+        customer.setOverdraftAllowed(true);
+        customer.setOverdraftAmount(1000.0);
+        bank.handleRequest(withdrawRequest(customer, 100.0));
+        bank.handleRequest(withdrawRequest(customer, 900.0));
+        bank.handleRequest(withdrawRequest(customer, 200.0));
     }
+
+    @Test(expected = OverdraftException.class)
+    public void CanNotWithdrawWhenCustomerRemoveOverdraftedAllowed() throws OverdraftException {
+        Customer customer = new Customer("yaoping", Calendar.getInstance());
+        //when
+        bank.addCustomertoBankwhenValidCustomer(customer);
+        customer.setOverdraftAllowed(true);
+        customer.setOverdraftAmount(1000.0);
+        bank.handleRequest(withdrawRequest(customer, 100.0));
+        customer.setOverdraftAllowed(false);
+        bank.handleRequest(withdrawRequest(customer, 100.0));
+    }
+
 
 }

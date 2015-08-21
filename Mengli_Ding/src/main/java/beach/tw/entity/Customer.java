@@ -13,6 +13,16 @@ public class Customer {
     private boolean isPremiumCustomer = false;
     private boolean isGetBonus = false;
     private Calendar joiningDate;
+    private boolean isOverdraft = false;
+    private int limit;
+
+    public int getLimit() {return limit;}
+
+    public void setLimit(int limit) {this.limit = limit;}
+
+    public boolean isOverdraft() {return isOverdraft;}
+
+    public void setIsOverdraft(boolean isOverdraft) {this.isOverdraft = isOverdraft;}
 
     public void setJoiningDate(Calendar joiningDate) {
         this.joiningDate = joiningDate;
@@ -26,9 +36,7 @@ public class Customer {
         this.isGetBonus = isGetBonus;
     }
 
-    public boolean isGetBonus() {
-        return isGetBonus;
-    }
+    public boolean isGetBonus() {return isGetBonus;}
 
     public boolean isPremiumCustomer() {
         return isPremiumCustomer;

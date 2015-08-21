@@ -1,6 +1,6 @@
 package beach.tw.entity;
 
-import beach.external.MessageGateway;
+import beach.tw.external.MessageGateway;
 import beach.tw.handlers.Handlers;
 import beach.tw.requests.CustomerRequest;
 

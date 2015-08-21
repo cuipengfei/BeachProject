@@ -10,19 +10,17 @@ public class DepositHandler implements Handler {
     public double handle(CustomerRequest customerRequest) {
         Customer customer = customerRequest.getCustomer();
         customer.setBalance(customer.getBalance() + customerRequest.getBalance());
-        if (isJoiningOverTwoYears(customer)) giveBonus(customer);
+        if (isGiveBonus(customer)) {
+            customer.setGiveBonus(true);
+            customer.setBalance(customer.getBalance() + 5);
+        }
         return customer.getBalance();
     }
 
-    private boolean isJoiningOverTwoYears(Customer customer) {
+    private boolean isGiveBonus(Customer customer) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.YEAR, -2);
         return (!customer.isGiveBonus() && calendar.after(customer.getDateOfJoin()));
-    }
-
-    private void giveBonus(Customer customer) {
-        customer.setGiveBonus(true);
-        customer.setBalance(customer.getBalance() + 5);
     }
 }

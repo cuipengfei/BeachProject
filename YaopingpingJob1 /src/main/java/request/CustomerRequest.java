@@ -30,9 +30,6 @@ public class CustomerRequest {
     }
 
     public static CustomerRequest despoitRequst(Customer customer, double money) {
-
-        new CustomerRequest(customer, RequestType.depositMoney, money);
-
         return new CustomerRequest(customer, RequestType.depositMoney, money);
     }
 

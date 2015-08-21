@@ -1,6 +1,6 @@
 package beach.tw;
 
-import beach.external.FasterMessageGateway;
+import beach.tw.external.FasterMessageGateway;
 import beach.tw.entity.Bank;
 import beach.tw.entity.Customer;
 import beach.tw.exception.InsufficientException;
@@ -141,6 +141,7 @@ public class BankTest {
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() {
         Customer customer = Customer.createCustomer("bbb", new Date());
+
         verify(mockedFasterMessageGateway, never()).sendMail(anyString(), anyString());
     }
 
@@ -187,12 +188,55 @@ public class BankTest {
         bank.addCustomer(customer);
         Calendar calendar = customer.getJoiningDate();
         calendar.add(Calendar.YEAR, -2);
-//        calendar.add(Calendar.DAY_OF_MONTH, -1);
         customer.setJoiningDate(calendar);
 
         bank.handleRequest(deposit(customer, 6));
         bank.handleRequest(deposit(customer, 7));
 
         assertThat(customer.getAccount().getMoney(), is(18));
+    }
+
+    @Test
+    public void shouldOverdraftWhenMarked() throws Exception {
+        Customer customer = Customer.createCustomer("ddd", new Date());
+        bank.addCustomer(customer);
+        customer.setIsOverdraft(true);
+        customer.setLimit(1000);
+
+        bank.handleRequest(deposit(customer, 200));
+        bank.handleRequest(withdraw(customer, 300));
+        bank.handleRequest(withdraw(customer, 900));
+
+        assertThat(customer.getAccount().getMoney(), is(-1000));
+    }
+
+    @Test
+    public void shouldNotContinueOverdraftWhenRemoveMarked() throws Exception {
+        Customer customer = Customer.createCustomer("ddd", new Date());
+        bank.addCustomer(customer);
+        customer.setIsOverdraft(true);
+        customer.setLimit(1000);
+
+        bank.handleRequest(deposit(customer, 200));
+        bank.handleRequest(withdraw(customer, 300));
+
+        assertThat(customer.getAccount().getMoney(), is(-100));
+
+        customer.setIsOverdraft(false);
+
+        bank.handleRequest(withdraw(customer, 300));
+
+        //throw an exception
+    }
+
+    @Test
+    public void shouldNotOverdraftWhenNotMarked() throws Exception {
+        Customer customer = Customer.createCustomer("ddd", new Date());
+        bank.addCustomer(customer);
+
+        bank.handleRequest(deposit(customer, 200));
+        bank.handleRequest(withdraw(customer, 300));
+
+        //throw an exception
     }
 }

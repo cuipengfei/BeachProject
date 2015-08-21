@@ -11,9 +11,10 @@ public class Customer {
     private Calendar dateofBirth;
     private final Account account = new Account();
     private String emailAddress;
-    private String message;
     private boolean isPreminumDefault;
     private boolean acceptReward;
+    private boolean overdraftAllowed;
+    private double overdraftAmount;
 
     public Calendar getJoinBankDay() {
         return joinBankDay;
@@ -47,10 +48,6 @@ public class Customer {
         return account;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public Customer(String nickname, Calendar dateofBirth) {
         this.nickname = nickname;
         this.dateofBirth = dateofBirth;
@@ -68,5 +65,21 @@ public class Customer {
 
     public void setJoinBankDay(Calendar joinBankDay) {
         this.joinBankDay = joinBankDay;
+    }
+
+    public boolean isOverdraftAllowed() {
+        return overdraftAllowed;
+    }
+
+    public void setOverdraftAllowed(boolean overdraftAllowed) {
+        this.overdraftAllowed = overdraftAllowed;
+    }
+
+    public double getOverdraftAmount() {
+        return overdraftAmount;
+    }
+
+    public void setOverdraftAmount(double overdraftAmount) {
+        this.overdraftAmount = overdraftAmount;
     }
 }

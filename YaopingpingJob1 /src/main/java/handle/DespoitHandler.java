@@ -11,18 +11,18 @@ import java.util.Calendar;
 public class DespoitHandler implements CustomerHandler {
     @Override
     public double handlers(CustomerRequest customerRequest) {
-        double bouse=5.0;
-        if (isGiveBouse(customerRequest.getCustomer())) {
-                  customerRequest.getCustomer().setAcceptReward(true);
-            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + bouse);
+        double bonus = 5.0;
+        if (isGiveBonus(customerRequest.getCustomer())) {
+            customerRequest.getCustomer().setAcceptReward(true);
+            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney() + bonus);
 
         }
         return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getMoney());
     }
 
-    private boolean isGiveBouse(Customer customer) {
+    private boolean isGiveBonus(Customer customer) {
         Calendar joinBankDay = customer.getJoinBankDay();
-        joinBankDay.add(Calendar.YEAR,2);
+        joinBankDay.add(Calendar.YEAR, 2);
         return !customer.isAcceptReward() && joinBankDay.before(Calendar.getInstance());
 
     }

@@ -7,7 +7,7 @@ import static bank.domain.event.Event.customerAddedEvent;
 import static bank.domain.event.Event.fire;
 
 public class CustomerService {
-    private CustomerRepository customerRepository;
+    private CustomerRepository Repository;
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;

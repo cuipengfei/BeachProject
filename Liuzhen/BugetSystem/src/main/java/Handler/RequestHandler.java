@@ -1,6 +1,6 @@
-package Handler;
+package handler;
 
-import Request.CustomerRequest;
+import request.CustomerRequest;
 
 public interface RequestHandler {
      void handle(CustomerRequest request) throws Exception;

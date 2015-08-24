@@ -1,6 +1,11 @@
-package Customer;
+package customer;
+
+import account.Account;
+import myException.AccountNameNotUniqueException;
+import myException.AccountNotExistException;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +17,7 @@ public class Customer {
 
     private final String nickName;
     private final Calendar dateOfBirth;
-    private double account = 0.0;
+    private LinkedList<Account> accountsList = new LinkedList<>();
     private String message ="";
     private boolean isPremiumCustomer = false;
     private Calendar joiningDate;
@@ -42,14 +47,6 @@ public class Customer {
 
     public String getNickName(){
         return nickName;
-    }
-
-    public void setAccount(double _money) {
-        this.account = _money;
-    }
-
-    public double getAccount() {
-        return account;
     }
 
     public void setIsPremiumCustomer(boolean isPremiumCustomer) {
@@ -82,5 +79,31 @@ public class Customer {
 
     public void setOverdraftAllowed(boolean overdraftAllowed) {
         this.overdraftAllowed = overdraftAllowed;
+    }
+
+    public Account getAccount(String accountName) throws Exception{
+        for (Account anAccountsList : accountsList) {
+            if (anAccountsList.getName().equals(accountName)) {
+                return anAccountsList;
+            }
+        }
+        throw new AccountNotExistException();
+    }
+
+    public void addAccount(String accountName) throws Exception{
+        for(Account account : accountsList){
+            if (account.getName().equals(accountName)){
+                throw new AccountNameNotUniqueException();
+            }
+        }
+        accountsList.add(new Account(accountName));
+    }
+
+    public double getTotalBalance(){
+        double totalBalance = 0.0;
+        for (Account account: accountsList){
+            totalBalance += account.getBalance();
+        }
+        return totalBalance;
     }
 }

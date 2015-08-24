@@ -1,9 +1,9 @@
-package Bank;
+package bank;
 
-import Customer.Customer;
-import Handler.Handlers;
-import MyException.CustomerNotExistException;
-import Request.CustomerRequest;
+import customer.Customer;
+import handler.Handlers;
+import myException.CustomerNotExistException;
+import request.CustomerRequest;
 import mailsender.MailSender;
 import mailsender.MailSenderStatusType;
 import utils.WriteLog;
@@ -23,29 +23,29 @@ public class Bank {
         this.mailSender = mailSender;
     }
 
-    public boolean add(Customer _customer) throws IOException {
-        if (shouldAdd(_customer)) {
-            customerList.add(_customer);
-            _customer.setJoiningDate(Calendar.getInstance());
-            sendWelcomeMessage(_customer);
+    public boolean add(Customer customer) throws IOException {
+        if (shouldAdd(customer)) {
+            customerList.add(customer);
+            customer.setJoiningDate(Calendar.getInstance());
+            sendWelcomeMessage(customer);
         }
 
-        return shouldAdd(_customer);
+        return shouldAdd(customer);
     }
 
-    public void handleRequest(CustomerRequest _request) throws Exception {
-        if (customerList.contains(_request.getCustomer())) {
-            Handlers.findHandler(_request.getRequestType()).handle(_request);
+    public void handleRequest(CustomerRequest request) throws Exception {
+        if (customerList.contains(request.getCustomer())) {
+            Handlers.findHandler(request.getRequestType()).handle(request);
 
-            if (_request.getCustomer().getAccount() >= 40000.0 && !_request.getCustomer().isPremiumCustomer()) {
-                mailSender.sendEmail("manager@thebank.com", _request.getCustomer() + " is now a premium customer.");
-                _request.getCustomer().setIsPremiumCustomer(true);
+            if (request.getCustomer().getAccount(request.getAccountName()).getBalance() >= 40000.0 && !request.getCustomer().isPremiumCustomer()) {
+                mailSender.sendEmail("manager@thebank.com", request.getCustomer() + " is now a premium customer.");
+                request.getCustomer().setIsPremiumCustomer(true);
             }
         } else throw new CustomerNotExistException();
     }
 
     private void sendWelcomeMessage(Customer customer) throws IOException {
-        MailSenderStatusType status = mailSender.sendEmail(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the Bank!");
+        MailSenderStatusType status = mailSender.sendEmail(customer.getNickName() + "@thebank.com", "Dear " + customer.getNickName() + ", Welcome to the bank!");
         writeCustomerMessageLog(customer.getNickName(), status);
     }
 

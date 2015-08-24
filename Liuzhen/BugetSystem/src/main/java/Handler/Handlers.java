@@ -1,6 +1,6 @@
-package Handler;
+package handler;
 
-import Request.RequestType;
+import request.RequestType;
 import java.util.HashMap;
 
 public class Handlers {

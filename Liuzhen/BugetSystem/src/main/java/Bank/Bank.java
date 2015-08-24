@@ -2,23 +2,18 @@ package Bank;
 
 import Customer.Customer;
 import Handler.Handlers;
-import mailsender.MailSender;
-import mailsender.MailSenderStatusType;
 import MyException.CustomerNotExistException;
 import Request.CustomerRequest;
+import mailsender.MailSender;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Bank {
     private List<Customer> customerList = new LinkedList<>();
     private MailSender mailSender;
+    private Log log = new Log();
 
     public Bank(MailSender mailSender) {
         this.mailSender = mailSender;
@@ -45,39 +40,9 @@ public class Bank {
         else throw new CustomerNotExistException();
     }
 
-
-
     private void sendWelcomeMessage(Customer _customer){
         mailSender.sendEmail( _customer.getNickName() + "@thebank.com", "Dear " + _customer.getNickName() + ", Welcome to the Bank!");
-        logCustomerMessage(mailSender,_customer);
-    }
-    //write log into file
-    private void logCustomerMessage(MailSender mailSender, Customer customer) {
-        MailSenderStatusType status = mailSender.getStatus();
-        try {
-            File file = new File("/Users/zhenliu/Public/TWTraining/BeachProject/Liuzhen/BugetSystem/src/main/Log/CustomerMessageLog");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("-----------").append(simpleDateFormat.format(new Date())).append("------------\n");
-            switch (status) {
-                case OK:
-                    stringBuilder.append("Mail sender's status is OK when send message to ").append(customer.getNickName()).append("\n");
-                    break;
-                case FAILED:
-                    stringBuilder.append("Mail sender's status is FAILED when send message to ").append(customer.getNickName()).append("\n");
-                    break;
-                case EXCEPTION:
-                    stringBuilder.append("Mail sender's status is EXCEPTION when send message to ").append(customer.getNickName()).append("\n");
-            }
-            fileOutputStream.write(stringBuilder.toString().getBytes("utf-8"));
-            fileOutputStream.close();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.logCustomerMessage(mailSender,_customer);
     }
 
     private boolean shouldAdd(Customer _customer) {

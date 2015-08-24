@@ -29,7 +29,6 @@ public class CustomerTest {
 
     @Test
     public void should_return_the_total_balance_when_a_customer_want_to_know() throws Exception {
-        customer.addAccount("account1");
         customer.addAccount("account2");
 
         customer.getAccount("account1").setBalance(1000.0);

@@ -78,11 +78,11 @@ public class Bank {
     private void logMessage(Customer customer) {
         try {
             String filePath = this.getClass().getClassLoader().getResource("log/CustomerMessage").getPath();
-            System.out.println(filePath);
             File file = new File(filePath);
-            if (!file.exists()) { file.createNewFile(); }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             String data = "Customer Name: " + customer.getName() + "  a Log is recorded when the gateway Status is " + sendFlag + "  " + new Date() + "\n";
-            System.out.println(data);
             FileWriter fileWriter = new FileWriter(file.getName(), true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(data);

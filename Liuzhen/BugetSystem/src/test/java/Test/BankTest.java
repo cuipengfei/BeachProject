@@ -2,26 +2,31 @@ package Test;
 
 import Bank.Bank;
 import Customer.Customer;
-import mailsender.FasterMailSender;
-import mailsender.*;
-import mailsender.StandardMailSender;
 import MyException.CustomerNotExistException;
 import MyException.OverdrawException;
 import Request.CustomerRequest;
+import mailsender.FasterMailSender;
+import mailsender.MailSender;
+import mailsender.MailSenderStatusType;
+import mailsender.StandardMailSender;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import utils.WriteLog;
 
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+
 public class BankTest {
     public Bank bank0, bank1;
     public Customer customer;
     public MailSender mockSender;
+    public WriteLog mockWriteLog;
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +34,7 @@ public class BankTest {
         customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
         mockSender = Mockito.mock(FasterMailSender.class);
         bank1 = new Bank(mockSender);
-        when(mockSender.getStatus()).thenReturn(MailSenderStatusType.OK);
+        when(mockSender.sendEmail(anyString(),anyString())).thenReturn(MailSenderStatusType.OK);
     }
 
     @Test
@@ -165,5 +170,13 @@ public class BankTest {
         bank1.handleRequest(CustomerRequest.withDraw(customer, 500.0));
         customer.setOverdraftAllowed(false);
         bank1.handleRequest(CustomerRequest.withDraw(customer, 100.0));
+    }
+
+    @Test
+    public void should_write_log_successfully_when_a_customer_be_sent_welcome_message() throws Exception {
+        bank1.add(customer);
+
+        verify(mockSender).sendEmail(anyString(), anyString());
+        assertTrue(WriteLog.isCalledWriteLogToFileMethod());
     }
 }

@@ -2,26 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67456360-da4f-4ddb-b084-ca1f9881a973" name="Default" comment="[yansiyu]add bonus">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Stories.pptx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/handle/DespoitHandler.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Account.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Account.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/test/entity/AccountTest.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/test/entity/AccountTest.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/YaopingpingJob1 /sendMessageLog" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Bank.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Bank.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/BankManager.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/BankManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/test/BankTest.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/test/BankTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BeachProject.ipr" afterPath="$PROJECT_DIR$/BeachProject.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BeachProject.iws" afterPath="$PROJECT_DIR$/BeachProject.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Customer.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/entity/Customer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/handle/CustomerHandler.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/handle/CustomerHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/request/CustomerRequest.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/request/CustomerRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/test/CustomerTest.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/test/CustomerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/FasterMessageGateway.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/FasterMessageGateway.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/MailSender.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/MailSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/MessageGateway.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/email/MessageGateway.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/exception/OverdrawException.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/exception/OverdrawException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/request/RequestType.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/request/RequestType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/handle/WithdrawHandler.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/main/java/handle/WithdrawHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/YaopingpingJob1 /src/test/handle/WithdrawHandlerTest.java" afterPath="$PROJECT_DIR$/YaopingpingJob1 /src/test/handle/WithdrawHandlerTest.java" />
     </list>
     <ignored path="BeachProject.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -148,8 +130,11 @@
         <entry file="file://$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/Bank/Bank.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.6353093">
-              <caret line="83" column="21" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
-              <folding />
+              <caret line="48" column="21" selection-start-line="48" selection-start-column="21" selection-end-line="48" selection-end-column="21" />
+              <folding>
+                <element signature="e#445#446#0" expanded="true" />
+                <element signature="e#489#490#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -277,8 +262,8 @@
         <option value="$PROJECT_DIR$/jakim/src/main/java/bank/domain/service/CustomerService.java" />
         <option value="$PROJECT_DIR$/zhangyu/Hello World/src/main/java/handle/WithdrawHandler.java" />
         <option value="$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/MailSender/StandardMailSender.java" />
-        <option value="$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/Bank/Bank.java" />
         <option value="$PROJECT_DIR$/Liuzhen/BugetSystem/src/test/java/Test/BankTest.java" />
+        <option value="$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/Bank/Bank.java" />
       </list>
     </option>
   </component>
@@ -1431,7 +1416,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/Bank/Bank.java</url>
-          <line>26</line>
+          <line>21</line>
           <properties />
           <option name="timeStamp" value="12" />
         </line-breakpoint>
@@ -1902,8 +1887,11 @@
     <entry file="file://$PROJECT_DIR$/Liuzhen/BugetSystem/src/main/java/Bank/Bank.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6353093">
-          <caret line="83" column="21" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
-          <folding />
+          <caret line="48" column="21" selection-start-line="48" selection-start-column="21" selection-end-line="48" selection-end-column="21" />
+          <folding>
+            <element signature="e#445#446#0" expanded="true" />
+            <element signature="e#489#490#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

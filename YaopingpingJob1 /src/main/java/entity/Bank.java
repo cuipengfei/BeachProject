@@ -71,13 +71,13 @@ public class Bank {
             PrintStream printer = new PrintStream(new FileOutputStream(file, true));
             switch (status) {
                 case OK:
-                    printer.append(logMessage(status, customer));
+                    printer.append(logCustomerMessage(status, customer));
                     break;
                 case FAILED:
-                    printer.append(logMessage(status, customer));
+                    printer.append(logCustomerMessage(status, customer));
                     break;
                 case EXCEPTION:
-                    printer.append(logMessage(status, customer));
+                    printer.append(logCustomerMessage(status, customer));
                     break;
                 default:
             }
@@ -89,9 +89,9 @@ public class Bank {
         }
     }
 
-    private String logMessage(MailSendStatus status, Customer customer) {
+    private String logCustomerMessage(MailSendStatus status, Customer customer) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd  hh:mm:ss a zzz");
-        return String.format("mail send status is %s %s %s \n", status, dateFormat.format(new Date()), customer.getNickname());
+        return String.format("mail send  %s %s %s \n", status, dateFormat.format(new Date()), customer.getNickname());
     }
 
     private String buildWelcomeMessage(String nickname) {

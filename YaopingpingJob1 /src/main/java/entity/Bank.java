@@ -64,7 +64,7 @@ public class Bank {
     private void writeMessageLog(Customer customer) {
         MailSendStatus status = messageGateway.getSendStatus();
         try {
-            File file = new File("sendMessageLog");
+            File file = new File("/Users/ppyao/yaopingping/BeachProject/YaopingpingJob1 /src/main/resources/sendMessageLog");
             if (!file.exists()) {
                 file.createNewFile();
             }

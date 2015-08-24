@@ -56,7 +56,7 @@ public class WithdrawHandlerTest {
 
         Customer customer = prepareCustomer(1000d);
 
-        customer.setOverdraftAllowed(false);
+        customer.getAccount().setOverdraftAllowed(false);
 
         handler.handle(withdrawRequest(customer, 2000d));
     }
@@ -64,7 +64,7 @@ public class WithdrawHandlerTest {
     private Customer prepareCustomer(double overdraftLimit) {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        customer.setOverdraftAllowed(true);
+        customer.getAccount().setOverdraftAllowed(true);
 
         customer.getAccount().setOverdraftLimit(overdraftLimit);
 

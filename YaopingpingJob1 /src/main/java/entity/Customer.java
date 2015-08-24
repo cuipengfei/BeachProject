@@ -1,6 +1,8 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Customer {
     private Calendar joinBankDay;
@@ -10,7 +12,7 @@ public class Customer {
     private String emailAddress;
     private boolean premiumDefault;
     private boolean acceptReward;
-    private boolean overdraftAllowed;
+    private List<Account> accounts = new ArrayList<Account>();
 
     public Calendar getJoinBankDay() {
         return joinBankDay;
@@ -44,6 +46,7 @@ public class Customer {
         this.dateOfBirth = dateOfBirth;
         this.emailAddress = nickname + "@bank.com";
         account = new Account();
+        accounts.add(account);
     }
 
     public boolean isAcceptReward() {
@@ -58,15 +61,24 @@ public class Customer {
         this.joinBankDay = joinBankDay;
     }
 
-    public boolean isOverdraftAllowed() {
-        return overdraftAllowed;
-    }
-
-    public void setOverdraftAllowed(boolean overdraftAllowed) {
-        this.overdraftAllowed = overdraftAllowed;
-    }
-
     private boolean isValidName(String nickname) {
         return nickname.matches("^[a-z0-9]+$");
     }
+
+    public double calculate() {
+        double totalBalance = 0d;
+        if (accounts.iterator().hasNext()) {
+            totalBalance += account.getBalance();
+        }
+        return totalBalance;
+    }
+
+    public Account createAccount(String accountName) {
+        for (Account account : accounts) {
+            if (account.getAccountName().equals(accountName))
+                return null;
+        }
+        return new Account(accountName);
+    }
+
 }

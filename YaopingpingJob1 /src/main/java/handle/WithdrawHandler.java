@@ -20,7 +20,7 @@ public class WithdrawHandler implements CustomerHandler {
 
     private boolean canOverdraft(double withdrawAmount, Customer customer, Account account) {
         return overdraft(withdrawAmount, account)
-                && customer.isOverdraftAllowed()
+                && customer.getAccount().isOverdraftAllowed()
                 && !exceedsLimit(withdrawAmount, account);
     }
 

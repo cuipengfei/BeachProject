@@ -1,15 +1,8 @@
 package entity;
 
-/**
- * Created by ppyao on 8/12/15.
- */
 public class Account {
     private double balance;
     private double overdraftLimit;
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
 
     public double getBalance() {
         return balance;

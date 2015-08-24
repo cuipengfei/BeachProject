@@ -1,4 +1,4 @@
-import email.FasterMessageGateway;
+import email.MailSendStatus;
 import email.MailSender;
 import email.MessageGateway;
 import entity.Bank;
@@ -15,29 +15,26 @@ import static org.mockito.Mockito.*;
 import static request.CustomerRequest.depositRequest;
 import static request.CustomerRequest.withdrawRequest;
 
-/**
- * Created by ppyao on 8/12/15.
- */
+
 public class BankTest {
-    public MailSender sender;
+    public MessageGateway sender;
     public Bank bank;
-    public Calendar birthday;
-    Calendar calendar;
+    public Calendar calendar;
 
     @Before
     public void setUp() throws Exception {
         sender = new MailSender();
         bank = new Bank(sender);
-        birthday = Calendar.getInstance();
-        birthday.set(1999, 4, 1);
         calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -3);
+
     }
 
     @Test
-    public void bankAcceptValidCustomer() {
+    public void should_add_customer_when_does_not_exist_() {
         //given
-        Customer customer = new Customer("yaoping", birthday);
+        Customer customer = new Customer("yaoping1", Calendar.getInstance());
+
         //when
         boolean isSuccess = bank.addCustomer(customer);
 
@@ -46,184 +43,91 @@ public class BankTest {
     }
 
     @Test
-    public void bankShouldUnacceptCustomerWhenCustomerExist() {
-        Customer firstCustomer = new Customer("yaoping", birthday);
-        Customer secondCustomer = new Customer("yaoping", birthday);
+    public void should_not_add_customer_when_exist() {
+        //given
+        Customer firstCustomer = new Customer("yaoping", Calendar.getInstance());
+
+        Customer secondCustomer = new Customer("yaoping", Calendar.getInstance());
         //when
         boolean isFirstSuccess = bank.addCustomer(firstCustomer);
+
         boolean isSecondSuccess = bank.addCustomer(secondCustomer);
 
         //then
         assertTrue(isFirstSuccess);
+
         assertFalse(isSecondSuccess);
     }
 
     @Test
-    public void bankShouldDespoitMoney() throws OverdrawException {
-        Customer customer = new Customer("yaoping", birthday);
-        bank.addCustomer(customer);
-        //when
-        bank.handleRequest(depositRequest(customer, 5000.0));
-        //then
-        assertThat(customer.getAccount().getBalance(), is(5000.0));
-    }
-
-    @Test
-    public void bankShouldWithdrawMoneyWhenMoneyLessThanBalance() throws Exception {
-        Customer customer = new Customer("yaoping", birthday);
-        bank.addCustomer(customer);
-        //when
-        bank.handleRequest(depositRequest(customer, 100.0));
-        bank.handleRequest(withdrawRequest(customer, 50.0));
-
-        //then
-        assertThat(customer.getAccount().getBalance(), is(50.0));
-    }
-
-    @Test(expected = OverdrawException.class)
-    public void bankShouldNotWithdrawMoneyWhenMoneyLargerThanBalance() throws OverdrawException {
-        Customer customer = new Customer("yaoping", birthday);
-        bank.addCustomer(customer);
-        //when
-        bank.handleRequest(depositRequest(customer, 100.0));
-        bank.handleRequest(withdrawRequest(customer, 150.0));
-    }
-
-    @Test
-    public void bandActualSendEamil() {
+    public void should_call_send_welcome_email_to_customer_after_customer_was_added() {
         //given
         MessageGateway sender = mock(MailSender.class);
+
+        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+
         bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", birthday);
+
+        Customer customer = new Customer("yaopingping1", Calendar.getInstance());
         //when
         bank.addCustomer(customer);
 
         //then
-        verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping>,Welcome to the Bank");
+        verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping1>, Welcome to the Bank");
     }
 
 
     @Test
-    public void bankShouldAddToPreminumWhenCustomerBalanceMoreThan40000() throws OverdrawException {
+    public void should_call_send_mail_method_to_manager_when_customer_balance_over_40000() throws OverdrawException {
         //given
         MessageGateway sender = mock(MailSender.class);
+
+        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+
         bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", birthday);
+
+        Customer customer = new Customer("yaopingping2", Calendar.getInstance());
         //when
         bank.addCustomer(customer);
-        bank.handleRequest(depositRequest(customer, 40000.0));
 
+        bank.handleRequest(depositRequest(customer, 40000d));
+
+        bank.handleRequest(depositRequest(customer, 10000d));
         //then
-        verify(sender).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping is a premium customer");
+        verify(sender, times(2)).sendEmail(anyString(), anyString());
     }
 
     @Test
-    public void bankShouldNotAddToPreminumWhenCustomerBalanceLessThan40000() throws OverdrawException {
+    public void should_no_send_email_to_manager_when_customer_balance_less_than_40000() throws OverdrawException {
         //given
         MessageGateway sender = mock(MailSender.class);
+
+        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+
         bank = new Bank(sender);
-        Customer customer = new Customer("yaopingping", birthday);
+
+        Customer customer = new Customer("yaopingping3", Calendar.getInstance());
+
         //when
         bank.addCustomer(customer);
-        bank.handleRequest(depositRequest(customer, 30000.0));
+
+        bank.handleRequest(depositRequest(customer, 30000d));
 
         //then
-        verify(sender, never()).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping is a premium customer");
+        verify(sender, never()).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping3 is a premium customer");
     }
 
     @Test
-    public void bankShouldAddPreminumOnce() throws OverdrawException {
-        //given
-        MessageGateway sender = mock(MailSender.class);
-        bank = new Bank(sender);
-        Customer customer = new Customer("yaoping", birthday);
-        //when
-        bank.addCustomer(customer);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-        bank.handleRequest(depositRequest(customer, 10000.0));
-
-        verify(sender, times(1)).sendEmail(matches(bank.bankManager.getEmailAddress()), matches("yaoping is a premium customer"));
-    }
-
-    @Test
-    public void bankSendEmailToBankmanagerByFasterMessageGateway() throws OverdrawException {
-        MessageGateway sender = mock(FasterMessageGateway.class);
-        bank = new Bank(sender);
-        Customer customer = new Customer("yaoping", birthday);
-        //when
-        bank.addCustomer(customer);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-
-        verify(sender).sendEmail(matches(bank.bankManager.getEmailAddress()), matches("yaoping is a premium customer"));
-    }
-
-    @Test
-    public void bankShouldGiveRewardWhenJoinBankDayMoreThan2() throws OverdrawException {
-        //given
-        Customer customer = new Customer("yaoping", birthday);
-
-        //when
-        bank.addCustomer(customer);
-        customer.setJoinBankDay(calendar);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-
-        //then
-        assertThat(customer.getAccount().getBalance(), is(40005.0));
-
-    }
-
-    @Test
-    public void bankShouldNotGiveRewardWhenJoinBankDayLessThan2() throws OverdrawException {
-        //given
-        Customer customer = new Customer("yaoping", birthday);
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -1);
-
-        //when
-        bank.addCustomer(customer);
-        customer.setJoinBankDay(calendar);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-
-        //then
-        assertThat(customer.getAccount().getBalance(), is(40000.0));
-    }
-
-    @Test
-    public void bankShouldNotGiveRewardWhenCustomerIsAcceptedReward() throws OverdrawException {
-        Customer customer = new Customer("yaoping", birthday);
-
-        //when
-        bank.addCustomer(customer);
-        customer.setJoinBankDay(calendar);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-        bank.handleRequest(depositRequest(customer, 10000.0));
-        assertThat(customer.getAccount().getBalance(), is(50005.0));
-    }
-
-    @Test
-    public void bankShouldGiveRewardWhenDespoit() throws OverdrawException {
-        //given
-        Customer customer = new Customer("yaoping", birthday);
-
-        //when
-        bank.addCustomer(customer);
-        customer.setJoinBankDay(calendar);
-        bank.handleRequest(depositRequest(customer, 40000.0));
-        bank.handleRequest(withdrawRequest(customer, 10000.0));
-
-        //then
-        assertThat(customer.getAccount().getBalance(), is(30005.0));
-    }
-
-    @Test(expected = OverdrawException.class)
-    public void withdrawNotAllowedWhenOverdraftRejected() throws OverdrawException {
-        Customer customer = new Customer("yaoping", birthday);
+    public void should_handle_the_request_when_added_to_bank() throws OverdrawException {
+        Customer customer = new Customer("yaopingping4", Calendar.getInstance());
 
         bank.addCustomer(customer);
 
-        customer.setOverdraftAllowed(false);
+        bank.handleRequest(depositRequest(customer, 100d));
 
-        bank.handleRequest(withdrawRequest(customer, 100.0));
+        bank.handleRequest(withdrawRequest(customer, 50d));
+
+        assertThat(customer.getAccount().getBalance(), is(50d));
     }
 
 

@@ -5,17 +5,13 @@ import request.CustomerRequest;
 
 import java.util.Calendar;
 
-/**
- * Created by ppyao on 8/13/15.
- */
-public class DespoitHandler implements CustomerHandler {
+public class DepositHandler implements CustomerHandler {
     @Override
     public double handle(CustomerRequest customerRequest) {
         double bonus = 5.0;
         if (isGiveBonus(customerRequest.getCustomer())) {
             customerRequest.getCustomer().setAcceptReward(true);
             return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount() + bonus);
-
         }
         return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount());
     }
@@ -24,6 +20,5 @@ public class DespoitHandler implements CustomerHandler {
         Calendar joinBankDay = customer.getJoinBankDay();
         joinBankDay.add(Calendar.YEAR, 2);
         return !customer.isAcceptReward() && joinBankDay.before(Calendar.getInstance());
-
     }
 }

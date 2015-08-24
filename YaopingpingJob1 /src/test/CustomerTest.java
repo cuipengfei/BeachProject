@@ -3,17 +3,18 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
 
     @Test
-    public void should_create_customer_with_valid_initial_account_given_valid_name() {
+    public void should_create_customer_with_valid_initial_account_with_balance_0_given_valid_name() {
         //when
-        Customer customer = new Customer("yaoping", Calendar.getInstance());
+        Customer customer = new Customer("yaoping123", Calendar.getInstance());
 
         //then
-        assertNotNull(customer);
+        assertThat(customer.getAccount().getBalance(), is(0.0));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -2,16 +2,13 @@ package entity;
 
 import java.util.Calendar;
 
-/**
- * Created by ppyao on 8/12/15.
- */
 public class Customer {
     private Calendar joinBankDay;
     private String nickname;
-    private Calendar dateofBirth;
+    private Calendar dateOfBirth;
     private Account account;
     private String emailAddress;
-    private boolean isPreminumDefault;
+    private boolean premiumDefault;
     private boolean acceptReward;
     private boolean overdraftAllowed;
 
@@ -19,46 +16,34 @@ public class Customer {
         return joinBankDay;
     }
 
-    public void setIsPreminumDefault(boolean isPreminumDefault) {
-        this.isPreminumDefault = isPreminumDefault;
-    }
-
-    public boolean isPreminum() {
-        return isPreminumDefault;
-    }
-
     public String getEmailAddress() {
         return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public Calendar getDateofBirth() {
-        return dateofBirth;
-    }
-
     public Account getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public boolean isPremiumDefault() {
+        return premiumDefault;
     }
 
-    public Customer(String nickname, Calendar dateofBirth) {
+    public void setPremiumDefault(boolean premiumDefault) {
+        this.premiumDefault = premiumDefault;
+    }
+
+    public Customer(String nickname, Calendar dateOfBirth) {
         if (!isValidName(nickname)) {
             throw new IllegalArgumentException();
         }
         this.nickname = nickname;
-        this.dateofBirth = dateofBirth;
+        this.dateOfBirth = dateOfBirth;
         this.emailAddress = nickname + "@bank.com";
-
+        account = new Account();
     }
 
     public boolean isAcceptReward() {

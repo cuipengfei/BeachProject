@@ -12,7 +12,6 @@ public class WithdrawHandler implements CustomerHandler {
         double withdrawAmount = customerRequest.getAmount();
         Customer customer = customerRequest.getCustomer();
         Account account = customer.getAccount();
-
         if (!overdraft(withdrawAmount, account) || canOverdraft(withdrawAmount, customer, account)) {
             return account.minusBalance(withdrawAmount);
         }

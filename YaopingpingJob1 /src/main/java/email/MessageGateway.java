@@ -1,9 +1,15 @@
 package email;
 
-/**
- * Created by ppyao on 8/18/15.
- */
+public abstract class MessageGateway {
+    protected MailSendStatus sendStatus;
 
-public interface MessageGateway {
-    public void sendEmail(String eamilAdress, String message);
+    public MailSendStatus getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(MailSendStatus sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+    public abstract void sendEmail(String emailAddress, String message);
 }

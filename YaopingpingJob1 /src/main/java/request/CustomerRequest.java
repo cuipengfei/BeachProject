@@ -2,10 +2,6 @@ package request;
 
 import entity.Customer;
 
-
-/**
- * Created by ppyao on 8/13/15.
- */
 public class CustomerRequest {
     private Customer customer;
     private RequestType type;
@@ -34,6 +30,6 @@ public class CustomerRequest {
     }
 
     public static CustomerRequest withdrawRequest(Customer customer, double money) {
-            return new CustomerRequest(customer, RequestType.withdraw, money);
+        return new CustomerRequest(customer, RequestType.withdraw, money);
     }
 }

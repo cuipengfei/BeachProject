@@ -2,15 +2,16 @@ package Test;
 
 import Bank.Bank;
 import Customer.Customer;
-import MailSender.FasterMailSender;
-import MailSender.MailSender;
-import MailSender.StandardMailSender;
+import mailsender.FasterMailSender;
+import mailsender.*;
+import mailsender.StandardMailSender;
 import MyException.CustomerNotExistException;
 import MyException.OverdrawException;
 import Request.CustomerRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
@@ -28,6 +29,7 @@ public class BankTest {
         customer = Customer.createCustomer("liuzhen11", Calendar.getInstance());
         mockSender = Mockito.mock(FasterMailSender.class);
         bank1 = new Bank(mockSender);
+        when(mockSender.getStatus()).thenReturn(MailSenderStatusType.OK);
     }
 
     @Test

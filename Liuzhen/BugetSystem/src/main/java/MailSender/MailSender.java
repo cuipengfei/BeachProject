@@ -1,4 +1,9 @@
-package MailSender;
+package mailsender;
+
 public interface MailSender {
-    public void sendEmail(String receiverAddress,String mailContent);
+    void sendEmail(String receiverAddress, String mailContent);
+
+    void setStatus(MailSenderStatusType status);
+
+    MailSenderStatusType getStatus();
 }

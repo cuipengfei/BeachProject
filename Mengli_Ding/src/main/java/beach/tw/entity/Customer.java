@@ -9,38 +9,29 @@ import java.util.Date;
 public class Customer {
     private final String name;
     private final Date birthdDate;
-    private final Account account = new Account();
-    private boolean isPremiumCustomer = false;
-    private boolean isGetBonus = false;
+    private Account account;
+    private boolean isPremiumCustomer;
+    private boolean isGetBonus;
     private Calendar joiningDate;
-    private boolean isOverdraft = false;
-    private int limit;
+    private boolean isOverdraft;
 
-    public int getLimit() {return limit;}
+    private static final Customer invalidCustomer = new Customer(null, null);
 
-    public void setLimit(int limit) {this.limit = limit;}
+    public boolean isOverdraft() { return isOverdraft; }
 
-    public boolean isOverdraft() {return isOverdraft;}
+    public void setIsOverdraft(boolean isOverdraft) { this.isOverdraft = isOverdraft; }
 
-    public void setIsOverdraft(boolean isOverdraft) {this.isOverdraft = isOverdraft;}
+    public void setJoiningDate(Calendar joiningDate) { this.joiningDate = joiningDate; }
 
-    public void setJoiningDate(Calendar joiningDate) {
-        this.joiningDate = joiningDate;
-    }
-
-    public Calendar getJoiningDate() {
-        return joiningDate;
-    }
+    public Calendar getJoiningDate() { return joiningDate; }
 
     public void setIsGetBonus(boolean isGetBonus) {
         this.isGetBonus = isGetBonus;
     }
 
-    public boolean isGetBonus() {return isGetBonus;}
+    public boolean isGetBonus() { return isGetBonus; }
 
-    public boolean isPremiumCustomer() {
-        return isPremiumCustomer;
-    }
+    public boolean isPremiumCustomer() { return isPremiumCustomer; }
 
     public void setIsPremiumCustomer(boolean isPremiumCustomer) {
         this.isPremiumCustomer = isPremiumCustomer;
@@ -50,11 +41,11 @@ public class Customer {
         return account;
     }
 
+    public void setAccount(Account account) {  this.account = account; }
+
     public String getName() {
         return name;
     }
-
-    private static final Customer invalidCustomer = new Customer(null, null);
 
     public Customer(String name, Date date){
         this.name = name;
@@ -71,10 +62,10 @@ public class Customer {
     }
 
     public static Customer createCustomer(String name, Date date){
-        if (isNameValid(name))
+        if (isNameValid(name)) {
             return new Customer(name, date);
-        else
+        } else {
             return invalidCustomer();
+        }
     }
-
 }

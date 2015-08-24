@@ -1,13 +1,12 @@
 package beach.tw;
 
-import beach.tw.external.FasterMessageGateway;
 import beach.tw.entity.Bank;
 import beach.tw.entity.Customer;
 import beach.tw.exception.InsufficientException;
+import beach.tw.external.FasterMessageGateway;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,7 +34,7 @@ public class BankTest {
     }
 
     @Test
-    public void BankShouldAddValidCustomer() throws ParseException {
+    public void BankShouldAddValidCustomer() throws Exception {
         //given
         Customer miya11 = Customer.createCustomer("miya11", new Date());
 
@@ -47,7 +46,7 @@ public class BankTest {
     }
 
     @Test
-    public void BankShouldNotAddInvalidCustomer() throws ParseException {
+    public void BankShouldNotAddInvalidCustomer() throws Exception {
         //given
         Customer Miya = Customer.createCustomer("Miya", new Date());
 
@@ -59,7 +58,7 @@ public class BankTest {
     }
 
     @Test
-    public void BankShouldNotAddSameNameCustomer() throws ParseException {
+    public void BankShouldNotAddSameNameCustomer() throws Exception {
         //given
         Customer miya1 = Customer.createCustomer("miya", new Date());
         Customer miya2 = Customer.createCustomer("miya", new Date());
@@ -78,7 +77,7 @@ public class BankTest {
     }
 
     @Test
-    public void shouldBeAbleToDepositMoney() throws ParseException {
+    public void shouldBeAbleToDepositMoney() throws Exception {
         //given
         Customer mike = Customer.createCustomer("mike", new Date());
         bank.addCustomer(mike);
@@ -91,7 +90,7 @@ public class BankTest {
     }
 
     @Test
-    public void shouldBeAbleToWithdrawMoney() throws ParseException {
+    public void shouldBeAbleToWithdrawMoney() throws Exception {
         //given
         Customer mike = Customer.createCustomer("mike", new Date());
         bank.addCustomer(mike);
@@ -105,7 +104,7 @@ public class BankTest {
     }
 
     @Test(expected = InsufficientException.class)
-    public void shouldNotBeAbleToWithdrawMoneyMoreThanBalance() throws ParseException {
+    public void shouldNotBeAbleToWithdrawMoneyMoreThanBalance() throws Exception {
         //given
         Customer mike = Customer.createCustomer("mike", new Date());
         bank.addCustomer(mike);
@@ -119,20 +118,8 @@ public class BankTest {
     }
 
     @Test
-    public void shouldNotHandleAnyRequestIfCustomerWasNotAdded() throws ParseException {
-        //given customer not added
-        Customer customer = Customer.createCustomer("aaa", new Date());
-
-        //when
-        bank.handleRequest(deposit(customer, 8));
-
-        //then
-        assertThat(customer.getAccount().getMoney(), is(0));
-    }
-
-    @Test
-    public void shouldSentMessageIfCustomerWasAdded() throws ParseException {
-        Customer customer = Customer.createCustomer("bbb", new Date());
+    public void shouldSentMessageIfCustomerWasAdded() throws Exception {
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
 
         verify(mockedFasterMessageGateway).sendMail(anyString(), anyString());
@@ -140,14 +127,14 @@ public class BankTest {
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() {
-        Customer customer = Customer.createCustomer("bbb", new Date());
+        Customer customer = Customer.createCustomer("ding", new Date());
 
         verify(mockedFasterMessageGateway, never()).sendMail(anyString(), anyString());
     }
 
     @Test
-    public void shouldSentMessageToManagerIfHavePremiumCustomer() throws ParseException {
-        Customer customer = Customer.createCustomer("ccc", new Date());
+    public void shouldSentMessageToManagerIfHavePremiumCustomer() throws Exception {
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
         bank.handleRequest(deposit(customer, 60000));
 
@@ -155,8 +142,8 @@ public class BankTest {
     }
 
     @Test
-    public void shouldNotSentMessageToManagerAgainIfCustomerIsPremiunOnce() throws ParseException {
-        Customer customer = Customer.createCustomer("ccc", new Date());
+    public void shouldNotSentMessageToManagerAgainIfCustomerIsPremiunOnce() throws Exception {
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
         bank.handleRequest(deposit(customer, 60000));
         bank.handleRequest(deposit(customer, 10000));
@@ -166,8 +153,8 @@ public class BankTest {
     }
 
     @Test
-    public void shouldSetJoiningDateIfCustomerAddedToBank() throws ParseException {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+    public void shouldSetJoiningDateIfCustomerAddedToBank() throws Exception {
+        Customer customer = Customer.createCustomer("ding", new Date());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         bank.addCustomer(customer);
@@ -177,17 +164,17 @@ public class BankTest {
 
     @Test
     public void shouldNotSetJoiningDateIfCustomerNotAddedToBank() {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+        Customer customer = Customer.createCustomer("ding", new Date());
 
         assertNull(customer.getJoiningDate());
     }
 
     @Test
-    public void shouldAddBonusWhenOverTwoYears() throws ParseException {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+    public void shouldAddBonusWhenOverTwoYears() throws Exception {
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
         Calendar calendar = customer.getJoiningDate();
-        calendar.add(Calendar.YEAR, -2);
+        calendar.add(Calendar.YEAR, -3);
         customer.setJoiningDate(calendar);
 
         bank.handleRequest(deposit(customer, 6));
@@ -198,10 +185,10 @@ public class BankTest {
 
     @Test
     public void shouldOverdraftWhenMarked() throws Exception {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
         customer.setIsOverdraft(true);
-        customer.setLimit(1000);
+        customer.getAccount().setLimit(1000);
 
         bank.handleRequest(deposit(customer, 200));
         bank.handleRequest(withdraw(customer, 300));
@@ -210,12 +197,12 @@ public class BankTest {
         assertThat(customer.getAccount().getMoney(), is(-1000));
     }
 
-    @Test
+    @Test(expected = InsufficientException.class)
     public void shouldNotContinueOverdraftWhenRemoveMarked() throws Exception {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
         customer.setIsOverdraft(true);
-        customer.setLimit(1000);
+        customer.getAccount().setLimit(1000);
 
         bank.handleRequest(deposit(customer, 200));
         bank.handleRequest(withdraw(customer, 300));
@@ -229,9 +216,9 @@ public class BankTest {
         //throw an exception
     }
 
-    @Test
+    @Test(expected = InsufficientException.class)
     public void shouldNotOverdraftWhenNotMarked() throws Exception {
-        Customer customer = Customer.createCustomer("ddd", new Date());
+        Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
 
         bank.handleRequest(deposit(customer, 200));

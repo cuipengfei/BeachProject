@@ -2,7 +2,6 @@ package test;
 
 import customer.Customer;
 import myException.AccountNameNotUniqueException;
-import myException.OverTransferException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,28 +42,5 @@ public class CustomerTest {
         customer.getAccount("account2").setBalance(3000.0);
 
         assertThat(customer.getTotalBalance(), is(4400.0));
-    }
-
-    @Test
-    public void should_transfer_successfully_when_an_account_transfer_money_less_than_its_balance_to_another_account() throws Exception {
-        customer.getAccount("current").setBalance(4000.0);
-        customer.transfer("current", "account1", 1000.0);
-
-        assertThat(customer.getAccount("current").getBalance(), is(3000.0));
-        assertThat(customer.getAccount("account1").getBalance(),is(1000.0));
-    }
-
-    @Test(expected = OverTransferException.class)
-    public void should_throw_exception_when_an_account_transfer_money_more_than_its_balance_to_another_account() throws Exception {
-        customer.getAccount("current").setBalance(4000.0);
-        customer.transfer("current", "account1", 5000.0);
-    }
-
-    @Test(expected = OverTransferException.class)
-    public void should_throw_exception_when_an_account_with_overdraft_facility_transfer_money_more_than_its_balance_to_another_account() throws Exception {
-        customer.getAccount("current").setBalance(4000.0);
-        customer.getAccount("current").setOverdraftAllowed(true);
-
-        customer.transfer("current", "account1", 5000.0);
     }
 }

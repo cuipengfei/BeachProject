@@ -1,4 +1,5 @@
 package request;
+import account.Account;
 import customer.*;
 
 public class CustomerRequest {
@@ -6,12 +7,29 @@ public class CustomerRequest {
     private String accountName;
     private RequestType requestType;
     private double money;
+    private Account accountTransferFrom;
+    private Account accountTransferTo;
 
-    public CustomerRequest(Customer customer, String accountName, RequestType requestType, double money) {
+    private CustomerRequest(Customer customer, String accountName, RequestType requestType, double money) {
         this.customer = customer;
         this.accountName = accountName;
         this.requestType = requestType;
         this.money = money;
+    }
+
+    private CustomerRequest(Account accountTransferFrom, Account accountTransferTo, RequestType requestType, double money) {
+        this.accountTransferFrom = accountTransferFrom;
+        this.accountTransferTo = accountTransferTo;
+        this.requestType = requestType;
+        this.money = money;
+    }
+
+    public Account getAccountTransferFrom() {
+        return accountTransferFrom;
+    }
+
+    public Account getAccountTransferTo() {
+        return accountTransferTo;
     }
 
     public Customer getCustomer() {
@@ -34,6 +52,9 @@ public class CustomerRequest {
         return new CustomerRequest(customer,accountName, RequestType.deposit,money);
     }
 
+    public static CustomerRequest transfer(Account accountTransferFrom, Account accountTransferTo, RequestType requestType, double money){
+        return new CustomerRequest(accountTransferFrom,accountTransferTo,RequestType.transfer,money);
+    }
     public String getAccountName() {
         return accountName;
     }

@@ -6,10 +6,7 @@ import mailsender.FasterMailSender;
 import mailsender.MailSender;
 import mailsender.MailSenderStatusType;
 import mailsender.StandardMailSender;
-import myException.AccountNameNotUniqueException;
-import myException.AccountNotExistException;
-import myException.CustomerNotExistException;
-import myException.OverdrawException;
+import myException.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -68,7 +65,7 @@ public class BankTest {
     public void should_throws_exception_when_an_account_be_withdraw_money_more_than_its_current_money() throws Exception {
         bank0.add(customer);
 
-        bank0.handleRequest(CustomerRequest.deposit(customer,"account1", 1000.0));
+        bank0.handleRequest(CustomerRequest.deposit(customer, "account1", 1000.0));
         bank0.handleRequest(CustomerRequest.withDraw(customer, "account1", 1100.0));
     }
 
@@ -94,7 +91,7 @@ public class BankTest {
         bank1.add(customer);
         bank1.handleRequest(CustomerRequest.deposit(customer,"account1", 40000.0));
 
-        verify(mockSender).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
+        verify(mockSender).sendEmail("manager@thebank.com", customer + " is now a premium customer.");
     }
 
     @Test
@@ -164,7 +161,7 @@ public class BankTest {
         customer.getAccount("account1").setOverdraftAllowed(true);
         bank1.add(customer);
 
-        bank1.handleRequest(CustomerRequest.withDraw(customer, "account1",  1100.0));
+        bank1.handleRequest(CustomerRequest.withDraw(customer, "account1", 1100.0));
     }
 
     @Test(expected = OverdrawException.class)
@@ -193,6 +190,6 @@ public class BankTest {
     @Test(expected = AccountNotExistException.class)
     public void should_throw_exception_when_an_account_be_called_but_doesnot_exist() throws Exception {
         customer.getAccount("accountNotExist");
-
     }
+
 }

@@ -8,8 +8,8 @@ import handle.DepositHandler;
 import handle.WithdrawHandler;
 import request.CustomerRequest;
 import request.RequestType;
+import utils.FileUtils;
 
-import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,6 +18,7 @@ public class Bank {
     public List<Customer> customers = new LinkedList<Customer>();
     public BankManager bankManager = new BankManager();
     public static Map<RequestType, CustomerHandler> customerHandler = new HashMap<RequestType, CustomerHandler>();
+    public MailSendStatus status;
 
     public Bank(MessageGateway messageGateway) {
         this.messageGateway = messageGateway;
@@ -32,12 +33,18 @@ public class Bank {
         if (!isCustomerRepeated(customer)) {
             customers.add(initCustomer(customer));
             sendMessageToCustomer(customer);
-            writeMessageLog(customer);
             return true;
         }
-        messageGateway.setSendStatus(MailSendStatus.FAILED);
-        writeMessageLog(customer);
         return false;
+    }
+
+    private void sendMessageToCustomer(Customer customer) {
+        try {
+            status = messageGateway.sendEmail(customer.getEmailAddress(), buildWelcomeMessage(customer.getNickname()));
+        } catch (Exception e) {
+            status = MailSendStatus.EXCEPTION;
+        }
+        FileUtils.writeMessageLog(buildDiary(status, customer));
     }
 
     public void handleRequest(CustomerRequest request) throws OverdrawException {
@@ -48,11 +55,6 @@ public class Bank {
         }
     }
 
-    private void sendMessageToCustomer(Customer customer) {
-        messageGateway.sendEmail(customer.getEmailAddress(), buildWelcomeMessage(customer.getNickname()));
-        messageGateway.setSendStatus(MailSendStatus.OK);
-    }
-
     private void sendMessage(Customer customer) {
         if (isPremiumCustomer(customer)) {
             String messageToManager = messageToManager(customer);
@@ -61,35 +63,7 @@ public class Bank {
         }
     }
 
-    private void writeMessageLog(Customer customer) {
-        MailSendStatus status = messageGateway.getSendStatus();
-        try {
-            File file = new File("sendMessageLog");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            PrintStream printer = new PrintStream(new FileOutputStream(file, true));
-            switch (status) {
-                case OK:
-                    printer.append(logCustomerMessage(status, customer));
-                    break;
-                case FAILED:
-                    printer.append(logCustomerMessage(status, customer));
-                    break;
-                case EXCEPTION:
-                    printer.append(logCustomerMessage(status, customer));
-                    break;
-                default:
-            }
-            printer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String logCustomerMessage(MailSendStatus status, Customer customer) {
+    private String buildDiary(MailSendStatus status, Customer customer) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd  hh:mm:ss a zzz");
         return String.format("mail send  %s %s %s \n", status, dateFormat.format(new Date()), customer.getNickname());
     }
@@ -116,8 +90,10 @@ public class Bank {
     }
 
     private boolean isPremiumCustomer(Customer customer) {
-        if (customer.getAccount().getBalance() >= 40000 && !(customer.isPremiumDefault())) {
-            return true;
+        for (int index = 0; index < customer.getAccounts().size(); index++) {
+            if (customer.getAccounts().get(index).getBalance() >= 40000 && !(customer.isPremiumDefault())) {
+                return true;
+            }
         }
         return false;
     }

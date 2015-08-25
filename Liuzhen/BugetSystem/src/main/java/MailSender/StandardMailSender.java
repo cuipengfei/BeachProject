@@ -1,10 +1,11 @@
 package mailsender;
 public class StandardMailSender implements MailSender {
-    public MailSenderStatusType status = MailSenderStatusType.OK;
+    public MailSenderStatusType status;
 
     @Override
-    public void sendEmail(String receiverAddress,String mailContent){
+    public MailSenderStatusType sendEmail(String receiverAddress,String mailContent){
         System.out.println(mailContent);
+        return MailSenderStatusType.OK;
     }
 
     @Override

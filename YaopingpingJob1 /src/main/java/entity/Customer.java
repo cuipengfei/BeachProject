@@ -1,16 +1,18 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Customer {
     private Calendar joinBankDay;
     private String nickname;
     private Calendar dateOfBirth;
-    private Account account;
     private String emailAddress;
     private boolean premiumDefault;
     private boolean acceptReward;
-    private boolean overdraftAllowed;
+    private double totalAssets;
+    private List<Account> accounts = new ArrayList<Account>();
 
     public Calendar getJoinBankDay() {
         return joinBankDay;
@@ -24,16 +26,20 @@ public class Customer {
         return nickname;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
     public boolean isPremiumDefault() {
         return premiumDefault;
     }
 
     public void setPremiumDefault(boolean premiumDefault) {
         this.premiumDefault = premiumDefault;
+    }
+
+    public double getTotalAssets() {
+        return totalAssets;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
     public Customer(String nickname, Calendar dateOfBirth) {
@@ -43,7 +49,8 @@ public class Customer {
         this.nickname = nickname;
         this.dateOfBirth = dateOfBirth;
         this.emailAddress = nickname + "@bank.com";
-        account = new Account();
+        Account account = new Account();
+        accounts.add(account);
     }
 
     public boolean isAcceptReward() {
@@ -58,15 +65,33 @@ public class Customer {
         this.joinBankDay = joinBankDay;
     }
 
-    public boolean isOverdraftAllowed() {
-        return overdraftAllowed;
-    }
-
-    public void setOverdraftAllowed(boolean overdraftAllowed) {
-        this.overdraftAllowed = overdraftAllowed;
-    }
-
     private boolean isValidName(String nickname) {
         return nickname.matches("^[a-z0-9]+$");
     }
+
+    public double calculate() {
+        for (int index = 0; index < accounts.size(); index++) {
+            totalAssets += accounts.get(index).getBalance();
+        }
+        return totalAssets;
+    }
+
+    public Account createAccount(String accountName) {
+        for (Account account : accounts) {
+            if (account.getAccountName().equals(accountName))
+                return null;
+        }
+        Account account = new Account(accountName);
+        accounts.add(account);
+        return account;
+    }
+
+    public Account findAccountByName(String name)  {
+        for (int index = 0; index < accounts.size(); index++) {
+            if (accounts.get(index).getAccountName().equals(name))
+                return accounts.get(index);
+        }
+        return null;
+    }
+
 }

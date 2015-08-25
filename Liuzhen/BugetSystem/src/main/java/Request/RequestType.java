@@ -1,5 +1,5 @@
-package Request;
+package request;
 
 public enum RequestType {
-    withDraw,deposit
+    withDraw,deposit,getTotalBalance
 }

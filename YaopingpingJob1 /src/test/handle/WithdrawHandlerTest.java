@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 import static request.CustomerRequest.withdrawRequest;
 
 public class WithdrawHandlerTest {
+    public Account account;
 
     @Test(expected = OverdrawException.class)
     public void should_throw_overdraft_exception_when_overdraft_exceeds_limit() throws Exception {
@@ -19,7 +20,7 @@ public class WithdrawHandlerTest {
 
         Customer customer = prepareCustomer(1000d);
 
-        handler.handle(withdrawRequest(customer, 2000d));
+        handler.handle(withdrawRequest(customer, 2000d, "current"));
     }
 
     @Test
@@ -28,24 +29,20 @@ public class WithdrawHandlerTest {
 
         Customer customer = prepareCustomer(1000d);
 
-        handler.handle(withdrawRequest(customer, 500d));
-
-        Account account = customer.getAccount();
+        handler.handle(withdrawRequest(customer, 500d, "current"));
 
         assertThat(account.getBalance(), is(-500d));
     }
 
-    @Test
+   @Test
     public void should_with_draw_if_no_overdraft() throws Exception {
         WithdrawHandler handler = new WithdrawHandler();
 
         Customer customer = prepareCustomer(1000d);
 
-        customer.getAccount().addBalance(3000d);
+        account.addBalance(3000d);
 
-        handler.handle(withdrawRequest(customer, 2000d));
-
-        Account account = customer.getAccount();
+        handler.handle(withdrawRequest(customer, 2000d,"current"));
 
         assertThat(account.getBalance(), is(1000d));
     }
@@ -56,17 +53,18 @@ public class WithdrawHandlerTest {
 
         Customer customer = prepareCustomer(1000d);
 
-        customer.setOverdraftAllowed(false);
+        account.setOverdraftAllowed(false);
 
-        handler.handle(withdrawRequest(customer, 2000d));
+        handler.handle(withdrawRequest(customer, 2000d,"current"));
     }
 
     private Customer prepareCustomer(double overdraftLimit) {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
+        account = customer.findAccountByName("current");
 
-        customer.setOverdraftAllowed(true);
+        account.setOverdraftAllowed(true);
 
-        customer.getAccount().setOverdraftLimit(overdraftLimit);
+        account.setOverdraftLimit(overdraftLimit);
 
         return customer;
     }

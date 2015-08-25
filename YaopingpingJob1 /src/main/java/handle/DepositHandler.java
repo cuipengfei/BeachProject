@@ -1,5 +1,6 @@
 package handle;
 
+import entity.Account;
 import entity.Customer;
 import request.CustomerRequest;
 
@@ -9,11 +10,12 @@ public class DepositHandler implements CustomerHandler {
     @Override
     public double handle(CustomerRequest customerRequest) {
         double bonus = 5.0;
+        Account account = customerRequest.getCustomer().findAccountByName(customerRequest.getAccountName());
         if (isGiveBonus(customerRequest.getCustomer())) {
             customerRequest.getCustomer().setAcceptReward(true);
-            return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount() + bonus);
+            return account.addBalance(customerRequest.getAmount() + bonus);
         }
-        return customerRequest.getCustomer().getAccount().addBalance(customerRequest.getAmount());
+        return account.addBalance(customerRequest.getAmount());
     }
 
     private boolean isGiveBonus(Customer customer) {
@@ -21,4 +23,5 @@ public class DepositHandler implements CustomerHandler {
         joinBankDay.add(Calendar.YEAR, 2);
         return !customer.isAcceptReward() && joinBankDay.before(Calendar.getInstance());
     }
+
 }

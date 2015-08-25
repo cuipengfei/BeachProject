@@ -3,8 +3,9 @@ package mailsender;
 public class FasterMailSender implements MailSender{
     public MailSenderStatusType status = MailSenderStatusType.OK;
     @Override
-    public void sendEmail(String receiverAddress,String mailContent){
+    public MailSenderStatusType sendEmail(String receiverAddress,String mailContent){
         System.out.println("It's faster mail sender!"+mailContent);
+        return status;
     }
 
     @Override

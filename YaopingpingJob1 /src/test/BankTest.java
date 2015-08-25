@@ -6,11 +6,14 @@ import entity.Customer;
 import exception.OverdrawException;
 import org.junit.Before;
 import org.junit.Test;
+import utils.FileUtils;
 
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static request.CustomerRequest.depositRequest;
 import static request.CustomerRequest.withdrawRequest;
@@ -64,11 +67,12 @@ public class BankTest {
         //given
         MessageGateway sender = mock(MailSender.class);
 
-        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+        when(sender.sendEmail(anyString(), anyString())).thenReturn(MailSendStatus.OK);
 
         bank = new Bank(sender);
 
         Customer customer = new Customer("yaopingping1", Calendar.getInstance());
+
         //when
         bank.addCustomer(customer);
 
@@ -82,7 +86,7 @@ public class BankTest {
         //given
         MessageGateway sender = mock(MailSender.class);
 
-        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+        when(sender.sendEmail(anyString(), anyString())).thenReturn(MailSendStatus.OK);
 
         bank = new Bank(sender);
 
@@ -90,9 +94,9 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 40000d));
+        bank.handleRequest(depositRequest(customer, 40000d,"current"));
 
-        bank.handleRequest(depositRequest(customer, 10000d));
+        bank.handleRequest(depositRequest(customer, 10000d,"current"));
         //then
         verify(sender, times(2)).sendEmail(anyString(), anyString());
     }
@@ -102,7 +106,7 @@ public class BankTest {
         //given
         MessageGateway sender = mock(MailSender.class);
 
-        when(sender.getSendStatus()).thenReturn(MailSendStatus.OK);
+        when(sender.sendEmail(anyString(), anyString())).thenReturn(MailSendStatus.OK);
 
         bank = new Bank(sender);
 
@@ -111,7 +115,7 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 30000d));
+        bank.handleRequest(depositRequest(customer, 30000d,"current"));
 
         //then
         verify(sender, never()).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping3 is a premium customer");
@@ -123,12 +127,27 @@ public class BankTest {
 
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 100d));
+        bank.handleRequest(depositRequest(customer, 100d, "current"));
 
-        bank.handleRequest(withdrawRequest(customer, 50d));
+        bank.handleRequest(withdrawRequest(customer, 50d, "current"));
 
-        assertThat(customer.getAccount().getBalance(), is(50d));
+        assertThat(customer.findAccountByName("current").getBalance(),is(50d));
     }
 
+    @Test
+    public void should_write_log_successfully() {
+        MailSender sender = mock(MailSender.class);
 
+        when(sender.sendEmail(anyString(), anyString())).thenReturn(MailSendStatus.OK);
+
+        bank = new Bank(sender);
+
+        Customer customer = new Customer("yaopingping5", Calendar.getInstance());
+
+        bank.addCustomer(customer);
+
+        verify(sender).sendEmail(anyString(), anyString());
+
+        assertTrue(FileUtils.isCalledWriteMessageLog());
+    }
 }

@@ -1,19 +1,19 @@
-package Handler;
+package handler;
 
-import MyException.OverdrawException;
-import Request.CustomerRequest;
-import Customer.*;
+import myException.OverdrawException;
+import request.CustomerRequest;
+import customer.*;
 
 public class WithdrawHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) throws Exception {
-            Customer _customer = request.getCustomer();
-            double _moneyWillBeDrawn = request.getMoney();
-            double currentMoneyInAccount = _customer.getAccount();
-            double overdraftLimitAmount = _customer.isOverdraftAllowed() ? 1000.0 : 0.0;
+            Customer customer = request.getCustomer();
+            double moneyWillBeDrawn = request.getMoney();
+            double currentMoneyInAccount = customer.getAccount(request.getAccountName()).getBalance();
+            double overdraftLimitAmount = customer.getAccount(request.getAccountName()).isOverdraftAllowed() ? 1000.0 : 0.0;
 
-            if(_moneyWillBeDrawn <= (currentMoneyInAccount + overdraftLimitAmount)) {
-                _customer.setAccount(currentMoneyInAccount - _moneyWillBeDrawn);
+            if(moneyWillBeDrawn <= (currentMoneyInAccount + overdraftLimitAmount)) {
+                customer.getAccount(request.getAccountName()).setBalance(currentMoneyInAccount - moneyWillBeDrawn);
             }
             else throw new OverdrawException();
     }

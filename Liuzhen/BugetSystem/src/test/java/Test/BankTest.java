@@ -7,6 +7,7 @@ import mailsender.MailSender;
 import mailsender.MailSenderStatusType;
 import mailsender.StandardMailSender;
 import myException.AccountNameNotUniqueException;
+import myException.AccountNotExistException;
 import myException.CustomerNotExistException;
 import myException.OverdrawException;
 import org.junit.Before;
@@ -48,7 +49,7 @@ public class BankTest {
     public void should_deposit_successfully_when_some_money_be_deposited_in_account() throws Exception {
         bank0.add(customer);
 
-        bank0.handleRequest(CustomerRequest.deposit(customer,"account1", 1000.0));
+        bank0.handleRequest(CustomerRequest.deposit(customer, "account1", 1000.0));
 
         assertThat(customer.getAccount("account1").getBalance(), is(1000.0));
     }
@@ -57,8 +58,8 @@ public class BankTest {
     public void should_withdraw_successfully_when_withdraw_method_be_used() throws Exception {
         bank0.add(customer);
 
-        bank0.handleRequest(CustomerRequest.deposit(customer,"account1", 1000.0));
-        bank0.handleRequest(CustomerRequest.withDraw(customer,"account1", 900.0));
+        bank0.handleRequest(CustomerRequest.deposit(customer, "account1", 1000.0));
+        bank0.handleRequest(CustomerRequest.withDraw(customer, "account1", 900.0));
 
         assertThat(customer.getAccount("account1").getBalance(), is(100.0));
     }
@@ -68,12 +69,12 @@ public class BankTest {
         bank0.add(customer);
 
         bank0.handleRequest(CustomerRequest.deposit(customer,"account1", 1000.0));
-        bank0.handleRequest(CustomerRequest.withDraw(customer,"account1", 1100.0));
+        bank0.handleRequest(CustomerRequest.withDraw(customer, "account1", 1100.0));
     }
 
     @Test(expected = CustomerNotExistException.class)
     public void should_throws_exception_when_a_customer_does_not_exist() throws Exception {
-        bank0.handleRequest(CustomerRequest.deposit(customer,"account1", 1000.0));
+        bank0.handleRequest(CustomerRequest.deposit(customer, "account1", 1000.0));
     }
 
     @Test
@@ -118,7 +119,7 @@ public class BankTest {
         bank1.add(customer);
         bank1.handleRequest(CustomerRequest.deposit(customer, "account1", 100.0));
 
-        verify(mockSender, never()).sendEmail("manager@thebank.com",customer+" is now a premium customer.");
+        verify(mockSender, never()).sendEmail("manager@thebank.com", customer + " is now a premium customer.");
     }
 
     @Test
@@ -149,18 +150,18 @@ public class BankTest {
 
     @Test
     public void should_overdraft_limit_money_successfully_when_a_customer_is_allowed_to_do_that() throws Exception {
-        customer.setOverdraftAllowed(true);
+        customer.getAccount("account1").setOverdraftAllowed(true);
         bank1.add(customer);
 
         bank1.handleRequest(CustomerRequest.withDraw(customer, "account1", 500.0));
         bank1.handleRequest(CustomerRequest.withDraw(customer, "account1", 100.0));
 
-        assertThat(customer.getAccount("account1").getBalance(),is(-600.0));
+        assertThat(customer.getAccount("account1").getBalance(), is(-600.0));
     }
 
     @Test(expected = OverdrawException.class)
     public void should_overdraft_failed_when_a_customer_overdraft_money_more_than_limit_mount() throws Exception {
-        customer.setOverdraftAllowed(true);
+        customer.getAccount("account1").setOverdraftAllowed(true);
         bank1.add(customer);
 
         bank1.handleRequest(CustomerRequest.withDraw(customer, "account1",  1100.0));
@@ -168,11 +169,11 @@ public class BankTest {
 
     @Test(expected = OverdrawException.class)
     public void should_overdraft_failed_when_a_customer_with_a_negative_balance_and_whose_overdraft_facility_is_removed() throws Exception {
-        customer.setOverdraftAllowed(true);
+        customer.getAccount("account1").setOverdraftAllowed(true);
         bank1.add(customer);
 
         bank1.handleRequest(CustomerRequest.withDraw(customer, "account1", 500.0));
-        customer.setOverdraftAllowed(false);
+        customer.getAccount("account1").setOverdraftAllowed(false);
         bank1.handleRequest(CustomerRequest.withDraw(customer, "account1", 100.0));
     }
 
@@ -187,5 +188,11 @@ public class BankTest {
     @Test(expected = AccountNameNotUniqueException.class)
     public void should_throw_exception_when_a_customer_add_a_account_which_has_same_name_with_existed_account() throws Exception {
         customer.addAccount("account1");
+    }
+
+    @Test(expected = AccountNotExistException.class)
+    public void should_throw_exception_when_an_account_be_called_but_doesnot_exist() throws Exception {
+        customer.getAccount("accountNotExist");
+
     }
 }

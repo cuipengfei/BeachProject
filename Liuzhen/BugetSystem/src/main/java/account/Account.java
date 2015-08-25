@@ -6,10 +6,7 @@ package account;
 public class Account {
     private String name ;
     private double balance = 0.0;
-
-    public Account(){
-        this.name = "current";
-    }
+    private boolean overdraftAllowed;
 
     public Account(String name) {
         this.name = name;
@@ -25,5 +22,13 @@ public class Account {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isOverdraftAllowed() {
+        return overdraftAllowed;
+    }
+
+    public void setOverdraftAllowed(boolean overdraftAllowed) {
+        this.overdraftAllowed = overdraftAllowed;
     }
 }

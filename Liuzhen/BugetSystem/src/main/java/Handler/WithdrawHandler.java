@@ -10,7 +10,7 @@ public class WithdrawHandler implements RequestHandler {
             Customer customer = request.getCustomer();
             double moneyWillBeDrawn = request.getMoney();
             double currentMoneyInAccount = customer.getAccount(request.getAccountName()).getBalance();
-            double overdraftLimitAmount = customer.isOverdraftAllowed() ? 1000.0 : 0.0;
+            double overdraftLimitAmount = customer.getAccount(request.getAccountName()).isOverdraftAllowed() ? 1000.0 : 0.0;
 
             if(moneyWillBeDrawn <= (currentMoneyInAccount + overdraftLimitAmount)) {
                 customer.getAccount(request.getAccountName()).setBalance(currentMoneyInAccount - moneyWillBeDrawn);

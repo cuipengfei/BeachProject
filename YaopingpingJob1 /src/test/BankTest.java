@@ -79,7 +79,6 @@ public class BankTest {
         verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping1>, Welcome to the Bank");
     }
 
-
     @Test
     public void should_call_send_mail_method_to_manager_when_customer_balance_over_40000() throws OverdrawException {
         //given

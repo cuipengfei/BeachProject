@@ -1,21 +1,21 @@
 import entity.Account;
 import entity.Customer;
 import exception.AccountNameRepeatedException;
-import exception.OverdrawException;
+import exception.AccountNotExistException;
 import org.junit.Test;
 
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
-
     @Test
-    public void should_create_customer_with_valid_initial_account_with_balance_0_given_valid_name() {
+    public void should_create_customer_with_valid_initial_account_with_name_current_given_valid_name() {
         Customer customer = new Customer("yaoping123", Calendar.getInstance());
 
-        assertThat(customer.findAccountByName("current").getBalance(), is(0.0));
+        assertThat(customer.getAccounts().get(0).getAccountName(), is("current"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -29,26 +29,26 @@ public class CustomerTest {
     }
 
     @Test
-    public void should_create_account_when_account_name_is_not_repeated() throws AccountNameRepeatedException {
+    public void should_create_account_when_account_name_is_not_repeated() throws AccountNameRepeatedException, AccountNotExistException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        assertNotNull(customer.createAccount("account1"));
+        assertNotNull(customer.openAccount("account1"));
     }
 
     @Test(expected = AccountNameRepeatedException.class)
-    public void should_reject_create_account_when_repeated() throws AccountNameRepeatedException {
+    public void should_reject_create_account_when_repeated() throws AccountNameRepeatedException, AccountNotExistException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        customer.createAccount("current");
+        customer.openAccount("current");
     }
 
     @Test
-    public void should_find_Account_by_account_name() throws AccountNameRepeatedException {
+    public void should_find_Account_by_account_name() throws AccountNameRepeatedException, AccountNotExistException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        customer.createAccount("liping");
+        customer.openAccount("liping");
 
-        customer.createAccount("yaoyao");
+        customer.openAccount("yaoyao");
 
         Account account = customer.findAccountByName("yaoyao");
 
@@ -56,14 +56,14 @@ public class CustomerTest {
     }
 
     @Test
-    public void should_calculate_the_total_assets() throws AccountNameRepeatedException {
+    public void should_calculate_the_total_assets() throws AccountNameRepeatedException, AccountNotExistException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        Account account = customer.createAccount("liping");
+        Account account = customer.openAccount("liping");
 
         account.addBalance(100d);
 
-        Account account1 = customer.createAccount("yaoyao");
+        Account account1 = customer.openAccount("yaoyao");
 
         account1.addBalance(200d);
 
@@ -73,19 +73,19 @@ public class CustomerTest {
     }
 
     @Test
-    public void should_transfer_successfully_when_an_account_balance_more_than_the_transfer_amount() throws OverdrawException {
+    public void should_display_all_accounts_statements() throws AccountNameRepeatedException, AccountNotExistException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        Account transferAccount = new Account("transferAccount");
+        Account account = customer.openAccount("Savings");
 
-        transferAccount.addBalance(500d);
+        Account accountISA = customer.openAccount("ISA");
 
-        Account receiveAccount = new Account("receiveAccount");
+        customer.findAccountByName("current").addBalance(111d);
 
-        customer.transferAccount(transferAccount, receiveAccount, 450d);
+        account.minusBalance(100d);
 
-        assertThat(transferAccount.getBalance(), is(50d));
+        accountISA.addBalance(400d);
 
-        assertThat(receiveAccount.getBalance(), is(450d));
+        customer.displayAllAccountsStatements();
     }
 }

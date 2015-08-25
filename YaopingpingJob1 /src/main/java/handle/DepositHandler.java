@@ -8,14 +8,15 @@ import java.util.Calendar;
 
 public class DepositHandler implements CustomerHandler {
     @Override
-    public double handle(CustomerRequest customerRequest) {
+    public void handle(CustomerRequest customerRequest) {
         double bonus = 5.0;
         Account account = customerRequest.getCustomer().findAccountByName(customerRequest.getAccountName());
         if (isGiveBonus(customerRequest.getCustomer())) {
             customerRequest.getCustomer().setAcceptReward(true);
-            return account.addBalance(customerRequest.getAmount() + bonus);
+            account.addBalance(customerRequest.getAmount() + bonus);
+        } else {
+            account.addBalance(customerRequest.getAmount());
         }
-        return account.addBalance(customerRequest.getAmount());
     }
 
     private boolean isGiveBonus(Customer customer) {

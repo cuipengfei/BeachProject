@@ -8,14 +8,15 @@ import request.CustomerRequest;
 
 public class WithdrawHandler implements CustomerHandler {
     @Override
-    public double handle(CustomerRequest customerRequest) throws OverdrawException {
+    public void handle(CustomerRequest customerRequest) throws OverdrawException {
         double withdrawAmount = customerRequest.getAmount();
         Customer customer = customerRequest.getCustomer();
         Account account = customer.findAccountByName(customerRequest.getAccountName());
         if (!overdraft(withdrawAmount, account) || canOverdraft(withdrawAmount, customer, account)) {
-            return account.minusBalance(withdrawAmount);
+            account.minusBalance(withdrawAmount);
+        } else {
+            throw new OverdrawException("Overdraw");
         }
-        throw new OverdrawException("Overdraw");
     }
 
     private boolean canOverdraft(double withdrawAmount, Customer customer, Account account) {

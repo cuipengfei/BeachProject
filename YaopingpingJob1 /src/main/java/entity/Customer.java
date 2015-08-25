@@ -1,7 +1,7 @@
 package entity;
 
 import exception.AccountNameRepeatedException;
-import exception.OverdrawException;
+import exception.AccountNotExistException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +52,7 @@ public class Customer {
         this.nickname = nickname;
         this.dateOfBirth = dateOfBirth;
         this.emailAddress = nickname + "@bank.com";
-        Account account = new Account();
+        Account account = Account.createAccount("current");
         accounts.add(account);
     }
 
@@ -79,14 +79,16 @@ public class Customer {
         return totalAssets;
     }
 
-    public Account createAccount(String accountName) throws AccountNameRepeatedException {
-        for (Account account : accounts) {
-            if (account.getAccountName().equals(accountName))
-                throw new AccountNameRepeatedException();
+    public Account openAccount(String accountName) throws AccountNameRepeatedException, AccountNotExistException {
+
+        if (isAccountNameRepeated(accountName) && accountName != null) {
+            Account account = Account.createAccount(accountName);
+            if (account != null) {
+                accounts.add(account);
+                return account;
+            }
         }
-        Account account = new Account(accountName);
-        accounts.add(account);
-        return account;
+        throw new AccountNotExistException();
     }
 
     public Account findAccountByName(String name) {
@@ -97,8 +99,22 @@ public class Customer {
         return null;
     }
 
-    public void transferAccount(Account transferAccount, Account receiveAccount, double transferAmount) throws OverdrawException {
-        transferAccount.transferBalance(receiveAccount, transferAmount);
+    public void displayAllAccountsStatements() {
+        for (Account account : accounts) {
+            String statement = String.format("%s    $%s", account.getAccountName(), account.getBalance());
+            System.out.println(statement);
+        }
     }
 
+    private boolean isAccountNameRepeated(String accountName) throws AccountNameRepeatedException {
+        boolean isExisted = false;
+        for (Account account : accounts) {
+            if (account.getAccountName().equals(accountName))
+                throw new AccountNameRepeatedException();
+            else {
+                isExisted = true;
+            }
+        }
+        return isExisted;
+    }
 }

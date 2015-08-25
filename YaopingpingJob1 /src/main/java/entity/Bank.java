@@ -5,6 +5,7 @@ import email.MessageGateway;
 import exception.OverdrawException;
 import handle.CustomerHandler;
 import handle.DepositHandler;
+import handle.TransferAssetsHandler;
 import handle.WithdrawHandler;
 import request.CustomerRequest;
 import request.RequestType;
@@ -27,6 +28,7 @@ public class Bank {
     static {
         customerHandler.put(RequestType.depositMoney, new DepositHandler());
         customerHandler.put(RequestType.withdraw, new WithdrawHandler());
+        customerHandler.put(RequestType.transfer, new TransferAssetsHandler());
     }
 
     public boolean addCustomer(Customer customer) {

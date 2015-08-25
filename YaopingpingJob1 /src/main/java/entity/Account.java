@@ -1,5 +1,7 @@
 package entity;
 
+import exception.OverdrawException;
+
 public class Account {
     private String accountName;
     private double balance;
@@ -28,20 +30,25 @@ public class Account {
         return accountName;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
-
     public double getBalance() {
         return balance;
     }
 
-    public double addBalance(double money) {
-        return balance += money;
+    public double addBalance(double amount) {
+        return balance += amount;
     }
 
-    public double minusBalance(double money) {
-        return balance -= money;
+    public double minusBalance(double amount) {
+        return balance -= amount;
+    }
+
+    public void transferBalance(Account receiveAccount, double amount) throws OverdrawException {
+        if (this.getBalance() - amount >= 0) {
+            this.minusBalance(amount);
+            receiveAccount.addBalance(amount);
+        } else {
+            throw new OverdrawException("the account's balance is insufficient");
+        }
     }
 
     public double getOverdraftLimit() {

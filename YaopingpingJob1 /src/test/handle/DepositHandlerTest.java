@@ -2,6 +2,7 @@ package handle;
 
 
 import entity.Customer;
+import exception.AccountNameRepeatedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class DepositHandlerTest {
     }
 
     @Test
-    public void should_deposit_the_account_by_name() {
+    public void should_deposit_the_account_by_name() throws AccountNameRepeatedException {
         customer.createAccount("account");
 
         customer.setJoinBankDay(Calendar.getInstance());
@@ -35,7 +36,7 @@ public class DepositHandlerTest {
     }
 
     @Test
-    public void should_given_one_bonus_when_deposit_and_join_bank_day_over_2_years() {
+    public void should_given_one_bonus_when_deposit_and_join_bank_day_over_2_years() throws AccountNameRepeatedException {
         Calendar calendar = Calendar.getInstance();
 
         calendar.add(Calendar.YEAR, -3);

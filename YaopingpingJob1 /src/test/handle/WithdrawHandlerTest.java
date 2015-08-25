@@ -60,6 +60,7 @@ public class WithdrawHandlerTest {
 
     private Customer prepareCustomer(double overdraftLimit) {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
+
         account = customer.findAccountByName("current");
 
         account.setOverdraftAllowed(true);

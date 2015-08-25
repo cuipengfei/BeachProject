@@ -94,9 +94,9 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 40000d,"current"));
+        bank.handleRequest(depositRequest(customer, 40000d, "current"));
 
-        bank.handleRequest(depositRequest(customer, 10000d,"current"));
+        bank.handleRequest(depositRequest(customer, 10000d, "current"));
         //then
         verify(sender, times(2)).sendEmail(anyString(), anyString());
     }
@@ -115,7 +115,7 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 30000d,"current"));
+        bank.handleRequest(depositRequest(customer, 30000d, "current"));
 
         //then
         verify(sender, never()).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping3 is a premium customer");
@@ -131,7 +131,7 @@ public class BankTest {
 
         bank.handleRequest(withdrawRequest(customer, 50d, "current"));
 
-        assertThat(customer.findAccountByName("current").getBalance(),is(50d));
+        assertThat(customer.findAccountByName("current").getBalance(), is(50d));
     }
 
     @Test

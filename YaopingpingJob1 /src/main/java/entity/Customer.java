@@ -1,5 +1,8 @@
 package entity;
 
+import exception.AccountNameRepeatedException;
+import exception.OverdrawException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -69,29 +72,33 @@ public class Customer {
         return nickname.matches("^[a-z0-9]+$");
     }
 
-    public double calculate() {
-        for (int index = 0; index < accounts.size(); index++) {
-            totalAssets += accounts.get(index).getBalance();
+    public double calculateTotalAssets() {
+        for (Account account : accounts) {
+            totalAssets += account.getBalance();
         }
         return totalAssets;
     }
 
-    public Account createAccount(String accountName) {
+    public Account createAccount(String accountName) throws AccountNameRepeatedException {
         for (Account account : accounts) {
             if (account.getAccountName().equals(accountName))
-                return null;
+                throw new AccountNameRepeatedException();
         }
         Account account = new Account(accountName);
         accounts.add(account);
         return account;
     }
 
-    public Account findAccountByName(String name)  {
+    public Account findAccountByName(String name) {
         for (int index = 0; index < accounts.size(); index++) {
             if (accounts.get(index).getAccountName().equals(name))
                 return accounts.get(index);
         }
         return null;
+    }
+
+    public void transferAccount(Account transferAccount, Account receiveAccount, double transferAmount) throws OverdrawException {
+        transferAccount.transferBalance(receiveAccount, transferAmount);
     }
 
 }

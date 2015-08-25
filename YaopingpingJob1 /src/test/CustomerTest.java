@@ -1,5 +1,7 @@
 import entity.Account;
 import entity.Customer;
+import exception.AccountNameRepeatedException;
+import exception.OverdrawException;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -27,28 +29,33 @@ public class CustomerTest {
     }
 
     @Test
-    public void should_create_account_when_account_name_is_not_repeated() {
+    public void should_create_account_when_account_name_is_not_repeated() throws AccountNameRepeatedException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
         assertNotNull(customer.createAccount("account1"));
     }
 
-    @Test
-    public void should_reject_create_account_when_repeated() {
+    @Test(expected = AccountNameRepeatedException.class)
+    public void should_reject_create_account_when_repeated() throws AccountNameRepeatedException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
-        assertNull(customer.createAccount("current"));
+        customer.createAccount("current");
     }
     @Test
-    public void should_find_Account_by_name(){
+    public void should_find_Account_by_account_name() throws AccountNameRepeatedException {
         Customer customer=new Customer("yaoping",Calendar.getInstance());
+
         customer.createAccount("liping");
+
         customer.createAccount("yaoyao");
-        assertThat(customer.findAccountByName("yaoyao"),is(customer.getAccounts().get(2)));
+
+        Account account=customer.findAccountByName("yaoyao");
+
+        assertThat(account.getAccountName(), is("yaoyao"));
     }
 
     @Test
-    public void should_calculate_the_accounts_balances() {
+    public void should_calculate_the_total_assets() throws AccountNameRepeatedException {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
 
         Account account = customer.createAccount("liping");
@@ -61,6 +68,25 @@ public class CustomerTest {
 
         account1.minusBalance(100d);
 
-        assertThat(customer.calculate(), is(200d));
+        assertThat(customer.calculateTotalAssets(), is(200d));
+    }
+
+    @Test
+    public void should_transfer_successfully_when_an_account_balance_more_than_the_transfer_amount() throws OverdrawException {
+        Customer customer = new Customer("yaoping", Calendar.getInstance());
+
+        Account transferAccount = new Account("transferAccount");
+
+        transferAccount.addBalance(500d);
+
+        Account receiveAccount = new Account("receiveAccount");
+
+        customer.transferAccount(transferAccount,receiveAccount,450d);
+
+        assertThat(transferAccount.getBalance(),is(50d));
+
+        assertThat(receiveAccount.getBalance(),is(450d));
+
+
     }
 }

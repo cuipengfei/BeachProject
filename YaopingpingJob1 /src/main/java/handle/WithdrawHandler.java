@@ -11,8 +11,7 @@ public class WithdrawHandler implements CustomerHandler {
     public double handle(CustomerRequest customerRequest) throws OverdrawException {
         double withdrawAmount = customerRequest.getAmount();
         Customer customer = customerRequest.getCustomer();
-
-        Account account=customer.findAccountByName(customerRequest.getAccountName());
+        Account account = customer.findAccountByName(customerRequest.getAccountName());
         if (!overdraft(withdrawAmount, account) || canOverdraft(withdrawAmount, customer, account)) {
             return account.minusBalance(withdrawAmount);
         }
@@ -32,5 +31,4 @@ public class WithdrawHandler implements CustomerHandler {
     private boolean exceedsLimit(double amount, Account account) {
         return amount - account.getBalance() > account.getOverdraftLimit();
     }
-
 }

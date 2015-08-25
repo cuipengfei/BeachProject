@@ -1,9 +1,11 @@
 package beach.tw;
 
+import beach.tw.entity.Account;
 import beach.tw.entity.Bank;
 import beach.tw.entity.Customer;
 import beach.tw.exception.InsufficientException;
 import beach.tw.external.FasterMessageGateway;
+import beach.tw.external.Status;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,10 +13,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static beach.tw.requests.CustomerRequest.deposit;
+import static beach.tw.requests.CustomerRequest.transfer;
 import static beach.tw.requests.CustomerRequest.withdraw;
+import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -25,21 +31,22 @@ import static org.mockito.Mockito.*;
 public class BankTest {
 
     private Bank bank;
-    private FasterMessageGateway mockedFasterMessageGateway;
+    private FasterMessageGateway messageGateway;
 
     @Before
     public void setUp() {
-        mockedFasterMessageGateway = mock(FasterMessageGateway.class);
-        bank = new Bank(mockedFasterMessageGateway);
+        messageGateway = mock(FasterMessageGateway.class);
+        bank = new Bank(messageGateway);
     }
 
     @Test
     public void BankShouldAddValidCustomer() throws Exception {
         //given
         Customer miya11 = Customer.createCustomer("miya11", new Date());
+        FasterMessageGateway fasterMessageGateway2 = new FasterMessageGateway();
 
         //when
-        boolean isSuccessful = bank.addCustomer(miya11);
+        boolean isSuccessful = new Bank(fasterMessageGateway2).addCustomer(miya11);
 
         //then
         assertTrue(isSuccessful);
@@ -86,7 +93,7 @@ public class BankTest {
         bank.handleRequest(deposit(mike, 8));
 
         //then
-        assertThat(mike.getAccount().getMoney(), is(8));
+        assertThat(mike.getAccount("current").getMoney(), is(8));
     }
 
     @Test
@@ -100,7 +107,7 @@ public class BankTest {
         bank.handleRequest(withdraw(mike, 2));
 
         //then
-        assertThat(mike.getAccount().getMoney(), is(6));
+        assertThat(mike.getAccount("current").getMoney(), is(6));
     }
 
     @Test(expected = InsufficientException.class)
@@ -122,14 +129,14 @@ public class BankTest {
         Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
 
-        verify(mockedFasterMessageGateway).sendMail(anyString(), anyString());
+        verify(messageGateway).sendMail(anyString(), anyString());
     }
 
     @Test
     public void shouldNotSentMessageIfCustomerWasNotAdded() {
         Customer customer = Customer.createCustomer("ding", new Date());
 
-        verify(mockedFasterMessageGateway, never()).sendMail(anyString(), anyString());
+        verify(messageGateway, never()).sendMail(anyString(), anyString());
     }
 
     @Test
@@ -138,7 +145,7 @@ public class BankTest {
         bank.addCustomer(customer);
         bank.handleRequest(deposit(customer, 60000));
 
-        verify(mockedFasterMessageGateway, times(1)).sendMail("manager@thebank.com", customer.getName() + " is now a premium customer");
+        verify(messageGateway, times(1)).sendMail("manager@thebank.com", customer.getName() + " is now a premium customer");
     }
 
     @Test
@@ -149,7 +156,7 @@ public class BankTest {
         bank.handleRequest(deposit(customer, 10000));
         bank.handleRequest(withdraw(customer, 60000));
 
-        verify(mockedFasterMessageGateway, times(2)).sendMail(anyString(), anyString());
+        verify(messageGateway, times(2)).sendMail(anyString(), anyString());
     }
 
     @Test
@@ -180,36 +187,36 @@ public class BankTest {
         bank.handleRequest(deposit(customer, 6));
         bank.handleRequest(deposit(customer, 7));
 
-        assertThat(customer.getAccount().getMoney(), is(18));
+        assertThat(customer.getAccount("current").getMoney(), is(18));
     }
 
     @Test
     public void shouldOverdraftWhenMarked() throws Exception {
         Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
-        customer.setIsOverdraft(true);
-        customer.getAccount().setLimit(1000);
+        customer.getAccount("current").setIsOverdraft(true);
+        customer.getAccount("current").setLimit(1000);
 
         bank.handleRequest(deposit(customer, 200));
         bank.handleRequest(withdraw(customer, 300));
         bank.handleRequest(withdraw(customer, 900));
 
-        assertThat(customer.getAccount().getMoney(), is(-1000));
+        assertThat(customer.getAccount("current").getMoney(), is(-1000));
     }
 
     @Test(expected = InsufficientException.class)
     public void shouldNotContinueOverdraftWhenRemoveMarked() throws Exception {
         Customer customer = Customer.createCustomer("ding", new Date());
         bank.addCustomer(customer);
-        customer.setIsOverdraft(true);
-        customer.getAccount().setLimit(1000);
+        customer.getAccount("current").setIsOverdraft(true);
+        customer.getAccount("current").setLimit(1000);
 
         bank.handleRequest(deposit(customer, 200));
         bank.handleRequest(withdraw(customer, 300));
 
-        assertThat(customer.getAccount().getMoney(), is(-100));
+        assertThat(customer.getAccount("current").getMoney(), is(-100));
 
-        customer.setIsOverdraft(false);
+        customer.getAccount("current").setIsOverdraft(false);
 
         bank.handleRequest(withdraw(customer, 300));
 
@@ -223,6 +230,88 @@ public class BankTest {
 
         bank.handleRequest(deposit(customer, 200));
         bank.handleRequest(withdraw(customer, 300));
+
+        //throw an exception
+    }
+
+    @Test
+    public void isLogMessageSuccessful() throws Exception {
+        when(messageGateway.sendMail(anyString(), anyString())).thenReturn(Status.OK);
+        Customer customer = Customer.createCustomer("ding", new Date());
+        bank.addCustomer(customer);
+
+        verify(messageGateway).sendMail(anyString(), anyString());
+        assertTrue(bank.isCalls());
+    }
+
+    @Test
+    public void customerShouldHaveDefaultAccount() throws Exception {
+        Customer ding = Customer.createCustomer("ding", new Date());
+        bank.addCustomer(ding);
+
+        assertNotNull(ding.getAccount("current"));
+    }
+
+    @Test
+    public void shouldNotCreateSameNameAccount() throws Exception {
+        Customer ding = Customer.createCustomer("ding", new Date());
+        bank.addCustomer(ding);
+        Account current = new Account("current");
+
+        boolean isSuccessful = ding.addAccount(current);
+
+        assertFalse(isSuccessful);
+    }
+
+    @Test
+    public void shouldCreateValidAccount() throws Exception {
+        Customer ding = Customer.createCustomer("ding", new Date());
+        bank.addCustomer(ding);
+        Account first = new Account("first");
+
+        boolean isSuccessful = ding.addAccount(first);
+
+        assertTrue(isSuccessful);
+    }
+
+    @Test
+    public void customerShouldRequestTotalBalance() throws Exception {
+        Customer ding = Customer.createCustomer("ding", new Date());
+        bank.addCustomer(ding);
+        bank.handleRequest(deposit(ding, 200));
+
+        assertThat(ding.getAccount("current").getMoney(), is(200));
+
+        bank.handleRequest(withdraw(ding, 100));
+
+        assertThat(ding.getAccount("current").getMoney(), is(100));
+    }
+
+    @Test
+    public void shouldBeAbleToTransferMoney() throws Exception {
+        Customer mike = Customer.createCustomer("mike", new Date());
+        bank.addCustomer(mike);
+        bank.handleRequest(deposit(mike, 800));
+        Account first = new Account("first");
+        mike.addAccount(first);
+
+        bank.handleRequest(transfer(mike, mike.getAccount("current"), mike.getAccount("first"), 200));
+
+        assertThat(mike.getAccount("current").getMoney(), is(600));
+        assertThat(mike.getAccount("first").getMoney(), is(200));
+    }
+
+    @Test(expected = InsufficientException.class)
+    public void shouldNotTransferMoneyOverCurrentMoneyEvenBeAbleToOverdraft() throws Exception {
+        Customer mike = Customer.createCustomer("mike", new Date());
+        bank.addCustomer(mike);
+        bank.handleRequest(deposit(mike, 800));
+        mike.getAccount("current").setIsOverdraft(true);
+        mike.getAccount("current").setLimit(1000);
+        Account first = new Account("first");
+        mike.addAccount(first);
+
+        bank.handleRequest(transfer(mike, mike.getAccount("current"), mike.getAccount("first"), 1200));
 
         //throw an exception
     }

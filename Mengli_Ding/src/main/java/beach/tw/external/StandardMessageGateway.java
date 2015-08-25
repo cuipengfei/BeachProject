@@ -5,7 +5,8 @@ package beach.tw.external;
  */
 public class StandardMessageGateway implements MessageGateway {
     @Override
-    public void sendMail(String address, String content) {
+    public Status sendMail(String address, String content) {
         System.out.println("standard message gateway");
+        return Status.OK;
     }
 }

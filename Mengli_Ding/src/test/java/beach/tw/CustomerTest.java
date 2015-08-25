@@ -27,6 +27,6 @@ public class CustomerTest {
     @Test
     public void shouldHaveEmptyAccountByDefault() throws Exception {
         Customer customer = Customer.createCustomer("mike", new Date());
-        assertThat(customer.getAccount().getMoney(), is(0));
+        assertThat(customer.getAccount("current").getMoney(), is(0));
     }
 }

@@ -13,9 +13,9 @@ public class WithdrawHandler implements RequestHandler {
     public void handle(CustomerRequest request) {
         int bill = request.getBill();
         Customer customer = request.getCustomer();
-        Account account = customer.getAccount();
+        Account account = customer.getAccount("current");
         int currentmoney = account.getMoney();
-        int overdraftmoney = customer.isOverdraft() ? account.getLimit() : 0;
+        int overdraftmoney = account.isOverdraft() ? account.getLimit() : 0;
 
         if (currentmoney + overdraftmoney < bill) {
             throw new InsufficientException();

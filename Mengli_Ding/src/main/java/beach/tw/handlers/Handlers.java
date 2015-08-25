@@ -10,6 +10,7 @@ public class Handlers {
         {
             put(RequestType.deposit, new DepositHandler());
             put(RequestType.withdraw, new WithdrawHandler());
+            put(RequestType.transfer, new TransferHandler());
         }
     };
 

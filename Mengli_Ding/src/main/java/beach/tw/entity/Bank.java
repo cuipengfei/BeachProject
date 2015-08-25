@@ -4,10 +4,8 @@ import beach.tw.external.MessageGateway;
 import beach.tw.external.Status;
 import beach.tw.handlers.Handlers;
 import beach.tw.requests.CustomerRequest;
+import beach.tw.utils.FileUtil;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +18,12 @@ import java.util.List;
 public class Bank {
     private List<Customer> customerList = new ArrayList<>();
     private MessageGateway messageGateway;
-    private Status sendFlag = Status.FAILED;
+    private Status sendFlag;
+    private boolean isCalls;
+
+    public boolean isCalls() {
+        return isCalls;
+    }
 
     public Bank(MessageGateway messageGateway) {
         this.messageGateway = messageGateway;
@@ -31,14 +34,14 @@ public class Bank {
             Handlers.findHandler(request.getType()).handle(request);
 
             Boolean flag = request.getCustomer().isPremiumCustomer();
-            if (request.getCustomer().getAccount().getMoney() > 40000 && !flag) {
+            if (request.getCustomer().getAccount("current").getMoney() > 40000 && !flag) {
                 messageGateway.sendMail("manager@thebank.com", request.getCustomer().getName() + " is now a premium customer");
                 request.getCustomer().setIsPremiumCustomer(true);
             }
         }
     }
 
-    public boolean addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) throws IOException {
         boolean isShouldAdd = isShouleAdd(customer);
         if (isShouldAdd) {
             customerList.add(initCustomer(customer));
@@ -63,7 +66,9 @@ public class Bank {
     }
 
     private Customer initCustomer(Customer customer) {
-        customer.setAccount(new Account());
+        Account current = new Account("current");
+        customer.getAccountList().add(current);
+        customer.setAccount(current);
         customer.setJoiningDate(Calendar.getInstance());
         return customer;
     }
@@ -71,25 +76,17 @@ public class Bank {
     private void sendMessage(Customer customer) {
         String address = customer.getName() + "@thebank.com";
         String message = "Dear " + customer.getName() + ", Welcome to the Bank";
-        messageGateway.sendMail(address, message);
-        sendFlag = Status.OK;
+        try {
+            sendFlag = messageGateway.sendMail(address, message);
+        } catch (Exception e) {
+            sendFlag = Status.EXCEPTION;
+        }
     }
 
     private void logMessage(Customer customer) {
-        try {
-            String filePath = this.getClass().getClassLoader().getResource("log/CustomerMessage").getPath();
-            File file = new File(filePath);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            String data = "Customer Name: " + customer.getName() + "  a Log is recorded when the gateway Status is " + sendFlag + "  " + new Date() + "\n";
-            FileWriter fileWriter = new FileWriter(file.getName(), true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(data);
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String data = "Customer Name: " + customer.getName() + "  a Log is recorded when the gateway Status is " + sendFlag + "  " + new Date() + "\n";
+        FileUtil.writeMessage(data);
+        isCalls = true;
     }
 
 }

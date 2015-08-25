@@ -2,24 +2,18 @@ import entity.Account;
 import entity.Customer;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class CustomerTest {
 
     @Test
     public void should_create_customer_with_valid_initial_account_with_balance_0_given_valid_name() {
-        //when
         Customer customer = new Customer("yaoping123", Calendar.getInstance());
 
-        //then
-        assertThat(customer.getAccount().getBalance(), is(0.0));
+        assertThat(customer.findAccountByName("current").getBalance(), is(0.0));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -35,32 +29,38 @@ public class CustomerTest {
     @Test
     public void should_create_account_when_account_name_is_not_repeated() {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
-        assertNotNull(customer.createAccount("account1"));
 
+        assertNotNull(customer.createAccount("account1"));
     }
 
     @Test
     public void should_reject_create_account_when_repeated() {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
+
         assertNull(customer.createAccount("current"));
-
     }
-
+    @Test
+    public void should_find_Account_by_name(){
+        Customer customer=new Customer("yaoping",Calendar.getInstance());
+        customer.createAccount("liping");
+        customer.createAccount("yaoyao");
+        assertThat(customer.findAccountByName("yaoyao"),is(customer.getAccounts().get(2)));
+    }
 
     @Test
     public void should_calculate_the_accounts_balances() {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
-        List<Account> accounts = new ArrayList<Account>();
-        Account account = new Account();
+
+        Account account = customer.createAccount("liping");
+
         account.addBalance(100d);
-        Account account1 = new Account();
+
+        Account account1 = customer.createAccount("yaoyao");
+
         account1.addBalance(200d);
-        accounts.add(account);
-        accounts.add(account1);
-        double totalBalance = customer.calculate();
 
-        assertThat(totalBalance, is(300d));
+        account1.minusBalance(100d);
 
-
+        assertThat(customer.calculate(), is(200d));
     }
 }

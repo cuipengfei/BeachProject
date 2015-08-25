@@ -6,11 +6,13 @@ public class CustomerRequest {
     private Customer customer;
     private RequestType type;
     private double amount;
+    private String accountName;
 
-    private CustomerRequest(Customer customer, RequestType type, double amount) {
+    private CustomerRequest(Customer customer, RequestType type, double amount, String accountName) {
         this.customer = customer;
         this.type = type;
         this.amount = amount;
+        this.accountName = accountName;
     }
 
     public Customer getCustomer() {
@@ -25,11 +27,15 @@ public class CustomerRequest {
         return amount;
     }
 
-    public static CustomerRequest depositRequest(Customer customer, double money) {
-        return new CustomerRequest(customer, RequestType.depositMoney, money);
+    public String getAccountName() {
+        return accountName;
     }
 
-    public static CustomerRequest withdrawRequest(Customer customer, double money) {
-        return new CustomerRequest(customer, RequestType.withdraw, money);
+    public static CustomerRequest depositRequest(Customer customer, double money, String accountName) {
+        return new CustomerRequest(customer, RequestType.depositMoney, money, accountName);
+    }
+
+    public static CustomerRequest withdrawRequest(Customer customer, double money, String accountName) {
+        return new CustomerRequest(customer, RequestType.withdraw, money, accountName);
     }
 }

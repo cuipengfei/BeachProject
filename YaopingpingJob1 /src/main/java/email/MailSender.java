@@ -1,7 +1,10 @@
 package email;
 
 public class MailSender extends MessageGateway {
+    private  MailSendStatus status;
     @Override
-    public void sendEmail(String emailAddress, String message) {
+    public MailSendStatus sendEmail(String emailAddress, String message) {
+
+        return  MailSendStatus.OK;
     }
 }

@@ -41,15 +41,16 @@ public class CustomerTest {
 
         customer.createAccount("current");
     }
+
     @Test
     public void should_find_Account_by_account_name() throws AccountNameRepeatedException {
-        Customer customer=new Customer("yaoping",Calendar.getInstance());
+        Customer customer = new Customer("yaoping", Calendar.getInstance());
 
         customer.createAccount("liping");
 
         customer.createAccount("yaoyao");
 
-        Account account=customer.findAccountByName("yaoyao");
+        Account account = customer.findAccountByName("yaoyao");
 
         assertThat(account.getAccountName(), is("yaoyao"));
     }
@@ -81,12 +82,10 @@ public class CustomerTest {
 
         Account receiveAccount = new Account("receiveAccount");
 
-        customer.transferAccount(transferAccount,receiveAccount,450d);
+        customer.transferAccount(transferAccount, receiveAccount, 450d);
 
-        assertThat(transferAccount.getBalance(),is(50d));
+        assertThat(transferAccount.getBalance(), is(50d));
 
-        assertThat(receiveAccount.getBalance(),is(450d));
-
-
+        assertThat(receiveAccount.getBalance(), is(450d));
     }
 }

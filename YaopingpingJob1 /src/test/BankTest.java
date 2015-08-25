@@ -30,7 +30,6 @@ public class BankTest {
         bank = new Bank(sender);
         calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -3);
-
     }
 
     @Test

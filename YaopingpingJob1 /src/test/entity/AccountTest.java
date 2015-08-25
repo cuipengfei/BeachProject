@@ -38,9 +38,9 @@ public class AccountTest {
 
     @Test
     public void should_transfer_successfully_after_transfers_account_balance_greater_than_0() throws OverdrawException {
-        Account account=new Account("transferAccount");
+        Account account = new Account("transferAccount");
 
-        Account account1=new Account("receiveAccount");
+        Account account1 = new Account("receiveAccount");
 
         account.addBalance(100d);
 
@@ -48,7 +48,7 @@ public class AccountTest {
 
         assertThat(account.getBalance(), is(50d));
 
-        assertThat(account1.getBalance(),is(50d));
+        assertThat(account1.getBalance(), is(50d));
     }
 
     @Test(expected = OverdrawException.class)

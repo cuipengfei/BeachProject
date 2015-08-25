@@ -32,7 +32,6 @@ public class DepositHandlerTest {
         depositHandler.handle(depositRequest(customer, 500d, "account"));
 
         assertThat(customer.findAccountByName("account").getBalance(), is(500d));
-
     }
 
     @Test
@@ -54,7 +53,7 @@ public class DepositHandlerTest {
         assertThat(customer.findAccountByName("current").getBalance(), is(500d));
     }
 
-   @Test
+    @Test
     public void should_no_bonus_when_join_bank_day_less_than_2_years() {
         Calendar calendar = Calendar.getInstance();
 
@@ -62,7 +61,7 @@ public class DepositHandlerTest {
 
         customer.setJoinBankDay(calendar);
 
-        depositHandler.handle(depositRequest(customer, 500d,"current"));
+        depositHandler.handle(depositRequest(customer, 500d, "current"));
 
         assertThat(customer.findAccountByName("current").getBalance(), is(500d));
     }

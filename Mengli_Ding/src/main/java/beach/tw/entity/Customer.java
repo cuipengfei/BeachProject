@@ -17,7 +17,7 @@ public class Customer {
     private boolean isPremiumCustomer;
     private boolean isGetBonus;
     private Calendar joiningDate;
-    private List<Account> accountList = new ArrayList<>();
+    private static List<Account> accountList = new ArrayList<>();
     private static final Customer invalidCustomer = new Customer(null, null);
 
     public List<Account> getAccountList() {
@@ -49,22 +49,18 @@ public class Customer {
     }
 
     public Account getAccount(String name) {
-        for (Account accountTemp : accountList) {
-            if (accountTemp.getAccountName().equals(name))
-                return accountTemp;
+        for (Account account : accountList) {
+            if (account.getAccountName().equals(name))
+                return account;
         }
         return invalidAccount();
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
     }
 
     public String getName() {
         return name;
     }
 
-    public Customer(String name, Date date) {
+    private Customer(String name, Date date) {
         this.name = name;
         this.birthdDate = date;
     }
@@ -87,6 +83,8 @@ public class Customer {
     }
 
     public boolean addAccount(Account account) {
+        assertInvalid(account);
+
         boolean isShouleAdd = isNotSameAccount(account);
         if (isShouleAdd) {
             accountList.add(account);
@@ -94,12 +92,26 @@ public class Customer {
         return isShouleAdd;
     }
 
+    private void assertInvalid(Account account) {
+        if (account == null || account == invalidAccount()) {
+            throw new IllegalArgumentException("account is null");
+        }
+    }
+
     private boolean isNotSameAccount(Account account) {
-        for (Account accountTemp : accountList) {
-            if (accountTemp.getAccountName().equals(account.getAccountName()))
+        for (Account account1 : accountList) {
+            if (account1.getAccountName().equals(account.getAccountName()))
                 return false;
         }
         return true;
     }
 
+    public static void printAccountInfo(Customer customer) {
+        StringBuffer info = new StringBuffer("Statement for " + customer.getName());
+        for (Account account2 : accountList) {
+            info.append("\n");
+            info.append(account2.getAccountName() + " " +account2.getMoney() );
+        }
+        System.out.println(info);
+    }
 }

@@ -10,10 +10,10 @@ import beach.tw.exception.InsufficientException;
  */
 public class WithdrawHandler implements RequestHandler {
     @Override
-    public void handle(CustomerRequest request) {
+    public void handle(CustomerRequest request) throws InsufficientException{
         int bill = request.getBill();
         Customer customer = request.getCustomer();
-        Account account = customer.getAccount("current");
+        Account account = customer.getAccount(request.getAccountName());
         int currentmoney = account.getMoney();
         int overdraftmoney = account.isOverdraft() ? account.getLimit() : 0;
 

@@ -12,19 +12,25 @@ public class CustomerRequest {
     private Account accountIn;
     private final RequestType type;
     private final int bill;
+    private String accountName;
 
-    public CustomerRequest(Customer customer, RequestType type, int bill) {
-        this.customer = customer;
-        this.type = type;
-        this.bill = bill;
-    }
-
-    public CustomerRequest(Customer customer, Account accountOut, Account accountIn, RequestType type, int bill) {
+    private CustomerRequest(Customer customer, Account accountOut, Account accountIn, RequestType type, int bill) {
         this.customer = customer;
         this.accountOut = accountOut;
         this.accountIn = accountIn;
         this.type = type;
         this.bill = bill;
+    }
+
+    private CustomerRequest(Customer customer, RequestType type, int bill, String accountName) {
+        this.customer = customer;
+        this.type = type;
+        this.bill = bill;
+        this.accountName = accountName;
+    }
+
+    public String getAccountName() {
+        return accountName;
     }
 
     public Customer getCustomer() {
@@ -47,15 +53,15 @@ public class CustomerRequest {
         return type;
     }
 
-    public static CustomerRequest withdraw(Customer customer, int bill) {
-        return new CustomerRequest(customer, RequestType.withdraw, bill);
+    public static CustomerRequest withdraw(Customer customer, int bill, String accountName) {
+        return new CustomerRequest(customer, RequestType.withdraw, bill, accountName);
     }
 
-    public static CustomerRequest deposit(Customer customer, int bill) {
-        return new CustomerRequest(customer, RequestType.deposit, bill);
+    public static CustomerRequest deposit(Customer customer, int bill, String accountName) {
+        return new CustomerRequest(customer, RequestType.deposit, bill, accountName);
     }
 
-    public static CustomerRequest transfer(Customer customer, Account account1, Account account2, int bill) {
-        return new CustomerRequest(customer, account1, account2, RequestType.transfer, bill);
+    public static CustomerRequest transfer(Customer fromCustomer, Account fromAccount, Account toAccount, int bill) {
+        return new CustomerRequest(fromCustomer, fromAccount, toAccount, RequestType.transfer, bill);
     }
 }

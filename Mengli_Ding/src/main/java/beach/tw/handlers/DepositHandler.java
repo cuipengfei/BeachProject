@@ -14,7 +14,7 @@ public class DepositHandler implements RequestHandler {
     @Override
     public void handle(CustomerRequest request) {
         Customer customer = request.getCustomer();
-        Account account = customer.getAccount("current");
+        Account account = customer.getAccount(request.getAccountName());
         if (isCustomerBeenWithBankOverTwoYears(customer) && !customer.isGetBonus()){
             account.add(request.getBill() + 5);
             customer.setIsGetBonus(true);

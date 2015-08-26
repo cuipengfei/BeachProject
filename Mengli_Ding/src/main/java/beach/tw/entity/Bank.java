@@ -66,9 +66,7 @@ public class Bank {
     }
 
     private Customer initCustomer(Customer customer) {
-        Account current = new Account("current");
-        customer.getAccountList().add(current);
-        customer.setAccount(current);
+        customer.getAccountList().add(new Account("current"));
         customer.setJoiningDate(Calendar.getInstance());
         return customer;
     }

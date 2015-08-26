@@ -30,7 +30,6 @@ public class BankTest {
         bank = new Bank(sender);
         calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -3);
-
     }
 
     @Test
@@ -80,7 +79,6 @@ public class BankTest {
         verify(sender).sendEmail(customer.getEmailAddress(), "Dear <yaopingping1>, Welcome to the Bank");
     }
 
-
     @Test
     public void should_call_send_mail_method_to_manager_when_customer_balance_over_40000() throws OverdrawException {
         //given
@@ -94,9 +92,9 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 40000d,"current"));
+        bank.handleRequest(depositRequest(customer, 40000d, "current"));
 
-        bank.handleRequest(depositRequest(customer, 10000d,"current"));
+        bank.handleRequest(depositRequest(customer, 10000d, "current"));
         //then
         verify(sender, times(2)).sendEmail(anyString(), anyString());
     }
@@ -115,7 +113,7 @@ public class BankTest {
         //when
         bank.addCustomer(customer);
 
-        bank.handleRequest(depositRequest(customer, 30000d,"current"));
+        bank.handleRequest(depositRequest(customer, 30000d, "current"));
 
         //then
         verify(sender, never()).sendEmail(bank.bankManager.getEmailAddress(), "yaopingping3 is a premium customer");
@@ -131,7 +129,7 @@ public class BankTest {
 
         bank.handleRequest(withdrawRequest(customer, 50d, "current"));
 
-        assertThat(customer.findAccountByName("current").getBalance(),is(50d));
+        assertThat(customer.findAccountByName("current").getBalance(), is(50d));
     }
 
     @Test

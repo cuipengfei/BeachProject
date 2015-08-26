@@ -2,6 +2,8 @@ package handle;
 
 
 import entity.Customer;
+import exception.AccountNameRepeatedException;
+import exception.AccountNotExistException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,37 +25,36 @@ public class DepositHandlerTest {
     }
 
     @Test
-    public void should_deposit_the_account_by_name() {
-        customer.createAccount("account");
+    public void should_deposit_the_account_by_name() throws AccountNameRepeatedException, AccountNotExistException {
+        customer.openAccount("account");
 
         customer.setJoinBankDay(Calendar.getInstance());
 
         depositHandler.handle(depositRequest(customer, 500d, "account"));
 
         assertThat(customer.findAccountByName("account").getBalance(), is(500d));
-
     }
 
     @Test
-    public void should_given_one_bonus_when_deposit_and_join_bank_day_over_2_years() {
+    public void should_given_one_bonus_when_deposit_and_join_bank_day_over_2_years() throws AccountNameRepeatedException, AccountNotExistException {
         Calendar calendar = Calendar.getInstance();
 
         calendar.add(Calendar.YEAR, -3);
 
         customer.setJoinBankDay(calendar);
 
-        customer.createAccount("account");
-
-        depositHandler.handle(depositRequest(customer, 500d, "account"));
+        customer.openAccount("account");
 
         depositHandler.handle(depositRequest(customer, 500d, "current"));
 
-        assertThat(customer.findAccountByName("account").getBalance(), is(505d));
+        depositHandler.handle(depositRequest(customer, 500d, "account"));
 
-        assertThat(customer.findAccountByName("current").getBalance(), is(500d));
+        assertThat(customer.findAccountByName("current").getBalance(), is(505d));
+
+        assertThat(customer.findAccountByName("account").getBalance(), is(500d));
     }
 
-   @Test
+    @Test
     public void should_no_bonus_when_join_bank_day_less_than_2_years() {
         Calendar calendar = Calendar.getInstance();
 
@@ -61,7 +62,7 @@ public class DepositHandlerTest {
 
         customer.setJoinBankDay(calendar);
 
-        depositHandler.handle(depositRequest(customer, 500d,"current"));
+        depositHandler.handle(depositRequest(customer, 500d, "current"));
 
         assertThat(customer.findAccountByName("current").getBalance(), is(500d));
     }

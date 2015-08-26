@@ -5,14 +5,15 @@ public class Account {
     private double balance;
     private double overdraftLimit;
     private boolean overdraftAllowed;
+    private static Account account;
 
-    public Account() {
+    private Account() {
         this.balance = 0.0;
         this.overdraftLimit = 0.0;
         this.accountName = "current";
     }
 
-    public Account(String accountName) {
+    private Account(String accountName) {
         this.accountName = accountName;
     }
 
@@ -28,20 +29,20 @@ public class Account {
         return accountName;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
-
     public double getBalance() {
         return balance;
     }
 
-    public double addBalance(double money) {
-        return balance += money;
+    public double addBalance(double amount) {
+        return balance += amount;
     }
 
-    public double minusBalance(double money) {
-        return balance -= money;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public double minusBalance(double amount) {
+        return balance -= amount;
     }
 
     public double getOverdraftLimit() {
@@ -51,4 +52,11 @@ public class Account {
     public void setOverdraftLimit(double overdraftLimit) {
         this.overdraftLimit = overdraftLimit;
     }
+
+    public static Account createAccount(String accountName)
+    {
+        account=new Account(accountName);
+        return account;
+    }
+
 }

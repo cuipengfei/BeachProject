@@ -5,5 +5,5 @@ import exception.OverdrawException;
 import request.CustomerRequest;
 
 public interface CustomerHandler {
-    double handle(CustomerRequest customerRequest) throws OverdrawException;
+    void handle(CustomerRequest customerRequest) throws OverdrawException;
 }

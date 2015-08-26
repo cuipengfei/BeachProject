@@ -34,7 +34,7 @@ public class WithdrawHandlerTest {
         assertThat(account.getBalance(), is(-500d));
     }
 
-   @Test
+    @Test
     public void should_with_draw_if_no_overdraft() throws Exception {
         WithdrawHandler handler = new WithdrawHandler();
 
@@ -42,7 +42,7 @@ public class WithdrawHandlerTest {
 
         account.addBalance(3000d);
 
-        handler.handle(withdrawRequest(customer, 2000d,"current"));
+        handler.handle(withdrawRequest(customer, 2000d, "current"));
 
         assertThat(account.getBalance(), is(1000d));
     }
@@ -55,11 +55,12 @@ public class WithdrawHandlerTest {
 
         account.setOverdraftAllowed(false);
 
-        handler.handle(withdrawRequest(customer, 2000d,"current"));
+        handler.handle(withdrawRequest(customer, 2000d, "current"));
     }
 
     private Customer prepareCustomer(double overdraftLimit) {
         Customer customer = new Customer("yaoping", Calendar.getInstance());
+
         account = customer.findAccountByName("current");
 
         account.setOverdraftAllowed(true);

@@ -1,5 +1,8 @@
 package entity;
 
+import exception.AccountNameRepeatedException;
+import exception.AccountNotExistException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -49,7 +52,7 @@ public class Customer {
         this.nickname = nickname;
         this.dateOfBirth = dateOfBirth;
         this.emailAddress = nickname + "@bank.com";
-        Account account = new Account();
+        Account account = Account.createAccount("current");
         accounts.add(account);
     }
 
@@ -69,24 +72,26 @@ public class Customer {
         return nickname.matches("^[a-z0-9]+$");
     }
 
-    public double calculate() {
-        for (int index = 0; index < accounts.size(); index++) {
-            totalAssets += accounts.get(index).getBalance();
+    public double calculateTotalAssets() {
+        for (Account account : accounts) {
+            totalAssets += account.getBalance();
         }
         return totalAssets;
     }
 
-    public Account createAccount(String accountName) {
-        for (Account account : accounts) {
-            if (account.getAccountName().equals(accountName))
-                return null;
+    public Account openAccount(String accountName) throws AccountNameRepeatedException, AccountNotExistException {
+
+        if (isAccountNameRepeated(accountName) && accountName != null) {
+            Account account = Account.createAccount(accountName);
+            if (account != null) {
+                accounts.add(account);
+                return account;
+            }
         }
-        Account account = new Account(accountName);
-        accounts.add(account);
-        return account;
+        throw new AccountNotExistException();
     }
 
-    public Account findAccountByName(String name)  {
+    public Account findAccountByName(String name) {
         for (int index = 0; index < accounts.size(); index++) {
             if (accounts.get(index).getAccountName().equals(name))
                 return accounts.get(index);
@@ -94,4 +99,22 @@ public class Customer {
         return null;
     }
 
+    public void displayAllAccountsStatements() {
+        for (Account account : accounts) {
+            String statement = String.format("%s    $%s", account.getAccountName(), account.getBalance());
+            System.out.println(statement);
+        }
+    }
+
+    private boolean isAccountNameRepeated(String accountName) throws AccountNameRepeatedException {
+        boolean isExisted = false;
+        for (Account account : accounts) {
+            if (account.getAccountName().equals(accountName))
+                throw new AccountNameRepeatedException();
+            else {
+                isExisted = true;
+            }
+        }
+        return isExisted;
+    }
 }

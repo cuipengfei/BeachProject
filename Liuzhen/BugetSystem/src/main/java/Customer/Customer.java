@@ -18,11 +18,7 @@ public class Customer {
 
     private final String nickName;
     private final Calendar dateOfBirth;
-    private LinkedList<Account> accountsList = new LinkedList<Account>(){
-        {
-            add(new Account("current"));
-        }
-    };
+    private LinkedList<Account> accountsList = new LinkedList<Account>();
     private String message ="";
     private boolean isPremiumCustomer = false;
     private Calendar joiningDate;
@@ -31,6 +27,7 @@ public class Customer {
     private Customer(String _nickName, Calendar _dateOfBirth)  {
         nickName = _nickName;
         dateOfBirth = _dateOfBirth;
+        accountsList.add(new Account());
     }
     public static Customer getInvalidCustomer() {return invalidCustomer;}
 
